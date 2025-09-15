@@ -265,6 +265,23 @@
             font-size: 14px;
         }
         
+        .test-info .test-meta {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .test-meta span {
+            display: flex;
+            align-items: center;
+        }
+        
+        .test-meta i {
+            margin-right: 4px;
+        }
+        
         .test-status {
             display: flex;
             align-items: center;
@@ -622,6 +639,104 @@
             border-top: 1px solid var(--border-color);
         }
         
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .test-case-type {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .type-option {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .type-option:hover {
+            border-color: var(--primary);
+        }
+        
+        .type-option.selected {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .type-option i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .test-steps {
+            margin-top: 15px;
+        }
+        
+        .test-step {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .test-step input {
+            flex: 1;
+        }
+        
+        .test-step-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
@@ -683,6 +798,10 @@
             .test-run-stats {
                 flex-wrap: wrap;
             }
+            
+            .test-case-type {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -698,359 +817,409 @@
                     <li><a href="#" class="nav-tab" data-tab="dashboard">Главная</a></li>
                     <li><a href="#" class="nav-tab" data-tab="test-cases">Тест-кейсы</a></li>
                     <li><a href="#" class="nav-tab" data-tab="test-runs">Тест-раны</a></li>
-                    <li><a href="#" class="nav-tab" data-tab="test-runs">Тест-раны</a></li>
-                                <li><a href="#" class="nav-tab" data-tab="reports">Отчеты</a></li>
-            </ul>
-            
-            <div class="auth-buttons">
-                <button class="btn btn-outline" id="loginBtn">Войти</button>
-                <button class="btn btn-primary" id="registerBtn">Регистрация</button>
-            </div>
-        </nav>
-    </div>
-</header>
+                    <li><a href="#" class="nav-tab" data-tab="reports">Отчеты</a></li>
+                </ul>
+                
+                <div class="auth-buttons">
+                    <button class="btn btn-outline" id="loginBtn">Войти</button>
+                    <button class="btn btn-primary" id="registerBtn">Регистрация</button>
+                </div>
+            </nav>
+        </div>
+    </header>
 
-<section class="hero">
-    <div class="container">
-        <h1>Демонстрационный стенд TestFlow</h1>
-        <p>Платформа для управления тестированием с детальными отчетами об ошибках</p>
-        <div class="hero-buttons">
-            <button class="btn btn-primary" id="runAllTests">Запустить все тесты</button>
-            <button class="btn btn-outline" id="viewReports">Посмотреть отчеты</button>
+    <section class="hero">
+        <div class="container">
+            <h1>Демонстрационный стенд TestFlow</h1>
+            <p>Платформа для управления тестированием с созданием тест-кейсов</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" id="runAllTests">Запустить все тесты</button>
+                <button class="btn btn-outline" id="viewReports">Посмотреть отчеты</button>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="dashboard">
-    <div class="container">
-        <div class="dashboard-header">
-            <h1 class="dashboard-title">Панель управления тестированием</h1>
-            <button class="btn btn-primary" id="newProjectBtn">
-                <i class="fas fa-plus"></i> Новый проект
-            </button>
-        </div>
-        
-        <div class="stats">
-            <div class="stat-card">
-                <h3>Всего тест-кейсов</h3>
-                <div class="number" id="totalTests">12</div>
+    <section class="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Панель управления тестированием</h1>
+                <button class="btn btn-primary" id="newProjectBtn">
+                    <i class="fas fa-plus"></i> Новый проект
+                </button>
             </div>
-            <div class="stat-card">
-                <h3>Успешно пройдено</h3>
-                <div class="number" id="passedTests">0</div>
-            </div>
-            <div class="stat-card">
-                <h3>Провалено</h3>
-                <div class="number" id="failedTests">0</div>
-            </div>
-            <div class="stat-card">
-                <h3>В процессе</h3>
-                <div class="number" id="inProgressTests">0</div>
-            </div>
-        </div>
-        
-        <div class="tabs">
-            <div class="tab active" data-tab="test-cases">Тест-кейсы</div>
-            <div class="tab" data-tab="test-runs">Тест-раны</div>
-            <div class="tab" data-tab="reports">Отчеты</div>
-            <div class="tab" data-tab="settings">Настройки</div>
-        </div>
-        
-        <div class="tab-content active" id="test-cases-content">
-            <h2>Управление тест-кейсами</h2>
-            <p>Создавайте и управляйте тест-кейсами для ваших проектов:</p>
-            
-            <div class="test-cases">
-                <div class="test-case">
-                    <div class="test-info">
-                        <h3>Тест аутентификации пользователя</h3>
-                        <p>Проверка входа в систему с правильными и неправильными учетными данными</p>
-                    </div>
-                    <div class="test-status">
-                        <span class="status-badge status-not-run" id="test1Status">Не запущен</span>
-                    </div>
-                    <div class="test-actions">
-                        <button class="btn btn-sm btn-outline" onclick="runTest(1)">Запустить</button>
-                    </div>
-                </div>
-                
-                <div class="test-case">
-                    <div class="test-info">
-                        <h3>Тест формы регистрации</h3>
-                        <p>Проверка валидации полей и создания нового пользователя</p>
-                    </div>
-                    <div class="test-status">
-                        <span class="status-badge status-not-run" id="test2Status">Не запущен</span>
-                    </div>
-                    <div class="test-actions">
-                        <button class="btn btn-sm btn-outline" onclick="runTest(2)">Запустить</button>
-                    </div>
-                </div>
-                
-                <div class="test-case">
-                    <div class="test-info">
-                        <h3>Тест API endpoints</h3>
-                        <p>Проверка работы REST API endpoints и кодов ответа</p>
-                    </div>
-                    <div class="test-status">
-                        <span class="status-badge status-not-run" id="test3Status">Не запущен</span>
-                    </div>
-                    <div class="test-actions">
-                        <button class="btn btn-sm btn-outline" onclick="runTest(3)">Запустить</button>
-                    </div>
-                </div>
-                
-                <div class="test-case">
-                    <div class="test-info">
-                        <h3>Тест производительности</h3>
-                        <p>Измерение времени ответа и производительности ключевых операций</p>
-                    </div>
-                    <div class="test-status">
-                        <span class="status-badge status-not-run" id="test4Status">Не запущен</span>
-                    </div>
-                    <div class="test-actions">
-                        <button class="btn btn-sm btn-outline" onclick="runTest(4)">Запустить</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="progress-bar">
-                <div class="progress-fill" id="testProgress" style="width: 0%"></div>
-            </div>
-            
-            <div class="controls">
-                <button class="btn btn-primary" id="runSelectedTests">Запустить выбранные тесты</button>
-                <button class="btn btn-outline" id="resetTests">Сбросить результаты</button>
-            </div>
-            
-            <div class="test-results">
-                <h3>Результаты тестирования</h3>
-                <div class="result-content" id="resultOutput">
-                    <div class="result-line">Готов к запуску тестов...</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="tab-content" id="test-runs-content">
-            <h2>Управление тест-ранами</h2>
-            <p>Создавайте и запускайте тест-раны для ваших проектов:</p>
-            
-            <div class="controls">
-                <button class="btn btn-primary" id="createTestRun">Создать новый тест-ран</button>
-            </div>
-            
-            <div id="testRunsList">
-                <!-- Тест-раны будут добавляться здесь динамически -->
-            </div>
-        </div>
-        
-        <div class="tab-content" id="reports-content">
-            <h2>Отчеты о тестировании</h2>
-            <p>Анализируйте результаты тестирования с помощью детальных отчетов:</p>
             
             <div class="stats">
                 <div class="stat-card">
-                    <h3>Общая статистика</h3>
-                    <div class="number">85%</div>
-                    <p>Успешных тестов</p>
+                    <h3>Всего тест-кейсов</h3>
+                    <div class="number" id="totalTests">4</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Покрытие кода</h3>
-                    <div class="number">72%</div>
-                    <p>Протестировано</p>
+                    <h3>Успешно пройдено</h3>
+                    <div class="number" id="passedTests">0</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Найдено багов</h3>
-                    <div class="number">8</div>
-                    <p>За последний запуск</p>
+                    <h3>Провалено</h3>
+                    <div class="number" id="failedTests">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>В процессе</h3>
+                    <div class="number" id="inProgressTests">0</div>
                 </div>
             </div>
             
-            <div class="test-results">
-                <h3>История запусков</h3>
-                <div class="result-content">
-                    <div class="result-line result-success">[2023-10-15 14:30] Регрессионный тест-ран: 45/50 тестов пройдено успешно</div>
-                    <div class="result-line result-warning">[2023-10-14 09:15] Смоук-тест: 8/10 тестов пройдено, 2 пропущено</div>
-                    <div class="result-line result-error">[2023-10-13 16:45] Тест API: Обнаружены критические ошибки в 3 endpoints</div>
-                    <div class="result-line result-success">[2023-10-12 11:20] Полный тест-ран: 120/125 тестов пройдено успешно</div>
+            <div class="tabs">
+                <div class="tab active" data-tab="test-cases">Тест-кейсы</div>
+                <div class="tab" data-tab="test-runs">Тест-раны</div>
+                <div class="tab" data-tab="reports">Отчеты</div>
+                <div class="tab" data-tab="settings">Настройки</div>
+            </div>
+            
+            <div class="tab-content active" id="test-cases-content">
+                <div class="dashboard-header">
+                    <h2>Управление тест-кейсами</h2>
+                    <button class="btn btn-primary" id="createTestCaseBtn">
+                        <i class="fas fa-plus"></i> Создать тест-кейс
+                    </button>
+                </div>
+                <p>Создавайте и управляйте тест-кейсами для ваших проектов:</p>
+                
+                <div class="test-cases" id="testCasesList">
+                    <!-- Тест-кейсы будут добавляться здесь динамически -->
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="testProgress" style="width: 0%"></div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-primary" id="runSelectedTests">Запустить выбранные тесты</button>
+                    <button class="btn btn-outline" id="resetTests">Сбросить результаты</button>
+                </div>
+                
+                <div class="test-results">
+                    <h3>Результаты тестирования</h3>
+                    <div class="result-content" id="resultOutput">
+                        <div class="result-line">Готов к запуску тестов...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="test-runs-content">
+                <h2>Управление тест-ранами</h2>
+                <p>Создавайте и запускайте тест-раны для ваших проектов:</p>
+                
+                <div class="controls">
+                    <button class="btn btn-primary" id="createTestRun">Создать новый тест-ран</button>
+                </div>
+                
+                <div id="testRunsList">
+                    <!-- Тест-раны будут добавляться здесь динамически -->
+                </div>
+            </div>
+            
+            <div class="tab-content" id="reports-content">
+                <h2>Отчеты о тестировании</h2>
+                <p>Анализируйте результаты тестирования с помощью детальных отчетов:</p>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3>Общая статистика</h3>
+                        <div class="number">85%</div>
+                        <p>Успешных тестов</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Покрытие кода</h3>
+                        <div class="number">72%</div>
+                        <p>Протестировано</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Найдено багов</h3>
+                        <div class="number">8</div>
+                        <p>За последний запуск</p>
+                    </div>
+                </div>
+                
+                <div class="test-results">
+                    <h3>История запусков</h3>
+                    <div class="result-content">
+                        <div class="result-line result-success">[2023-10-15 14:30] Регрессионный тест-ран: 45/50 тестов пройдено успешно</div>
+                        <div class="result-line result-warning">[2023-10-14 09:15] Смоук-тест: 8/10 тестов пройдено, 2 пропущено</div>
+                        <div class="result-line result-error">[2023-10-13 16:45] Тест API: Обнаружены критические ошибки в 3 endpoints</div>
+                        <div class="result-line result-success">[2023-10-12 11:20] Полный тест-ран: 120/125 тестов пройдено успешно</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="settings-content">
+                <h2>Настройки проекта</h2>
+                <p>Настройте параметры тестирования для вашего проекта:</p>
+                
+                <div class="test-cases">
+                    <div class="test-case">
+                        <div class="test-info">
+                            <h3>Интеграция с CI/CD</h3>
+                            <p>Настройте автоматический запуск тестов при деплое</p>
+                        </div>
+                        <div class="test-actions">
+                            <button class="btn btn-sm btn-outline">Настроить</button>
+                        </div>
+                    </div>
+                    
+                    <div class="test-case">
+                        <div class="test-info">
+                            <h3>Уведомления</h3>
+                            <p>Настройте оповещения о результатах тестирования</p>
+                        </div>
+                        <div class="test-actions">
+                            <button class="btn btn-sm btn-outline">Настроить</button>
+                        </div>
+                    </div>
+                    
+                    <div class="test-case">
+                        <div class="test-info">
+                            <h3>Параметры тестовой среды</h3>
+                            <p>Настройте окружение для запуска тестов</p>
+                        </div>
+                        <div class="test-actions">
+                            <button class="btn btn-sm btn-outline">Настроить</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </section>
+
+    <!-- Модальное окно для создания тест-кейса -->
+    <div class="modal" id="createTestCaseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Создание нового тест-кейса</h2>
+                <button class="modal-close" id="closeTestCaseModal">&times;</button>
+            </div>
+            <form id="testCaseForm">
+                <div class="form-group">
+                    <label for="testCaseName">Название тест-кейса</label>
+                    <input type="text" id="testCaseName" required placeholder="Введите название тест-кейса">
+                </div>
+                
+                <div class="form-group">
+                    <label for="testCaseDescription">Описание</label>
+                    <textarea id="testCaseDescription" placeholder="Опишите цель тест-кейса"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Тип тест-кейса</label>
+                    <div class="test-case-type">
+                        <div class="type-option" data-type="functional">
+                            <i class="fas fa-cog"></i>
+                            <div>Функциональный</div>
+                        </div>
+                        <div class="type-option" data-type="api">
+                            <i class="fas fa-code"></i>
+                            <div>API</div>
+                        </div>
+                        <div class="type-option" data-type="performance">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <div>Производительность</div>
+                        </div>
+                        <div class="type-option" data-type="ui">
+                            <i class="fas fa-desktop"></i>
+                            <div>UI</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="testCaseType" value="functional">
+                </div>
+                
+                <div class="form-group">
+                    <label for="testCasePriority">Приоритет</label>
+                    <select id="testCasePriority">
+                        <option value="high">Высокий</option>
+                        <option value="medium" selected>Средний</option>
+                        <option value="low">Низкий</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="testCasePreconditions">Предусловия</label>
+                    <textarea id="testCasePreconditions" placeholder="Что должно быть выполнено перед запуском теста"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Шаги выполнения</label>
+                    <div class="test-steps" id="testSteps">
+                        <div class="test-step">
+                            <span class="step-number">1</span>
+                            <input type="text" placeholder="Опишите шаг выполнения">
+                            <div class="test-step-actions">
+                                <button type="button" class="btn btn-sm btn-outline" onclick="addTestStep()">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="testCaseExpected">Ожидаемый результат</label>
+                    <textarea id="testCaseExpected" required placeholder="Опишите ожидаемый результат"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="cancelTestCase">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Создать тест-кейс</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно для просмотра отчета -->
+    <div class="modal" id="reportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Детальный отчет по тест-рану</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div id="modalReportContent">
+                <!-- Содержимое отчета будет добавляться здесь динамически -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Состояние тестов
+        let testCases = [
+            { 
+                id: 1, 
+                name: "Тест аутентификации пользователя", 
+                description: "Проверка входа в систему с правильными и неправильными учетными данными",
+                type: "functional",
+                priority: "high",
+                status: "not-run", 
+                passed: false,
+                errorDetails: null
+            },
+            { 
+                id: 2, 
+                name: "Тест формы регистрации", 
+                description: "Проверка валидации полей и создания нового пользователя",
+                type: "functional",
+                priority: "high",
+                status: "not-run", 
+                passed: false,
+                errorDetails: null
+            },
+            { 
+                id: 3, 
+                name: "Тест API endpoints", 
+                description: "Проверка работы REST API endpoints и кодов ответа",
+                type: "api",
+                priority: "medium",
+                status: "not-run", 
+                passed: false,
+                errorDetails: null
+            },
+            { 
+                id: 4, 
+                name: "Тест производительности", 
+                description: "Измерение времени ответа и производительности ключевых операций",
+                type: "performance",
+                priority: "medium",
+                status: "not-run", 
+                passed: false,
+                errorDetails: null
+            }
+        ];
         
-        <div class="tab-content" id="settings-content">
-            <h2>Настройки проекта</h2>
-            <p>Настройте параметры тестирования для вашего проекта:</p>
-            
-            <div class="test-cases">
-                <div class="test-case">
-                    <div class="test-info">
-                        <h3>Интеграция с CI/CD</h3>
-                        <p>Настройте автоматический запуск тестов при деплое</p>
-                    </div>
-                    <div class="test-actions">
-                        <button class="btn btn-sm btn-outline">Настроить</button>
-                    </div>
-                </div>
-                
-                <div class="test-case">
-                    <div class="test-info">
-                        <h3>Уведомления</h3>
-                        <p>Настройте оповещения о результатах тестирования</p>
-                    </div>
-                    <div class="test-actions">
-                        <button class="btn btn-sm btn-outline">Настроить</button>
-                    </div>
-                </div>
-                
-                <div class="test-case">
-                    <div class="test-info">
-                        <h3>Параметры тестовой среды</h3>
-                        <p>Настройте окружение для запуска тестов</p>
-                    </div>
-                    <div class="test-actions">
-                        <button class="btn btn-sm btn-outline">Настроить</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Модальное окно для просмотра отчета -->
-<div class="modal" id="reportModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 class="modal-title">Детальный отчет по тест-рану</h2>
-            <button class="modal-close" id="closeModal">&times;</button>
-        </div>
-        <div id="modalReportContent">
-            <!-- Содержимое отчета будет добавляться здесь динамически -->
-        </div>
-    </div>
-</div>
-
-<script>
-    // Состояние тестов
-    const testCases = [
-        { 
-            id: 1, 
-            name: "Тест аутентификации пользователя", 
-            status: "not-run", 
-            passed: false,
-            errorDetails: null
-        },
-        { 
-            id: 2, 
-            name: "Тест формы регистрации", 
-            status: "not-run", 
-            passed: false,
-            errorDetails: null
-        },
-        { 
-            id: 3, 
-            name: "Тест API endpoints", 
-            status: "not-run", 
-            passed: false,
-            errorDetails: null
-        },
-        { 
-            id: 4, 
-            name: "Тест производительности", 
-            status: "not-run", 
-            passed: false,
-            errorDetails: null
-        }
-    ];
-    
-    // База данных ошибок для каждого теста
-    const errorDatabase = {
-        1: {
-            location: "Страница входа, форма аутентификации",
-            description: "Неверные учетные данные не вызывают ожидаемую ошибку",
-            reason: "Отсутствует валидация на стороне клиента для некорректных данных",
-            solution: "Добавить проверку введенных данных перед отправкой на сервер",
-            stackTrace: "Error: Expected status code 401 but got 200\n    at AuthTest.validateErrorResponse (auth-test.js:45:15)\n    at AuthTest.run (auth-test.js:23:7)",
-            logs: [
-                { time: "14:30:12", level: "INFO", message: "Запуск теста аутентификации" },
-                { time: "14:30:13", level: "INFO", message: "Ввод корректных учетных данных" },
-                { time: "14:30:14", level: "SUCCESS", message: "Успешный вход в систему" },
-                { time: "14:30:15", level: "INFO", message: "Ввод некорректных учетных данных" },
-                { time: "14:30:16", level: "ERROR", message: "Ожидалась ошибка 401, но получен код 200" }
-            ]
-        },
-        2: {
-            location: "Страница регистрации, форма создания аккаунта",
-            description: "Поле 'Email' принимает некорректные форматы email-адресов",
-            reason: "Регулярное выражение для валидации email содержит ошибку",
-            solution: "Исправить регулярное выражение на /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/",
-            stackTrace: "Error: Invalid email format was accepted\n    at RegistrationTest.validateEmailField (registration-test.js:67:22)\n    at RegistrationTest.run (registration-test.js:31:9)",
-            logs: [
-                { time: "14:31:05", level: "INFO", message: "Запуск теста регистрации" },
-                { time: "14:31:06", level: "INFO", message: "Ввод валидных данных" },
-                { time: "14:31:07", level: "SUCCESS", message: "Успешная регистрация" },
-                { time: "14:31:08", level: "INFO", message: "Ввод email 'invalid-email'" },
-                { time: "14:31:09", level: "ERROR", message: "Некорректный email был принят системой" }
-            ]
-        },
-        3: {
-            location: "API endpoint /api/users/{id}, метод GET",
-            description: "Запрос несуществующего пользователя возвращает 200 вместо 404",
-            reason: "Отсутствует проверка существования пользователя в базе данных",
-            solution: "Добавить проверку if (!user) return res.status(404).json({ error: 'User not found' });",
-            stackTrace: "Error: Expected status code 404 but got 200\n    at ApiTest.testUserEndpoint (api-test.js:89:17)\n    at ApiTest.run (api-test.js:42:11)",
-            logs: [
-                { time: "14:32:22", level: "INFO", message: "Запуск теста API" },
-                { time: "14:32:23", level: "INFO", message: "Запрос существующего пользователя ID: 123" },
-                { time: "14:32:24", level: "SUCCESS", message: "Успешный ответ с кодом 200" },
-                { time: "14:32:25", level: "INFO", message: "Запрос несуществующего пользователя ID: 99999" },
-                { time: "14:32:26", level: "ERROR", message: "Ожидалась ошибка 404, но получен код 200" }
-            ]
-        },
-        4: {
-            location: "Страница продукта, загрузка изображений",
-            description: "Время загрузки изображений превышает лимит в 2 секунды",
-            reason: "Изображения не оптимизированы для веба (отсутствует сжатие)",
-            solution: "Оптимизировать изображения с помощью инструментов сжатия и использовать форматы WebP",
-            stackTrace: "Error: Image loading time 3450ms exceeds limit of 2000ms\n    at PerformanceTest.measureImageLoading (performance-test.js:112:25)\n    at PerformanceTest.run (performance-test.js:55:13)",
-            logs: [
-                { time: "14:33:40", level: "INFO", message: "Запуск теста производительности" },
-                { time: "14:33:41", level: "INFO", message: "Измерение времени загрузки страницы" },
-                { time: "14:33:42", level: "SUCCESS", message: "Время загрузки страницы: 1200ms" },
-                { time: "14:33:43", level: "INFO", message: "Измерение времени загрузки изображений" },
-                { time: "14:33:46", level: "ERROR", message: "Время загрузки изображений: 3450ms (превышает лимит 2000ms)" }
-            ]
-        }
-    };
-    
-    // Состояние тест-ранов
-    let testRuns = [];
-    let totalTests = testCases.length;
-    let passedTests = 0;
-    let failedTests = 0;
-    let inProgressTests = 0;
-    let testRunCounter = 1;
-    
-    // Инициализация
-    document.addEventListener('DOMContentLoaded', function() {
-        // Навигация по вкладкам
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Убираем активный класс у всех вкладок
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                // Добавляем активный класс текущей вкладке
-                tab.classList.add('active');
-                
-                // Скрываем все содержимое вкладок
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                
-                // Показываем соответствующее содержимое
-                const tabId = tab.getAttribute('data-tab');
-                document.getElementById(tabId + '-content').classList.add('active');
+        // База данных ошибок для каждого теста
+        const errorDatabase = {
+            1: {
+                location: "Страница входа, форма аутентификации",
+                description: "Неверные учетные данные не вызывают ожидаемую ошибку",
+                reason: "Отсутствует валидация на стороне клиента для некорректных данных",
+                solution: "Добавить проверку введенных данных перед отправкой на сервер",
+                stackTrace: "Error: Expected status code 401 but got 200\n    at AuthTest.validateErrorResponse (auth-test.js:45:15)\n    at AuthTest.run (auth-test.js:23:7)",
+                logs: [
+                    { time: "14:30:12", level: "INFO", message: "Запуск теста аутентификации" },
+                    { time: "14:30:13", level: "INFO", message: "Ввод корректных учетных данных" },
+                    { time: "14:30:14", level: "SUCCESS", message: "Успешный вход в систему" },
+                    { time: "14:30:15", level: "INFO", message: "Ввод некорректных учетных данных" },
+                    { time: "14:30:16", level: "ERROR", message: "Ожидалась ошибка 401, но получен код 200" }
+                ]
+            },
+            2: {
+                location: "Страница регистрации, форма создания аккаунта",
+                description: "Поле 'Email' принимает некорректные форматы email-адресов",
+                reason: "Регулярное выражение для валидации email содержит ошибку",
+                solution: "Исправить регулярное выражение на /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/",
+                stackTrace: "Error: Invalid email format was accepted\n    at RegistrationTest.validateEmailField (registration-test.js:67:22)\n    at RegistrationTest.run (registration-test.js:31:9)",
+                logs: [
+                    { time: "14:31:05", level: "INFO", message: "Запуск теста регистрации" },
+                    { time: "14:31:06", level: "INFO", message: "Ввод валидных данных" },
+                    { time: "14:31:07", level: "SUCCESS", message: "Успешная регистрация" },
+                    { time: "14:31:08", level: "INFO", message: "Ввод email 'invalid-email'" },
+                    { time: "14:31:09", level: "ERROR", message: "Некорректный email был принят системой" }
+                ]
+            },
+            3: {
+                location: "API endpoint /api/users/{id}, метод GET",
+                description: "Запрос несуществующего пользователя возвращает 200 вместо 404",
+                reason: "Отсутствует проверка существования пользователя в базе данных",
+                solution: "Добавить проверку if (!user) return res.status(404).json({ error: 'User not found' });",
+                stackTrace: "Error: Expected status code 404 but got 200\n    at ApiTest.testUserEndpoint (api-test.js:89:17)\n    at ApiTest.run (api-test.js:42:11)",
+                logs: [
+                    { time: "14:32:22", level: "INFO", message: "Запуск теста API" },
+                    { time: "14:32:23", level: "INFO", message: "Запрос существующего пользователя ID: 123" },
+                    { time: "14:32:24", level: "SUCCESS", message: "Успешный ответ с кодом 200" },
+                    { time: "14:32:25", level: "INFO", message: "Запрос несуществующего пользователя ID: 99999" },
+                    { time: "14:32:26", level: "ERROR", message: "Ожидалась ошибка 404, но получен код 200" }
+                ]
+            },
+            4: {
+                location: "Страница продукта, загрузка изображений",
+                description: "Время загрузки изображений превышает лимит в 2 секунды",
+                reason: "Изображения не оптимизированы для веба (отсутствует сжатие)",
+                solution: "Оптимизировать изображения с помощью инструментов сжатия и использовать форматы WebP",
+                stackTrace: "Error: Image loading time 3450ms exceeds limit of 2000ms\n    at PerformanceTest.measureImageLoading (performance-test.js:112:25)\n    at PerformanceTest.run (performance-test.js:55:13)",
+                logs: [
+                    { time: "14:33:40", level: "INFO", message: "Запуск теста производительности" },
+                    { time: "14:33:41", level: "INFO", message: "Измерение времени загрузки страницы" },
+                    { time: "14:33:42", level: "SUCCESS", message: "Время загрузки страницы: 1200ms" },
+                    { time: "14:33:43", level: "INFO", message: "Измерение времени загрузки изображений" },
+                    { time: "14:33:46", level: "ERROR", message: "Время загрузки изображений: 3450ms (превышает лимит 2000ms)" }
+                ]
+            }
+        };
+        
+        // Состояние тест-ранов
+        let testRuns = [];
+        let totalTests = testCases.length;
+        let passedTests = 0;
+        let failedTests = 0;
+        let inProgressTests = 0;
+        let testRunCounter = 1;
+        let testCaseCounter = testCases.length;
+        
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            // Навигация по вкладкам
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Убираем активный класс у всех вкладок
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    // Добавляем активный класс текущей вкладке
+                    tab.classList.add('active');
+                    
+                    // Скрываем все содержимое вкладок
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                    
+                    // Показываем соответствующее содержимое
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId + '-content').classList.add('active');
+                });
             });
-        });
-        
-        // Навигация через меню
-                    document.querySelectorAll('.nav-tab').forEach(navTab => {
+            
+            // Навигация через меню
+            document.querySelectorAll('.nav-tab').forEach(navTab => {
                 navTab.addEventListener('click', (e) => {
                     e.preventDefault();
                     const tabId = navTab.getAttribute('data-tab');
@@ -1102,14 +1271,233 @@
                 createTestRun();
             });
             
-            // Закрытие модального окна
+            // Создание тест-кейса
+            document.getElementById('createTestCaseBtn').addEventListener('click', () => {
+                document.getElementById('createTestCaseModal').classList.add('active');
+            });
+            
+            // Закрытие модального окна создания тест-кейса
+            document.getElementById('closeTestCaseModal').addEventListener('click', () => {
+                document.getElementById('createTestCaseModal').classList.remove('active');
+            });
+            
+            // Отмена создания тест-кейса
+            document.getElementById('cancelTestCase').addEventListener('click', () => {
+                document.getElementById('createTestCaseModal').classList.remove('active');
+            });
+            
+            // Выбор типа тест-кейса
+            document.querySelectorAll('.type-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.type-option').forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                    document.getElementById('testCaseType').value = option.getAttribute('data-type');
+                });
+            });
+            
+            // Обработка формы создания тест-кейса
+            document.getElementById('testCaseForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                createTestCase();
+            });
+            
+            // Закрытие модального окна отчета
             document.getElementById('closeModal').addEventListener('click', () => {
                 document.getElementById('reportModal').classList.remove('active');
             });
             
+            // Инициализация отображения тест-кейсов
+            renderTestCases();
+            
             // Обновляем статистику
             updateStats();
         });
+        
+        // Добавление шага тест-кейса
+        function addTestStep() {
+            const testSteps = document.getElementById('testSteps');
+            const stepCount = testSteps.children.length + 1;
+            
+            const stepElement = document.createElement('div');
+            stepElement.className = 'test-step';
+            stepElement.innerHTML = `
+                <span class="step-number">${stepCount}</span>
+                <input type="text" placeholder="Опишите шаг выполнения">
+                <div class="test-step-actions">
+                    <button type="button" class="btn btn-sm btn-outline" onclick="addTestStep()">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="removeTestStep(this)">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            `;
+            
+            testSteps.appendChild(stepElement);
+        }
+        
+        // Удаление шага тест-кейса
+        function removeTestStep(button) {
+            const stepElement = button.closest('.test-step');
+            stepElement.remove();
+            
+            // Обновляем номера шагов
+            document.querySelectorAll('.test-step').forEach((step, index) => {
+                step.querySelector('.step-number').textContent = index + 1;
+            });
+        }
+        
+        // Создание нового тест-кейса
+        function createTestCase() {
+            const name = document.getElementById('testCaseName').value;
+            const description = document.getElementById('testCaseDescription').value;
+            const type = document.getElementById('testCaseType').value;
+            const priority = document.getElementById('testCasePriority').value;
+            const preconditions = document.getElementById('testCasePreconditions').value;
+            const expectedResult = document.getElementById('testCaseExpected').value;
+            
+            // Собираем шаги выполнения
+            const steps = [];
+            document.querySelectorAll('.test-step input').forEach(input => {
+                if (input.value.trim() !== '') {
+                    steps.push(input.value.trim());
+                }
+            });
+            
+            // Создаем новый тест-кейс
+            testCaseCounter++;
+            const newTestCase = {
+                id: testCaseCounter,
+                name,
+                description,
+                type,
+                priority,
+                preconditions,
+                steps,
+                expectedResult,
+                status: "not-run",
+                passed: false,
+                errorDetails: null
+            };
+            
+            testCases.push(newTestCase);
+            totalTests = testCases.length;
+            
+            // Обновляем отображение
+            renderTestCases();
+            updateStats();
+            
+            // Закрываем модальное окно и сбрасываем форму
+            document.getElementById('createTestCaseModal').classList.remove('active');
+            document.getElementById('testCaseForm').reset();
+            
+            // Удаляем все дополнительные шаги, оставляя только первый
+            const testSteps = document.getElementById('testSteps');
+            while (testSteps.children.length > 1) {
+                testSteps.removeChild(testSteps.lastChild);
+            }
+            
+            addResultLine(`Создан новый тест-кейс: ${name}`, 'success');
+        }
+        
+        // Отображение тест-кейсов
+        function renderTestCases() {
+            const testCasesList = document.getElementById('testCasesList');
+            testCasesList.innerHTML = '';
+            
+            testCases.forEach(testCase => {
+                const testCaseElement = document.createElement('div');
+                testCaseElement.className = 'test-case';
+                
+                // Определяем иконку в зависимости от типа тест-кейса
+                let icon = 'fa-cog';
+                if (testCase.type === 'api') icon = 'fa-code';
+                if (testCase.type === 'performance') icon = 'fa-tachometer-alt';
+                if (testCase.type === 'ui') icon = 'fa-desktop';
+                
+                // Определяем цвет приоритета
+                let priorityColor = 'var(--text-secondary)';
+                if (testCase.priority === 'high') priorityColor = 'var(--danger)';
+                if (testCase.priority === 'medium') priorityColor = 'var(--warning)';
+                
+                testCaseElement.innerHTML = `
+                    <div class="test-info">
+                        <h3>${testCase.name}</h3>
+                        <p>${testCase.description}</p>
+                        <div class="test-meta">
+                            <span><i class="fas ${icon}"></i> ${getTypeName(testCase.type)}</span>
+                            <span style="color: ${priorityColor}"><i class="fas fa-exclamation-circle"></i> ${getPriorityName(testCase.priority)}</span>
+                            <span><i class="fas fa-list-ol"></i> ${testCase.steps ? testCase.steps.length : 0} шагов</span>
+                        </div>
+                    </div>
+                    <div class="test-status">
+                        <span class="status-badge ${getStatusClass(testCase.status)}" id="test${testCase.id}Status">${getStatusName(testCase.status)}</span>
+                    </div>
+                    <div class="test-actions">
+                        <button class="btn btn-sm btn-outline" onclick="runTest(${testCase.id})">Запустить</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteTestCase(${testCase.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                testCasesList.appendChild(testCaseElement);
+            });
+        }
+        
+        // Получение имени типа тест-кейса
+        function getTypeName(type) {
+            const types = {
+                'functional': 'Функциональный',
+                'api': 'API',
+                'performance': 'Производительность',
+                'ui': 'UI'
+            };
+            return types[type] || type;
+        }
+        
+        // Получение имени приоритета
+        function getPriorityName(priority) {
+            const priorities = {
+                'high': 'Высокий',
+                'medium': 'Средний',
+                'low': 'Низкий'
+            };
+            return priorities[priority] || priority;
+        }
+        
+        // Получение класса статуса
+        function getStatusClass(status) {
+            const statuses = {
+                'not-run': 'status-not-run',
+                'passed': 'status-passed',
+                'failed': 'status-failed',
+                'running': 'status-running'
+            };
+            return statuses[status] || 'status-not-run';
+        }
+        
+        // Получение имени статуса
+        function getStatusName(status) {
+            const statuses = {
+                'not-run': 'Не запущен',
+                'passed': 'Пройден',
+                'failed': 'Провален',
+                'running': 'Выполняется'
+            };
+            return statuses[status] || status;
+        }
+        
+        // Удаление тест-кейса
+        function deleteTestCase(testId) {
+            if (confirm('Вы уверены, что хотите удалить этот тест-кейс?')) {
+                testCases = testCases.filter(test => test.id !== testId);
+                totalTests = testCases.length;
+                renderTestCases();
+                updateStats();
+                addResultLine(`Тест-кейс удален`, 'warning');
+            }
+        }
         
         // Создание нового тест-рана
         function createTestRun() {
@@ -1223,7 +1611,14 @@
                     testRun.failed++;
                     failedTests++;
                     // Сохраняем детали ошибки
-                    testCase.errorDetails = errorDatabase[testId];
+                    testCase.errorDetails = errorDatabase[testId] || {
+                        location: "Неизвестно",
+                        description: "Произошла неизвестная ошибка",
+                        reason: "Причина не определена",
+                        solution: "Проверить логи приложения",
+                        stackTrace: "Стек вызовов недоступен",
+                        logs: []
+                    };
                 }
                 
                 inProgressTests--;
@@ -1374,8 +1769,15 @@
                 } else {
                     failedTests++;
                     // Сохраняем детали ошибки
-                    testCase.errorDetails = errorDatabase[testId];
-                    addResultLine(`Тест "${testCase.name}" провален: ${errorDatabase[testId].description}`, 'error');
+                    testCase.errorDetails = errorDatabase[testId] || {
+                        location: "Неизвестно",
+                        description: "Произошла неизвестная ошибка",
+                        reason: "Причина не определена",
+                        solution: "Проверить логи приложения",
+                        stackTrace: "Стек вызовов недоступен",
+                        logs: []
+                    };
+                    addResultLine(`Тест "${testCase.name}" провален: ${testCase.errorDetails.description}`, 'error');
                 }
                 
                 updateStats();
