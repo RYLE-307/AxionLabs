@@ -102,11 +102,20 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
 };
 
   const runTest = (testId) => {
-  setTestCases(prevTestCases => 
-    prevTestCases.map(test => 
-      test.id === testId ? { ...test, status: 'running' } : test
-    )
-  );
+setTestCases(prevTestCases => {
+  return prevTestCases.map(testCase => {
+    const updatedTest = updatedTests.find(t => t.id === testCase.id);
+    if (updatedTest) {
+      return {
+        ...testCase,
+        status: updatedTest.status,
+        passed: updatedTest.passed,
+        errorDetails: updatedTest.errorDetails
+      };
+    }
+    return testCase;
+  });
+});
 
   // Имитация выполнения теста
   setTimeout(() => {
@@ -193,6 +202,15 @@ const updateTestResult = (testRunId, testId, passed) => {
         const passedCount = updatedTests.filter(t => t.passed).length;
         const failedCount = updatedTests.filter(t => t.status === "completed" && !t.passed).length;
         
+        // Также обновляем тест-кейс
+        setTestCases(prevTestCases => 
+          prevTestCases.map(tc => 
+            tc.id === testId 
+              ? { ...tc, status: "completed", passed, errorDetails: passed ? null : (tc.errorDetails || {}) } 
+              : tc
+          )
+        );
+
         return {
           ...run,
           tests: updatedTests,
@@ -215,61 +233,83 @@ const notRunRuns = currentProjectRuns.filter(run => run.status === 'not-run').le
  
 
 const runTestRun = (testRunId) => {
-  setTestRuns(prevRuns =>
-    prevRuns.map(run => {
-      if (run.id !== testRunId) return run;
-      
-      // Запускаем тест-ран
-      const updatedTests = run.tests.map(test => ({
-        ...test,
-        status: 'running'
-      }));
-      
-      return { ...run, status: 'running', tests: updatedTests };
-    })
-  );
+  // Находим тест-ран по ID
+  const testRun = testRuns.find(run => run.id === testRunId);
+  if (!testRun) return;
 
-  // Имитация автоматической проверки
-  setTimeout(() => {
+  if (testRun.type === "Hand") {
+    // Для ручного режима меняем статус на running и сбрасываем результаты
+    setTestRuns(prev =>
+      prev.map(run =>
+        run.id === testRunId
+          ? {
+              ...run,
+              status: "running",
+              tests: run.tests.map(test => ({ ...test, status: "not-run" })),
+              passed: 0,
+              failed: 0
+            }
+          : run
+      )
+    );
+  } else {
+    // Для автоматического режима
     setTestRuns(prevRuns =>
       prevRuns.map(run => {
         if (run.id !== testRunId) return run;
         
-        // Генерируем случайные результаты с деталями ошибок
-        const updatedTests = run.tests.map(test => {
-          const passed = Math.random() > 0.5;
-          
-          return {
-            ...test,
-            status: passed ? 'passed' : 'failed',
-            passed: passed,
-            // Добавляем детали ошибок для неудачных тестов
-            ...(!passed && {
-              errorDetails: errorDatabase[test.id] || {
-                location: "Неизвестно",
-                description: "Произошла неизвестная ошибка",
-                reason: "Причина не определена",
-                solution: "Проверить логи приложения",
-                stackTrace: "Стек вызовов недоступен",
-                logs: []
-              }
-            })
-          };
-        });
+        // Запускаем тест-ран
+        const updatedTests = run.tests.map(test => ({
+          ...test,
+          status: 'running'
+        }));
         
-        const passedCount = updatedTests.filter(t => t.passed).length;
-        const failedCount = updatedTests.filter(t => !t.passed).length;
-        
-        return {
-          ...run, 
-          status: 'completed', 
-          tests: updatedTests,
-          passed: passedCount,
-          failed: failedCount
-        };
+        return { ...run, status: 'running', tests: updatedTests };
       })
     );
-  }, 2000);
+
+    // Имитация автоматической проверки
+    setTimeout(() => {
+      setTestRuns(prevRuns =>
+        prevRuns.map(run => {
+          if (run.id !== testRunId) return run;
+          
+          // Генерируем случайные результаты с деталями ошибок
+          const updatedTests = run.tests.map(test => {
+            const passed = Math.random() > 0.5;
+            
+            return {
+              ...test,
+              status: passed ? 'passed' : 'failed',
+              passed: passed,
+              // Добавляем детали ошибок для неудачных тестов
+              ...(!passed && {
+                errorDetails: errorDatabase[test.id] || {
+                  location: "Неизвестно",
+                  description: "Произошла неизвестная ошибка",
+                  reason: "Причина не определена",
+                  solution: "Проверить логи приложения",
+                  stackTrace: "Стек вызовов недоступен",
+                  logs: []
+                }
+              })
+            };
+          });
+          
+          const passedCount = updatedTests.filter(t => t.passed).length;
+          const failedCount = updatedTests.filter(t => !t.passed).length;
+          
+          return {
+            ...run, 
+            status: 'completed', 
+            tests: updatedTests,
+            passed: passedCount,
+            failed: failedCount
+          };
+        })
+      );
+    }, 2000);
+  }
 };
 //setTimeout(() => {
     // const successCount = Math.floor(Math.random() * test.status(r => r.id === testRunId).tests.length);
@@ -530,7 +570,7 @@ const runTestRun = (testRunId) => {
                                     </button>
                                   </>
                                ) : (
-                                  <span>Результат: {test.passed ? "Пройден" : "Провален"}</span>
+                                  <span style={test.passed ? {} : { color: 'red' }}>Результат: {test.passed ? "Пройден" : "Провален"}</span>
                                 )}
                              </div>
                            ))}
@@ -548,28 +588,6 @@ const runTestRun = (testRunId) => {
             <div className="tab-content active" id="reports-content">
               <h2>Отчеты о тестировании</h2>
               <p>Анализируйте результаты тестирования с помощью детальных отчетов:</p>
-              
-              <div className="stats">
-                <div className="stat-card">
-                  <h3>Общая статистика</h3>
-                  <div className="number">{totalTests}</div>
-                  <p>Всего тестов</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Успешность</h3>
-                  <div className="number">
-                    {totalTests > 0 ? Math.round((passedTests / totalTests) * 100) : 0}%
-                  </div>
-                  <p>Процент успеха</p>
-                </div>
-                
-                <div className="stat-card">
-                  <h3>Найдено багов</h3>
-                  <div className="number">{failedTests}</div>
-                  <p>За все время</p>
-                </div>
-              </div>
-              
               <div className="test-results">
                 <h3>История запусков</h3>
                 <div className="result-content" id="historyOutput">

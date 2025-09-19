@@ -1,10 +1,38 @@
 import React from 'react';
 
 const ReportModal = ({ testRun, onClose }) => {
-  
+  // Защита от отсутствующих данных
+  if (!testRun || !testRun.tests) {
+    return (
+      <div className="modal active">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h2 className="modal-title">Ошибка</h2>
+            <button className="modal-close" onClick={onClose}>&times;</button>
+          </div>
+          <div className="test-run-report">
+            <p>Данные отчета недоступны или повреждены.</p>
+            <button className="btn btn-primary" onClick={onClose}>
+              Закрыть
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const passedTests = testRun.tests.filter(test => test.passed).length;
   const totalTests = testRun.tests.length;
   const successRate = totalTests > 0 ? Math.round((passedTests / totalTests) * 100) : 0;
+
+  // Форматирование даты, если она в формате timestamp
+  const formatDate = (date) => {
+    if (!date) return 'Не указана';
+    if (typeof date === 'number') {
+      return new Date(date).toLocaleDateString('ru-RU');
+    }
+    return date;
+  };
 
   return (
     <div className="modal active">
@@ -15,8 +43,8 @@ const ReportModal = ({ testRun, onClose }) => {
         </div>
         <div className="test-run-report">
           <div className="report-header">
-            <h3>{testRun.name}</h3>
-            <p><strong>Дата выполнения:</strong> {testRun.date}</p>
+            <h3>{testRun.name || 'Без названия'}</h3>
+            <p><strong>Дата выполнения:</strong> {formatDate(testRun.date)}</p>
             <p><strong>Тип прогона:</strong> {testRun.type === 'Automatic' ? 'Автоматический' : 'Ручной'}</p>
           </div>
           
@@ -50,32 +78,40 @@ const ReportModal = ({ testRun, onClose }) => {
           {testRun.tests.map((test, index) => (
             <div key={index} className={`test-case-result ${test.passed ? 'passed' : 'failed'}`}>
               <div className="test-case-header">
-                <strong>{index + 1}. {test.name}</strong>
+                <strong>{index + 1}. {test.name || 'Без названия'}</strong>
                 <span className={`status-badge ${test.passed ? 'status-passed' : 'status-failed'}`}>
                   {test.passed ? 'Пройден' : 'Провален'}
                 </span>
               </div>
-              <p>{test.description}</p>
+              {test.description && <p>{test.description}</p>}
               
               {!test.passed && test.errorDetails && (
                 <div className="error-details">
                   <h5>Детали ошибки:</h5>
-                  <div className="error-section">
-                    <strong>Местоположение:</strong>
-                    <div className="error-reason">{test.errorDetails.location}</div>
-                  </div>
-                  <div className="error-section">
-                    <strong>Описание проблемы:</strong>
-                    <div className="error-reason">{test.errorDetails.description}</div>
-                  </div>
-                  <div className="error-section">
-                    <strong>Причина:</strong>
-                    <div className="error-reason">{test.errorDetails.reason}</div>
-                  </div>
-                  <div className="error-section">
-                    <strong>Решение:</strong>
-                    <div className="error-reason">{test.errorDetails.solution}</div>
-                  </div>
+                  {test.errorDetails.location && (
+                    <div className="error-section">
+                      <strong>Местоположение:</strong>
+                      <div className="error-reason">{test.errorDetails.location}</div>
+                    </div>
+                  )}
+                  {test.errorDetails.description && (
+                    <div className="error-section">
+                      <strong>Описание проблемы:</strong>
+                      <div className="error-reason">{test.errorDetails.description}</div>
+                    </div>
+                  )}
+                  {test.errorDetails.reason && (
+                    <div className="error-section">
+                      <strong>Причина:</strong>
+                      <div className="error-reason">{test.errorDetails.reason}</div>
+                    </div>
+                  )}
+                  {test.errorDetails.solution && (
+                    <div className="error-section">
+                      <strong>Решение:</strong>
+                      <div className="error-reason">{test.errorDetails.solution}</div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
