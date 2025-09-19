@@ -487,6 +487,8 @@
         .test-run-date {
             color: var(--text-secondary);
             font-size: 14px;
+            margin-left: 6em;
+           
         }
         
 .btn-new-run{
