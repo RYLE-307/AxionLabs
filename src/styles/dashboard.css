@@ -886,6 +886,7 @@
 
 .select-all {
   padding: 5px 0;
+  
   border-bottom: 1px solid #eee;
   margin-bottom: 5px;
 }
@@ -897,4 +898,10 @@
 .test-case-checkbox label {
   margin-left: 8px;
   cursor: pointer;
+}
+
+
+.checkbox-run{
+    max-width: 15px;
+    margin-left: 95%;
 }

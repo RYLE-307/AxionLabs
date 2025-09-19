@@ -83,6 +83,7 @@ const TestRunModal = ({ onClose, onCreate, testCases }) => {
                 <input
                   type="checkbox"
                   id="selectAll"
+                   className='checkbox-run'
                   checked={selectedTestCases.length === testCases.length}
                   onChange={selectAllTestCases}
                 />
@@ -93,6 +94,7 @@ const TestRunModal = ({ onClose, onCreate, testCases }) => {
                 <div key={testCase.id} className="test-case-checkbox">
                   <input
                     type="checkbox"
+                    className='checkbox-run'
                     id={`testCase-${testCase.id}`}
                     checked={selectedTestCases.includes(testCase.id)}
                     onChange={() => handleTestCaseSelection(testCase.id)}

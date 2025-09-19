@@ -1,4 +1,4 @@
-// components/AuthPage.js
+
 import React, { useState } from 'react';
 import '../styles/auth.css';
 

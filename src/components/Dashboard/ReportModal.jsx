@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ReportModal = ({ testRun, onClose }) => {
-  // Правильно рассчитываем процент успешных тестов
+  
   const passedTests = testRun.tests.filter(test => test.passed).length;
   const totalTests = testRun.tests.length;
   const successRate = totalTests > 0 

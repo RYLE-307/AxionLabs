@@ -139,13 +139,13 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
     }
   };
 
-// И замените её на эту:
+
 const createTestRun = (formData) => {
   console.log('Creating test run with data:', formData);
   
   const { selectedTestCases, ...runData } = formData;
   
-  // Фильтруем тест-кейсы по выбранным ID
+
   const selectedTests = testCases.filter(test => 
     selectedTestCases.includes(test.id)
   );
@@ -177,15 +177,15 @@ const createTestRun = (formData) => {
 const runTestRun = (testRunId) => {
   const updatedTestRuns = testRuns.map(run => {
     if (run.id === testRunId) {
-      // Обновляем статус тест-рана
+      
       const updatedRun = { ...run, status: 'running' };
       
-      // Обновляем статусы отдельных тестов
+      
       updatedRun.tests = updatedRun.tests.map(test => ({
         ...test,
         status: 'running',
         passed: false,
-        errorDetails: null // Сбрасываем детали ошибок перед запуском
+        errorDetails: null 
       }));
       
       return updatedRun;
@@ -202,14 +202,14 @@ const runTestRun = (testRunId) => {
         if (run.id === testRunId) {
           const successCount = Math.floor(Math.random() * run.tests.length);
           
-          // Обновляем статусы отдельных тестов
+        
           const updatedTests = run.tests.map((test, index) => {
             const passed = index < successCount;
             return {
               ...test,
               status: 'completed',
               passed: passed,
-              // Для проваленных тестов добавляем детали ошибки из базы
+              
               errorDetails: !passed ? errorDatabase[test.id] || {
                 location: "Неизвестно",
                 description: "Произошла неизвестная ошибка",
@@ -329,7 +329,7 @@ const runTestRun = (testRunId) => {
     <button className="btn btn-primary hero-buttons btn-add-test" onClick={() => setShowTestCaseModal(true)}>
               <i className="fas fa-plus"></i> Создать тест-кейс
             </button>
-    {/* === ВСТАВЬТЕ РЕНДЕР ТЕСТ-КЕЙСОВ ЗДЕСЬ === */}
+    {/* === РЕНДЕР ТЕСТ-КЕЙСОВ === */}
     <div className="test-cases" id="testCasesList">
       {currentProjectTests.length === 0 ? (
         <div className="test-case">
@@ -390,7 +390,7 @@ const runTestRun = (testRunId) => {
   </div>
 )}
           
-          {/* Контент вкладки "Тест-раны" */}
+          {/* вкладкa Тест-раны */}
           {activeTab === 'test-runs' && (
             <div className="tab-content active" id="test-runs-content">
               <h2>Управление тест-ранами</h2>
@@ -474,7 +474,7 @@ const runTestRun = (testRunId) => {
             </div>
           )}
           
-          {/* Контент вкладки "Отчеты" */}
+          {/* вкладкa Отчеты */}
           {activeTab === 'reports' && (
             <div className="tab-content active" id="reports-content">
               <h2>Отчеты о тестировании</h2>
@@ -543,7 +543,7 @@ const runTestRun = (testRunId) => {
   <TestRunModal 
     onClose={() => setShowTestRunModal(false)} 
     onCreate={createTestRun}
-    testCases={currentProjectTests} // Передаем текущие тест-кейсы проекта
+    testCases={currentProjectTests} //текущие тест-кейсы проекта
   />
 )}
 

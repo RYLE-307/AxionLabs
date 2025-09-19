@@ -4,4 +4,4 @@ const TestCaseItem = ({ testCase, onRunTest, onDeleteTestCase }) => {
 
 };
 
-export default TestCaseItem; // Правильный экспорт по умолчанию
+export default TestCaseItem; 
