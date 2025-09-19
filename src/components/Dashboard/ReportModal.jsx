@@ -4,9 +4,7 @@ const ReportModal = ({ testRun, onClose }) => {
   
   const passedTests = testRun.tests.filter(test => test.passed).length;
   const totalTests = testRun.tests.length;
-  const successRate = totalTests > 0 
-    ? Math.round((passedTests / totalTests) * 100) 
-    : 0;
+  const successRate = totalTests > 0 ? Math.round((passedTests / totalTests) * 100) : 0;
 
   return (
     <div className="modal active">
