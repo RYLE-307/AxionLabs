@@ -285,7 +285,7 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 15px;
-            margin-bottom: 30px;
+  
         }
         
         .test-case {
@@ -905,9 +905,8 @@
 }
 
 
-
 .test-case-checkbox input[type="checkbox"] {
-  /* Скрываем стандартный чекбокс */
+
   opacity: 0;
   position: absolute;
   cursor: pointer;
@@ -926,7 +925,7 @@
   line-height: 1.4;
 }
 
-/* Создаем кастомный чекбокс */
+
 .test-case-checkbox label:before {
   content: '';
   position: absolute;
@@ -967,7 +966,7 @@
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
 }
 
-/* Стили для "Выбрать все" */
+
 .select-all input[type="checkbox"] {
   opacity: 0;
   position: absolute;
@@ -1023,18 +1022,5 @@
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
 }
 
-/* Стили для скроллбара */
-.test-cases-selection::-webkit-scrollbar {
-  width: 8px;
-}
 
-.test-cases-selection::-webkit-scrollbar-track {
-
-  border-radius: 4px;
-}
-
-.test-cases-selection::-webkit-scrollbar-thumb {
- 
-  border-radius: 4px;
-}
 
