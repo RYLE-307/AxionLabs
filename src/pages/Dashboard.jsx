@@ -102,18 +102,17 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
 };
 
   const runTest = (testId) => {
-    setTestCases(testCases.map(test => {
-      if (test.id === testId) {
-        return { ...test, status: 'running' };
-      }
-      return test;
-    }));
+  setTestCases(prevTestCases => 
+    prevTestCases.map(test => 
+      test.id === testId ? { ...test, status: 'running' } : test
+    )
+  );
 
-    // Имитация выполнения теста
-    setTimeout(() => {
-      const success = Math.random() > 0.3;
-      
-      setTestCases(testCases.map(test => {
+  // Имитация выполнения теста
+  setTimeout(() => {
+    const success = Math.random() > 0.3;
+    setTestCases(prevTestCases => 
+      prevTestCases.map(test => {
         if (test.id === testId) {
           return { 
             ...test, 
@@ -130,10 +129,10 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
           };
         }
         return test;
-      }));
-    }, Math.random() * 3000 + 1000);
-  };
-
+      })
+    );
+  }, Math.random() * 3000 + 1000);
+};
   const deleteTestCase = (testId) => {
     if (window.confirm('Вы уверены, что хотите удалить этот тест-кейс?')) {
       setTestCases(testCases.filter(test => test.id !== testId));
@@ -142,7 +141,7 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
 
 // И замените её на эту:
 const createTestRun = (formData) => {
-  console.log('Creating test run with data:', formData); // Для отладки
+  console.log('Creating test run with data:', formData);
   
   const currentProjectTests = testCases.filter(test => test.projectId === currentProjectId);
   const currentProject = projects.find(p => p.id === currentProjectId);
@@ -157,9 +156,9 @@ const createTestRun = (formData) => {
     projectId: currentProjectId,
     name: formData.name || `Тест-ран #${Date.now()} - ${currentProject.name}`,
     description: formData.description,
-    type: formData.type, // Добавляем тип из формы
+    type: formData.type,
     date: new Date().toLocaleString(),
-    tests: JSON.parse(JSON.stringify(currentProjectTests)),
+    tests: JSON.parse(JSON.stringify(currentProjectTests)), // Глубокое копирование
     status: 'not-run',
     passed: 0,
     failed: 0
@@ -169,34 +168,66 @@ const createTestRun = (formData) => {
   setShowTestRunModal(false);
 };
 
-  const runTestRun = (testRunId) => {
-    const updatedTestRuns = testRuns.map(run => {
-      if (run.id === testRunId) {
-        return { ...run, status: 'running' };
-      }
-      return run;
-    });
-    
-    setTestRuns(updatedTestRuns);
-    
-    // Имитация выполнения тест-рана
-    setTimeout(() => {
-      const successCount = Math.floor(Math.random() * updatedTestRuns.find(r => r.id === testRunId).tests.length);
-      const failedCount = updatedTestRuns.find(r => r.id === testRunId).tests.length - successCount;
+const runTestRun = (testRunId) => {
+  const updatedTestRuns = testRuns.map(run => {
+    if (run.id === testRunId) {
+      // Обновляем статус тест-рана
+      const updatedRun = { ...run, status: 'running' };
       
-      setTestRuns(testRuns.map(run => {
+      // Обновляем статусы отдельных тестов
+      updatedRun.tests = updatedRun.tests.map(test => ({
+        ...test,
+        status: 'running',
+        passed: false,
+        errorDetails: null // Сбрасываем детали ошибок перед запуском
+      }));
+      
+      return updatedRun;
+    }
+    return run;
+  });
+  
+  setTestRuns(updatedTestRuns);
+  
+  // Имитация выполнения тест-рана
+  setTimeout(() => {
+    setTestRuns(prevTestRuns => {
+      return prevTestRuns.map(run => {
         if (run.id === testRunId) {
+          const successCount = Math.floor(Math.random() * run.tests.length);
+          
+          // Обновляем статусы отдельных тестов
+          const updatedTests = run.tests.map((test, index) => {
+            const passed = index < successCount;
+            return {
+              ...test,
+              status: 'completed',
+              passed: passed,
+              // Для проваленных тестов добавляем детали ошибки из базы
+              errorDetails: !passed ? errorDatabase[test.id] || {
+                location: "Неизвестно",
+                description: "Произошла неизвестная ошибка",
+                reason: "Причина не определена",
+                solution: "Проверить логи приложения",
+                stackTrace: "Стек вызовов недоступен",
+                logs: []
+              } : null
+            };
+          });
+          
           return { 
             ...run, 
             status: 'completed', 
             passed: successCount, 
-            failed: failedCount 
+            failed: run.tests.length - successCount,
+            tests: updatedTests
           };
         }
         return run;
-      }));
-    }, 3000);
-  };
+      });
+    });
+  }, 3000);
+};
 
   const deleteTestRun = (testRunId) => {
     if (window.confirm('Вы уверены, что хотите удалить этот тест-ран?')) {
@@ -376,11 +407,11 @@ const createTestRun = (formData) => {
                         <div className="test-run-title">{testRun.name}</div>
                         <div className="test-run-date">{testRun.date}</div>
                         <div className="test-meta">
-             <span>  
-  {testRun.type === 'Automatic' ? 'Автоматический прогон' : 
-   testRun.type === 'Hand' ? 'Ручной прогон' : `Неизвестный тип: ${testRun.type}`}
-</span>
-              </div>
+                          <span>  
+                            {testRun.type === 'Automatic' ? 'Автоматический прогон' : 
+                             testRun.type === 'Hand' ? 'Ручной прогон' : `Неизвестный тип: ${testRun.type}`}
+                          </span>
+                            </div>
                       </div>
                       <div className="test-run-stats">
                         <div className="test-run-stat">

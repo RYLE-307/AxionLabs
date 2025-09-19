@@ -1,10 +1,11 @@
-// components/ReportModal.js
 import React from 'react';
 
 const ReportModal = ({ testRun, onClose }) => {
-  // Для демонстрации создадим имитацию данных отчета
-  const successRate = testRun.tests.length > 0 
-    ? Math.round((testRun.passed / testRun.tests.length) * 100) 
+  // Правильно рассчитываем процент успешных тестов
+  const passedTests = testRun.tests.filter(test => test.passed).length;
+  const totalTests = testRun.tests.length;
+  const successRate = totalTests > 0 
+    ? Math.round((passedTests / totalTests) * 100) 
     : 0;
 
   return (
@@ -18,22 +19,23 @@ const ReportModal = ({ testRun, onClose }) => {
           <div className="report-header">
             <h3>{testRun.name}</h3>
             <p><strong>Дата выполнения:</strong> {testRun.date}</p>
+            <p><strong>Тип прогона:</strong> {testRun.type === 'Automatic' ? 'Автоматический' : 'Ручной'}</p>
           </div>
           
           <div className="report-stats">
             <div className="report-stat">
-              <div className="report-stat-value">{testRun.tests.length}</div>
+              <div className="report-stat-value">{totalTests}</div>
               <div className="report-stat-label">Всего тестов</div>
             </div>
             <div className="report-stat">
               <div className="report-stat-value" style={{color: 'var(--success)'}}>
-                {testRun.passed}
+                {passedTests}
               </div>
               <div className="report-stat-label">Пройдено</div>
             </div>
             <div className="report-stat">
               <div className="report-stat-value" style={{color: 'var(--danger)'}}>
-                {testRun.failed}
+                {totalTests - passedTests}
               </div>
               <div className="report-stat-label">Провалено</div>
             </div>
@@ -57,12 +59,24 @@ const ReportModal = ({ testRun, onClose }) => {
               </div>
               <p>{test.description}</p>
               
-              {!test.passed && (
+              {!test.passed && test.errorDetails && (
                 <div className="error-details">
                   <h5>Детали ошибки:</h5>
                   <div className="error-section">
+                    <strong>Местоположение:</strong>
+                    <div className="error-reason">{test.errorDetails.location}</div>
+                  </div>
+                  <div className="error-section">
                     <strong>Описание проблемы:</strong>
-                    <div className="error-reason">Произошла неизвестная ошибка (демо)</div>
+                    <div className="error-reason">{test.errorDetails.description}</div>
+                  </div>
+                  <div className="error-section">
+                    <strong>Причина:</strong>
+                    <div className="error-reason">{test.errorDetails.reason}</div>
+                  </div>
+                  <div className="error-section">
+                    <strong>Решение:</strong>
+                    <div className="error-reason">{test.errorDetails.solution}</div>
                   </div>
                 </div>
               )}
@@ -75,6 +89,9 @@ const ReportModal = ({ testRun, onClose }) => {
             </button>
             <button className="btn btn-outline" onClick={() => alert('Функция экспорта в CSV будет реализована в полной версии')}>
               <i className="fas fa-file-csv"></i> Экспорт в CSV
+            </button>
+            <button className="btn btn-primary" onClick={onClose}>
+              Закрыть
             </button>
           </div>
         </div>
