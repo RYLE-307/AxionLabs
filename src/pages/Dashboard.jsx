@@ -164,7 +164,7 @@ const createTestRun = (formData) => {
     description: runData.description,
     type: runData.type,
     date: new Date().toLocaleString(),
-    tests: JSON.parse(JSON.stringify(selectedTests)), // Используем выбранные тесты
+    tests: JSON.parse(JSON.stringify(selectedTests)), 
     status: 'not-run',
     passed: 0,
     failed: 0
@@ -174,64 +174,82 @@ const createTestRun = (formData) => {
   setShowTestRunModal(false);
 };
 
-const runTestRun = (testRunId) => {
-  const updatedTestRuns = testRuns.map(run => {
-    if (run.id === testRunId) {
-      
-      const updatedRun = { ...run, status: 'running' };
-      
-      
-      updatedRun.tests = updatedRun.tests.map(test => ({
-        ...test,
-        status: 'running',
-        passed: false,
-        errorDetails: null 
-      }));
-      
-      return updatedRun;
-    }
-    return run;
-  });
-  
-  setTestRuns(updatedTestRuns);
-  
-  // Имитация выполнения тест-рана
-  setTimeout(() => {
-    setTestRuns(prevTestRuns => {
-      return prevTestRuns.map(run => {
-        if (run.id === testRunId) {
-          const successCount = Math.floor(Math.random() * run.tests.length);
-          
+const updateTestResult = (testRunId, testId, passed) => {
+  setTestRuns(prev =>
+    prev.map(run => {
+      if (run.id === testRunId) {
+        const updatedTests = run.tests.map(test =>
+          test.id === testId
+            ? { ...test, status: "completed", passed }
+            : test
+        );
         
-          const updatedTests = run.tests.map((test, index) => {
-            const passed = index < successCount;
+        const passedCount = updatedTests.filter(t => t.passed).length;
+        const failedCount = updatedTests.filter(t => t.status === "completed" && !t.passed).length;
+        
+        return {
+          ...run,
+          tests: updatedTests,
+          passed: passedCount,
+          failed: failedCount,
+          status: updatedTests.every(t => t.status === "completed") ? "completed" : "running"
+        };
+      }
+      return run;
+    })
+  );
+};
+
+
+const runTestRun = (testRunId) => {
+  const testRun = testRuns.find(run => run.id === testRunId);
+  if (!testRun) {
+    alert("Тест-ран не найден!");
+    return;
+  }
+
+  if (testRun.type === "Hand") {
+    // ДЛЯ РУЧНОГО РЕЖИМА МЕНЯЕМ СТАТУС НА running
+    setTestRuns(prev =>
+      prev.map(run =>
+        run.id === testRunId
+          ? {
+              ...run,
+              status: "running",
+              tests: run.tests.map(test => ({ ...test, status: "not-run" })),
+              passed: 0,
+              failed: 0
+            }
+          : run
+      )
+    );
+    return;
+  }
+  
+  setTimeout(() => {
+    setTestRuns(prev =>
+      prev.map(run => {
+        if (run.id === testRunId) {
+          const updatedTests = run.tests.map(test => {
+            const passed = Math.random() > 0.3;
             return {
               ...test,
-              status: 'completed',
-              passed: passed,
-              
-              errorDetails: !passed ? errorDatabase[test.id] || {
-                location: "Неизвестно",
-                description: "Произошла неизвестная ошибка",
-                reason: "Причина не определена",
-                solution: "Проверить логи приложения",
-                stackTrace: "Стек вызовов недоступен",
-                logs: []
-              } : null
+              status: "completed",
+              passed,
+              errorDetails: !passed ? errorDatabase[test.id] || null : null
             };
           });
-          
-          return { 
-            ...run, 
-            status: 'completed', 
-            passed: successCount, 
-            failed: run.tests.length - successCount,
+          return {
+            ...run,
+            status: "completed",
+            passed: updatedTests.filter(test => test.passed).length,
+            failed: updatedTests.filter(test => !test.passed).length,
             tests: updatedTests
           };
         }
         return run;
-      });
-    });
+      })
+    );
   }, 3000);
 };
 
@@ -452,6 +470,7 @@ const runTestRun = (testRunId) => {
                             Выполняется...
                           </button>
                         )}
+
                         {testRun.status === 'completed' && (
                           <button 
                             className="btn btn-show-log btn-sm btn-primary" 
@@ -467,6 +486,28 @@ const runTestRun = (testRunId) => {
                           <i className="fas fa-trash"></i>
                         </button>
                       </div>
+                      {testRun.status === "running" && testRun.type === "Hand" && (
+                          <div className="manual-controls">
+                            <h4>Ручное управление:</h4>
+                            {testRun.tests.map(test => (
+                              <div key={test.id} className="manual-test">
+                                <span>{test.name} - {test.status === "completed" ? "Завершен" : "Ожидание"}</span>
+                                {test.status !== "completed" ? (
+                                  <>
+                                    <button onClick={() => updateTestResult(testRun.id, test.id, true)}>
+                                         Пройден
+                                    </button>
+                                    <button onClick={() => updateTestResult(testRun.id, test.id, false)}>
+                                      Провален
+                                    </button>
+                                  </>
+                               ) : (
+                                  <span>Результат: {test.passed ? "Пройден" : "Провален"}</span>
+                                )}
+                             </div>
+                           ))}
+                          </div>
+                        )}
                     </div>
                   ))
                 )}

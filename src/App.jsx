@@ -7,6 +7,8 @@ import './styles/global.css';
 import './styles/auth.css';
 import './styles/dashboard.css';
 
+
+
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [theme, setTheme] = useState('dark');
