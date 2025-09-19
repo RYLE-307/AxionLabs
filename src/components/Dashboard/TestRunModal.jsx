@@ -50,8 +50,8 @@ const TestRunModal = ({ onClose, onCreate }) => {
               onChange={handleChange}
               required 
             >
-              <option value="Autom11atic">Автоматический прогон</option>
-              <option value="Han1d">Ручной прогон</option>
+              <option value="Automatic">Автоматический прогон</option>
+              <option value="Hand">Ручной прогон</option>
             </select>
           </div>       
           <div className="form-actions">
