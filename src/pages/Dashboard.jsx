@@ -231,9 +231,7 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
             <h1 className="dashboard-title">
               Панель управления: 
             </h1>
-            <button className="btn btn-primary hero-buttons btn-add-test" onClick={() => setShowTestCaseModal(true)}>
-              <i className="fas fa-plus"></i> Создать тест-кейс
-            </button>
+            
           </div>
         
           <div className="stats">
@@ -282,7 +280,9 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
       <h2>Управление тест-кейсами</h2>
     </div>
     <p>Создавайте и управляйте тест-кейсами для ваших проектов:</p>
-    
+    <button className="btn btn-primary hero-buttons btn-add-test" onClick={() => setShowTestCaseModal(true)}>
+              <i className="fas fa-plus"></i> Создать тест-кейс
+            </button>
     {/* === ВСТАВЬТЕ РЕНДЕР ТЕСТ-КЕЙСОВ ЗДЕСЬ === */}
     <div className="test-cases" id="testCasesList">
       {currentProjectTests.length === 0 ? (
