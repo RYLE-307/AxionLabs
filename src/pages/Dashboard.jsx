@@ -531,7 +531,7 @@ const runTestRun = (testRunId) => {
                             className="btn btn-sm btn-outline" 
                             onClick={() => runTestRun(testRun.id)}
                           >
-                            Запустит
+                            Запустить
                           </button>
                         ) : (
                           <button className="btn btn-sm btn-outline" disabled>
