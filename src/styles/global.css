@@ -294,7 +294,7 @@ header {
   text-decoration: none;
   display: flex;
   align-items: center;
-  margin-right: 40px;
+
 }
 
 .logo i {
@@ -302,9 +302,11 @@ header {
 }
 
 .auth-buttons {
+  margin-left: 15px;
+  margin-right: auto;
   display: flex;
-  align-items: center;
-  gap: 10px;
+align-items:center;
+ 
 }
 
 .theme-toggle {

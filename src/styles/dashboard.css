@@ -121,11 +121,6 @@
             min-width: 200px;
         }
         
-        .auth-buttons {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
         
         .theme-toggle {
             background: none;

@@ -15,7 +15,8 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
       id: 1, 
       name: "Главный проект", 
       description: "Основной проект для демонстрации",
-      environment: "development",
+      environment: "Разработка",
+      environment1: "CI/CD",
       createdAt: new Date().toISOString()
     }
   ]);
@@ -343,6 +344,11 @@ const runTestRun = (testRunId) => {
         <div className="container">
           <h1>Платформа для управления тестированием</h1>
           <p>Создавайте, запускайте и анализируйте тесты для ваших проектов</p>
+        <h1>Проект {projects.find(proj => proj.id === currentProjectId)?.name || 'Проект не найден'}</h1>
+        <p>{projects.find(proj => proj.id === currentProjectId)?.description || 'Проект не найден'}</p>
+        <p>{projects.find(proj => proj.id === currentProjectId)?.environment || 'Проект не найден'}</p>
+        <p>{projects.find(proj => proj.id === currentProjectId)?.environment1 || 'Проект не найден'}</p>
+
           <div className="hero-buttons">
             <button className="btn btn-outline" onClick={() => setActiveTab('reports')}>
               Посмотреть отчеты
@@ -359,10 +365,6 @@ const runTestRun = (testRunId) => {
             </h1>
             
           </div>
-        
-
-
-
           <div className="stats">
             <div className="stat-card">
               <h3>Всего тест-кейсов</h3>
@@ -426,7 +428,9 @@ const runTestRun = (testRunId) => {
         </div>
       ) : (
         currentProjectTests.map(testCase => (
-          <div key={testCase.id} className="test-case">
+      
+        
+          <div key={testCase.id} className="test-case">       
             <div className="test-info">
               <h3>{testCase.name}</h3>
               <p><strong>Описание:</strong> {testCase.description}</p>
@@ -462,6 +466,8 @@ const runTestRun = (testRunId) => {
               </button>
             </div>
           </div>
+        
+       
         ))
       )}
     </div>

@@ -40,13 +40,13 @@ const Header = ({
             >
               <i className="fas fa-plus"></i> Новый проект
             </button>
-            <a className="btn btn-header btn-outline" href="/">
-              <i className="fas fa-home"></i> На главную
-            </a>
+          
+          </div>
+<p>никнейм и имя фирмы
+</p>
             <button className="btn btn-header btn-outline" onClick={onLogout}>
               <i className="fas fa-sign-out-alt"></i> Выйти
             </button>
-          </div>
         </nav>
       </div>
     </header>
