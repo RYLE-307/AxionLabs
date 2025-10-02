@@ -798,7 +798,7 @@ const saveManualReport = (reportData) => {
       </section>
 
       {/* Модальные окна */}
-// В секции модальных окон Dashboard.jsx добавьте:
+
 
 {showProjectModal && (
   <ProjectModal 
