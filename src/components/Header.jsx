@@ -42,8 +42,12 @@ const Header = ({
             </button>
           
           </div>
-          <p className="NameCompany">Имя компании</p>
-          <p className="Nikname">
+          <p className="NameCompany">
+  {currentUser && currentUser.company && (
+    <span><strong>{currentUser.company}</strong></span>
+  )}
+</p>
+<p className="Nikname">
   {currentUser && (
     <span><strong>{currentUser.username || currentUser.name}</strong></span>
   )}
