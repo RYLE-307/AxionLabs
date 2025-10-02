@@ -43,7 +43,11 @@ const Header = ({
           
           </div>
           <p className="NameCompany">Имя компании</p>
-          <p className='Nikname'>никнейм</p>
+          <p className="Nikname">
+  {currentUser && (
+    <span><strong>{currentUser.username || currentUser.name}</strong></span>
+  )}
+</p>
             <button className="btn btn-header btn-outline" onClick={onLogout}>
               <i className="fas fa-sign-out-alt"></i> Выйти
             </button>

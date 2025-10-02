@@ -8,7 +8,6 @@ import TestCaseItemModal from '../components/Dashboard/TestCaseItemModal';
 import TestCaseCategoryModal from '../components/Dashboard/TestCaseCategoryModal';
 
 
-
 const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
   const [activeTab, setActiveTab] = useState('test-cases');
   const [projects, setProjects] = useState([
@@ -25,7 +24,7 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
   const [testCases, setTestCases] = useState([]);
   const [testRuns, setTestRuns] = useState([]);
   const [showProjectModal, setShowProjectModal] = useState(false);
-  const [showTestCaseModal, setShowTestCaseModal] = useState(false);
+ 
   const [showTestRunModal, setShowTestRunModal] = useState(false);
 
   const [showReportModal, setShowReportModal] = useState(false);
@@ -63,12 +62,8 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
     }
   };
 
-  // Статистика
-  const currentProjectTests = testCases.filter(test => test.projectId === currentProjectId);
-  const totalTests = currentProjectTests.length;
-  const passedTests = currentProjectTests.filter(test => test.status === 'passed').length;
-  const failedTests = currentProjectTests.filter(test => test.status === 'failed').length;
-  const inProgressTests = currentProjectTests.filter(test => test.status === 'running').length;
+
+  
 
   const createProject = (projectData) => {
     const newProject = {
@@ -168,11 +163,13 @@ const deleteTestCaseCategory = (categoryId) => {
 };
 
 
+
 const createTestRun = (formData) => {
   console.log('Creating test run with data:', formData);
   
   const { selectedTestCases, ...runData } = formData;
-  
+  const currentProjectTests = testCases.filter(test => test.projectId === currentProjectId);
+  const currentProject = projects.find(p => p.id === currentProjectId);
   // Получаем все тест-кейсы из всех групп
   const allTestCasesFromCategories = testCaseCategories.flatMap(category => category.testCases);
   
@@ -187,7 +184,7 @@ const createTestRun = (formData) => {
     status: test.status || 'not-run'
   }));
   
-  const currentProject = projects.find(p => p.id === currentProjectId);
+  
   
   if (selectedTests.length === 0) {
     alert('Нет выбранных тест-кейсов для создания тест-рана');
@@ -256,10 +253,7 @@ const runningRuns = currentProjectRuns.filter(run => run.status === 'running').l
 const notRunRuns = currentProjectRuns.filter(run => run.status === 'not-run').length;
 
  
-const [testCaseCategories, setTestCaseCategories] = useState([
- 
-]);
-
+const [testCaseCategories, setTestCaseCategories] = useState([]);
 const [showCategoryModal, setShowCategoryModal] = useState(false);
 const [showTestCaseItemModal, setShowTestCaseItemModal] = useState(false);
 const [draggedTestCase, setDraggedTestCase] = useState(null);
@@ -304,6 +298,15 @@ const createTestCaseInCategory = (testCaseData) => {
   );
   setShowTestCaseItemModal(false);
 };
+
+// Статистика
+const currentProjectTests = testCaseCategories
+  .flatMap(category => category.testCases)
+  .filter(test => test.projectId === currentProjectId);
+const totalTests = currentProjectTests.length;
+const passedTests = currentProjectTests.filter(test => test.status === 'passed').length;
+const failedTests = currentProjectTests.filter(test => test.status === 'failed').length;
+const inProgressTests = currentProjectTests.filter(test => test.status === 'running').length;
 
 // Функция перемещения тест-кейса между группами
 const moveTestCaseToCategory = (testCaseId, fromCategoryId, toCategoryId) => {
@@ -490,14 +493,14 @@ const toggleCategory = (categoryId) => {
       />
 
       <section className="hero">
-        <div className="container">
-          <h1>Платформа для управления тестированием</h1>
-          <p>Создавайте, запускайте и анализируйте тесты для ваших проектов</p>
-        <h1>Проект {projects.find(proj => proj.id === currentProjectId)?.name || 'Проект не найден'}</h1>
-        <p>{projects.find(proj => proj.id === currentProjectId)?.description || 'Проект не найден'}</p>
-        <p>{projects.find(proj => proj.id === currentProjectId)?.environment || 'Проект не найден'}</p>
-        <p>{projects.find(proj => proj.id === currentProjectId)?.environment1 || 'Проект не найден'}</p>
-
+  <div className="container">
+    <h1>Платформа для управления тестированием</h1>
+    <p>Создавайте, запускайте и анализируйте тесты для ваших проектов</p>
+    <h1>Проект: {projects.find(proj => proj.id === currentProjectId)?.name || 'Проект не найден'}</h1>
+    <p>{projects.find(proj => proj.id === currentProjectId)?.description || 'Проект не найден'}</p>
+    <p>{projects.find(proj => proj.id === currentProjectId)?.environment || 'Проект не найден'}</p>
+    <p>{projects.find(proj => proj.id === currentProjectId)?.environment1 || 'Проект не найден'}</p>
+          
           <div className="hero-buttons">
             <button className="btn btn-outline" onClick={() => setActiveTab('reports')}>
               Посмотреть отчеты
