@@ -160,7 +160,7 @@ const deleteTestCase = (testCaseId, categoryId) => {
 };
 
 const deleteTestCaseCategory = (categoryId) => {
-  if (window.confirm('Вы уверены, что хотите удалить эту категорию? Все тест-кейсы внутри нее также будут удалены.')) {
+  if (window.confirm('Вы уверены, что хотите удалить эту группу? Все тест-кейсы внутри нее также будут удалены.')) {
     setTestCaseCategories(prevCategories => 
       prevCategories.filter(category => category.id !== categoryId)
     );
@@ -173,7 +173,7 @@ const createTestRun = (formData) => {
   
   const { selectedTestCases, ...runData } = formData;
   
-  // Получаем все тест-кейсы из всех категорий
+  // Получаем все тест-кейсы из всех групп
   const allTestCasesFromCategories = testCaseCategories.flatMap(category => category.testCases);
   
   // Получаем выбранные тест-кейсы с ВСЕМИ полями
@@ -224,7 +224,7 @@ const updateTestResult = (testRunId, testId, passed) => {
         const passedCount = updatedTests.filter(t => t.passed).length;
         const failedCount = updatedTests.filter(t => t.status === "completed" && !t.passed).length;
         
-        // Также обновляем тест-кейс в категориях
+        // Также обновляем тест-кейс в группах
         setTestCaseCategories(prevCategories =>
           prevCategories.map(category => ({
             ...category,
@@ -264,7 +264,7 @@ const [showCategoryModal, setShowCategoryModal] = useState(false);
 const [showTestCaseItemModal, setShowTestCaseItemModal] = useState(false);
 const [draggedTestCase, setDraggedTestCase] = useState(null);
 
-// Функция создания категории
+// Функция создания группы
 const createTestCaseCategory = (categoryData) => {
   const newCategory = {
     id: Date.now(),
@@ -272,10 +272,17 @@ const createTestCaseCategory = (categoryData) => {
     testCases: []
   };
   setTestCaseCategories([...testCaseCategories, newCategory]);
+  
+  // Развернуть новую категорию по умолчанию
+  setExpandedCategories(prev => ({
+    ...prev,
+    [newCategory.id]: true
+  }));
+  
   setShowCategoryModal(false);
 };
 
-// Функция создания тест-кейса внутри категории
+// Функция создания тест-кейса внутри группы
 const createTestCaseInCategory = (testCaseData) => {
   const { categoryId, ...testCase } = testCaseData;
   
@@ -298,14 +305,14 @@ const createTestCaseInCategory = (testCaseData) => {
   setShowTestCaseItemModal(false);
 };
 
-// Функция перемещения тест-кейса между категориями
+// Функция перемещения тест-кейса между группами
 const moveTestCaseToCategory = (testCaseId, fromCategoryId, toCategoryId) => {
   if (fromCategoryId === toCategoryId) return;
 
   setTestCaseCategories(prevCategories => {
     const updatedCategories = [...prevCategories];
     
-    // Находим исходную категорию и тест-кейс
+    // Находим исходную группу и тест-кейс
     const fromCategory = updatedCategories.find(cat => cat.id === fromCategoryId);
     const toCategory = updatedCategories.find(cat => cat.id === toCategoryId);
     
@@ -314,7 +321,7 @@ const moveTestCaseToCategory = (testCaseId, fromCategoryId, toCategoryId) => {
     const testCaseToMove = fromCategory.testCases.find(tc => tc.id === testCaseId);
     if (!testCaseToMove) return prevCategories;
 
-    // Удаляем из исходной категории и добавляем в целевую
+    // Удаляем из исходной группы и добавляем в целевую
     return updatedCategories.map(category => {
       if (category.id === fromCategoryId) {
         return {
@@ -462,7 +469,13 @@ const saveManualReport = (reportData) => {
   alert('Отчет успешно сохранен!');
 };
 
-
+const [expandedCategories, setExpandedCategories] = useState({});
+const toggleCategory = (categoryId) => {
+  setExpandedCategories(prev => ({
+    ...prev,
+    [categoryId]: !prev[categoryId]
+  }));
+};
   return (
     <div className="main-content">
       <Header 
@@ -549,7 +562,7 @@ const saveManualReport = (reportData) => {
     <div className="dashboard-header">
       <h2>Управление тест-кейсами</h2>
     </div>
-    <p>Создавайте категории и управляйте тест-кейсами:</p>
+    <p>Создавайте группы и управляйте тест-кейсами:</p>
     
     <div className="category-controls">
       <button className="btn btn-primary" onClick={() => setShowCategoryModal(true)}>
@@ -560,88 +573,104 @@ const saveManualReport = (reportData) => {
       </button>
     </div>
 
-    {/* Рендер категорий */}
+    {/* Рендер групп */}
     <div className="test-case-categories">
-      {testCaseCategories.map(category => (
-        <div 
-          key={category.id} 
-          className="test-case-category"
-          onDragOver={(e) => handleDragOver(e, category.id)}
-          onDrop={(e) => handleDrop(e, category.id)}
-        >
-        <div className="category-header">
-  <div className="category-info">
-    <h3>{category.name}</h3>
-    {category.description && <p>{category.description}</p>}
-    <span className="category-stats">
-      {category.testCases.length} тест-кейсов
-    </span>
-  </div>
-  <div className="category-actions">
-    <button 
-      className="btn btn-sm btn-outline"
-      onClick={() => {
-        setShowTestCaseItemModal(true);
-      }}
-    >
-      <i className="fas fa-plus"></i> Добавить тест-кейс
-    </button>
-    <button 
-      className="btn btn-sm btn-danger" 
-      onClick={() => deleteTestCaseCategory(category.id)}
-    >
-      <i className="fas fa-trash"></i> Удалить категорию
-    </button>
-  </div>
-</div>
-
-          {/* Рендер тест-кейсов в категории */}
-          <div className="category-test-cases">
-            {category.testCases.length === 0 ? (
-              <div className="empty-category">
-                <p>Нет тест-кейсов в этой категории</p>
-                <p className="drop-hint">Перетащите тест-кейсы сюда</p>
-              </div>
-            ) : (
-              category.testCases.map(testCase => (
-                <div 
-                  key={testCase.id} 
-                  className="test-case-item"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, testCase, category.id)}
-                >
-                  <div className="test-case-content">
-                    <h4>{testCase.name}</h4>
-                    <p>{testCase.description}</p>
-                    <div className="test-case-meta">
-                      <span className={`priority-${testCase.priority}`}>
-                        {testCase.priority === 'high' ? 'Высокий' : 
-                         testCase.priority === 'medium' ? 'Средний' : 'Низкий'} приоритет
-                      </span>
-                      <span className={`type-${testCase.type}`}>
-                        {testCase.type === 'functional' ? 'Функциональный' : 
-                         testCase.type === 'api' ? 'API' : 
-                         testCase.type === 'performance' ? 'Производительность' : 'UI'}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="test-case-actions">
-                    <button 
-                      className="btn btn-sm btn-danger" 
-                      onClick={() => deleteTestCase(testCase.id, category.id)}
-                    >
-                      <i className="fas fa-trash"></i>
-                    </button>
-                    <span className="drag-handle">
-                      <i className="fas fa-grip-vertical"></i>
-                    </span>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+     {testCaseCategories.map(category => (
+  <div 
+    key={category.id} 
+    className="test-case-category"
+    onDragOver={(e) => handleDragOver(e, category.id)}
+    onDrop={(e) => handleDrop(e, category.id)}
+  >
+    <div className="category-header">
+      <div 
+        className="category-info"
+        onClick={() => toggleCategory(category.id)}
+        style={{ cursor: 'pointer', flex: 1 }}
+      >
+        <div className="category-title-wrapper">
+          <i 
+            className={`fas fa-chevron-${expandedCategories[category.id] ? 'down' : 'right'}`}
+            style={{ marginRight: '10px', transition: 'transform 0.3s' }}
+          ></i>
+          <h3>{category.name}</h3>
         </div>
-      ))}
+        {category.description && <p>{category.description}</p>}
+        <span className="category-stats">
+          {category.testCases.length} тест-кейсов
+        </span>
+      </div>
+      <div className="category-actions">
+        <button 
+          className="btn btn-sm btn-outline"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowTestCaseItemModal(true);
+          }}
+        >
+          <i className="fas fa-plus"></i> Добавить тест-кейс
+        </button>
+        <button 
+          className="btn btn-sm btn-danger" 
+          onClick={(e) => {
+            e.stopPropagation();
+            deleteTestCaseCategory(category.id);
+          }}
+        >
+          <i className="fas fa-trash"></i> Удалить группу
+        </button>
+      </div>
+    </div>
+
+    {/* Показывать тест-кейсы только если категория развернута */}
+    {expandedCategories[category.id] && (
+      <div className="category-test-cases">
+        {category.testCases.length === 0 ? (
+          <div className="empty-category">
+            <p>Нет тест-кейсов в этой группе</p>
+            <p className="drop-hint">Перетащите тест-кейсы сюда</p>
+          </div>
+        ) : (
+          category.testCases.map(testCase => (
+            <div 
+              key={testCase.id} 
+              className="test-case-item"
+              draggable
+              onDragStart={(e) => handleDragStart(e, testCase, category.id)}
+            >
+              <div className="test-case-content">
+                <h4>{testCase.name}</h4>
+                <p>{testCase.description}</p>
+                <div className="test-case-meta">
+                  <span className={`priority-${testCase.priority}`}>
+                    {testCase.priority === 'high' ? 'Высокий' : 
+                     testCase.priority === 'medium' ? 'Средний' : 'Низкий'} приоритет
+                  </span>
+                  <span className={`type-${testCase.type}`}>
+                    {testCase.type === 'functional' ? 'Функциональный' : 
+                     testCase.type === 'api' ? 'API' : 
+                     testCase.type === 'performance' ? 'Производительность' : 'UI'}
+                  </span>
+                </div>
+              </div>
+              <div className="test-case-actions">
+                <button 
+                  className="btn btn-sm btn-danger" 
+                  onClick={() => deleteTestCase(testCase.id, category.id)}
+                >
+                  <i className="fas fa-trash"></i>
+                </button>
+                <span className="drag-handle">
+                  <i className="fas fa-grip-vertical"></i>
+                </span>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    )}
+  </div>
+))}
     </div>
   </div>
 )}
