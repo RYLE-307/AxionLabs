@@ -100,6 +100,7 @@ return (
           <div className="radio-group">
             <label className="radio-label">
               <input
+              className='radio-input'
                 type="radio"
                 name="userType"
                 value="individual"
@@ -110,6 +111,7 @@ return (
             </label>
             <label className="radio-label">
               <input
+              className='radio-input'
                 type="radio"
                 name="userType"
                 value="legal"
