@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 
-const TestRunModal = ({ onClose, onCreate, testCases }) => {
+const TestRunModal = ({ onClose, onCreate, categories }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     type: 'Automatic',
   });
+  const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [selectedTestCases, setSelectedTestCases] = useState([]);
+
+  // Получаем тест-кейсы из выбранной категории
+  const currentCategoryTestCases = selectedCategoryId 
+    ? categories.find(cat => cat.id === parseInt(selectedCategoryId))?.testCases || []
+    : [];
+
+  // Получаем все тест-кейсы для статистики "Выбрать все"
+  const allTestCases = categories.flatMap(category => category.testCases);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,6 +34,13 @@ const TestRunModal = ({ onClose, onCreate, testCases }) => {
     });
   };
 
+  const handleCategoryChange = (e) => {
+    const categoryId = e.target.value;
+    setSelectedCategoryId(categoryId);
+    // Сбрасываем выбранные тест-кейсы при смене категории
+    setSelectedTestCases([]);
+  };
+
   const handleTestCaseSelection = (testCaseId) => {
     if (selectedTestCases.includes(testCaseId)) {
       setSelectedTestCases(selectedTestCases.filter(id => id !== testCaseId));
@@ -34,10 +50,26 @@ const TestRunModal = ({ onClose, onCreate, testCases }) => {
   };
 
   const selectAllTestCases = () => {
-    if (selectedTestCases.length === testCases.length) {
+    if (selectedTestCases.length === allTestCases.length) {
       setSelectedTestCases([]);
     } else {
-      setSelectedTestCases(testCases.map(test => test.id));
+      setSelectedTestCases(allTestCases.map(test => test.id));
+    }
+  };
+
+  const selectAllInCategory = () => {
+    if (selectedCategoryId) {
+      const categoryTestCaseIds = currentCategoryTestCases.map(test => test.id);
+      const allSelected = categoryTestCaseIds.every(id => selectedTestCases.includes(id));
+      
+      if (allSelected) {
+        // Убираем все тест-кейсы этой категории
+        setSelectedTestCases(selectedTestCases.filter(id => !categoryTestCaseIds.includes(id)));
+      } else {
+        // Добавляем все тест-кейсы этой категории
+        const newSelection = [...new Set([...selectedTestCases, ...categoryTestCaseIds])];
+        setSelectedTestCases(newSelection);
+      }
     }
   };
 
@@ -77,33 +109,67 @@ const TestRunModal = ({ onClose, onCreate, testCases }) => {
           </div>
 
           <div className="form-group">
-            <label>Выберите тест-кейсы для запуска:</label>
-            <div className="test-cases-selection">
-              <div className="select-all">
-                <input
-                  type="checkbox"
-                  id="selectAll"
-                   className='checkbox-run'
-                  checked={selectedTestCases.length === testCases.length}
-                  onChange={selectAllTestCases}
-                />
-                <label htmlFor="selectAll">Выбрать все</label>
-              </div>
-              
-              {testCases.map(testCase => (
-                <div key={testCase.id} className="test-case-checkbox">
+            <label htmlFor="testRunCategory">Выберите категорию</label>
+            <select 
+              id="testRunCategory" 
+              value={selectedCategoryId}
+              onChange={handleCategoryChange}
+              required
+            >
+              <option value="">Выберите категорию</option>
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name} ({category.testCases.length} тестов)
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {selectedCategoryId && (
+            <div className="form-group">
+              <label>Выберите тест-кейсы из категории "{categories.find(c => c.id === parseInt(selectedCategoryId))?.name}":</label>
+              <div className="test-cases-selection">
+                <div className="select-all">
                   <input
                     type="checkbox"
+                    id="selectAllCategory"
                     className='checkbox-run'
-                    id={`testCase-${testCase.id}`}
-                    checked={selectedTestCases.includes(testCase.id)}
-                    onChange={() => handleTestCaseSelection(testCase.id)}
+                    checked={currentCategoryTestCases.length > 0 && 
+                             currentCategoryTestCases.every(test => selectedTestCases.includes(test.id))}
+                    onChange={selectAllInCategory}
                   />
-                  <label htmlFor={`testCase-${testCase.id}`}>
-                    {testCase.name} ({testCase.type})
-                  </label>
+                  <label htmlFor="selectAllCategory">Выбрать все в категории</label>
                 </div>
-              ))}
+                
+                {currentCategoryTestCases.map(testCase => (
+                  <div key={testCase.id} className="test-case-checkbox">
+                    <input
+                      type="checkbox"
+                      className='checkbox-run'
+                      id={`testCase-${testCase.id}`}
+                      checked={selectedTestCases.includes(testCase.id)}
+                      onChange={() => handleTestCaseSelection(testCase.id)}
+                    />
+                    <label htmlFor={`testCase-${testCase.id}`}>
+                      {testCase.name} ({testCase.type})
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="form-group">
+            <label>Всего выбрано тест-кейсов: {selectedTestCases.length}</label>
+            <div className="select-all">
+              <input
+                type="checkbox"
+                id="selectAll"
+                className='checkbox-run'
+                checked={selectedTestCases.length === allTestCases.length}
+                onChange={selectAllTestCases}
+              />
+              <label htmlFor="selectAll">Выбрать все тест-кейсы из всех категорий</label>
             </div>
           </div>
           

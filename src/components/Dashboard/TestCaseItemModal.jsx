@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
-const TestCaseModal = ({ onClose, onCreate }) => {
+const TestCaseItemModal = ({ onClose, onCreate, categories }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     type: 'functional',
     priority: 'medium',
-    expectedResult: ''
+    expectedResult: '',
+    categoryId: categories.length > 0 ? categories[0].id : ''
   });
 
   const handleSubmit = (e) => {
@@ -26,10 +27,27 @@ const TestCaseModal = ({ onClose, onCreate }) => {
     <div className="modal active">
       <div className="modal-content">
         <div className="modal-header">
-          <h2 className="modal-title">Создание нового тест-кейса</h2>
+          <h2 className="modal-title">Создание тест-кейса</h2>
           <button className="modal-close" onClick={onClose}>&times;</button>
         </div>
         <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="testCaseCategory">группа</label>
+            <select 
+              id="testCaseCategory" 
+              name="categoryId"
+              value={formData.categoryId}
+              onChange={handleChange}
+              required
+            >
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          
           <div className="form-group">
             <label htmlFor="testCaseName">Название тест-кейса</label>
             <input 
@@ -109,4 +127,4 @@ const TestCaseModal = ({ onClose, onCreate }) => {
   );
 };
 
-export default TestCaseModal;
+export default TestCaseItemModal;
