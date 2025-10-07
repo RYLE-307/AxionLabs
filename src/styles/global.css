@@ -817,39 +817,7 @@ align-items:center;
   gap: 15px;
 }
 
-.hero-section {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  padding: 60px 0;
-}
 
-.hero-content {
-  display: flex;
-  align-items: center;
-  gap: 50px;
-}
-
-.hero-text {
-  flex: 1;
-}
-
-.hero-title {
-  font-size: 48px;
-  margin-bottom: 20px;
-  color: var(--text-primary);
-  font-weight: 700;
-}
-
-.hero-subtitle {
-  font-size: 20px;
-  color: var(--text-secondary);
-  margin-bottom: 30px;
-}
-
-.hero-features {
-  margin: 30px 0;
-}
 
 .feature-item {
   display: flex;
@@ -867,24 +835,6 @@ align-items:center;
   justify-content: center;
   margin-right: 15px;
   color: white;
-}
-
-.hero-image {
-  flex: 1;
-  text-align: center;
-}
-
-.hero-image-placeholder {
-  width: 100%;
-  height: 300px;
-  background: var(--primary);
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 24px;
-  font-weight: 600;
 }
 
 .features-section {
@@ -1004,60 +954,6 @@ align-items:center;
   color: var(--text-secondary);
 }
 
-@media (max-width: 768px) {
-  .hero-content {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .feature-item {
-    justify-content: center;
-  }
-  
-  .footer-content {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .hero-title {
-    font-size: 36px;
-  }
-  
-  .landing-nav {
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .navbar {
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .auth-buttons {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .dashboard-header {
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .tabs {
-    overflow-x: auto;
-  }
-  
-  .test-case {
-    flex-direction: column;
-    gap: 15px;
-    align-items: flex-start;
-  }
-  
-  .test-actions {
-    align-self: flex-end;
-  }
-}
-
 .Nikname{
   margin: auto;
 }
@@ -1069,23 +965,6 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: auto;
 }
 
-
-.category-controls {
-  display: flex;
-  gap: 15px;
-  margin: 20px 0;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.category-controls .btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-}
-
-/* Убедитесь, что модальные окна правильно стилизованы */
 .modal {
   position: fixed;
   top: 0;
@@ -1103,13 +982,6 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
 }
 
-
-
-.category-actions {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
 
 .form-row {
   display: flex;
@@ -1165,4 +1037,87 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin-bottom: 10px;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .report-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .test-case-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .test-case-header .status-badge {
+        margin-top: 10px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+
+     .hero-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .feature-item {
+    justify-content: center;
+  }
+  
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .hero-title {
+    font-size: 36px;
+  }
+  
+  .landing-nav {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .auth-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .tabs {
+    overflow-x: auto;
+  }
+  
+  .test-case {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .test-actions {
+    align-self: flex-end;
+  }
+  .test-case-categories {
+    grid-template-columns: 1fr;
+  }
+  
+  .test-case-actions {
+    align-self: flex-end;
+  }
 }
