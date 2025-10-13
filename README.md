@@ -39,7 +39,7 @@ bash
 npm install
 
 #### Run in development mode
-npm run dev
+npm start
 
 #### Build for production
 npm run build
@@ -115,7 +115,7 @@ bash
 npm install
 
 ### Запуск в режиме разработки
-npm run dev
+npm start
 
 ### Сборка для production
 npm run build

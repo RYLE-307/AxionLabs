@@ -1,4 +1,3 @@
-// components/LandingPage.js
 import React from 'react';
 
 const LandingPage = ({ theme, toggleTheme }) => {
