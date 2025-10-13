@@ -14,9 +14,7 @@ const AuthPage = ({ onLogin }) => {
     const email = e.target.elements.registerEmail.value;
     const password = e.target.elements.registerPassword.value;
     const confirmPassword = e.target.elements.registerConfirmPassword.value;
-    const company = isLegalEntity
-      ? e.target.elements.registerCompany.value
-      : "физ. лицо";
+ 
 
     if (password !== confirmPassword) {
       alert('Пароли не совпадают');

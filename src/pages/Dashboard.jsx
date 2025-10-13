@@ -841,7 +841,7 @@ const toggleCategory = (categoryId) => {
 )}
 
 {showTestCaseItemModal && (
-  <TestCaseItemModal 
+  <TestCaseItemModal form-group
     onClose={() => setShowTestCaseItemModal(false)} 
     onCreate={createTestCaseInCategory}
     categories={testCaseCategories}

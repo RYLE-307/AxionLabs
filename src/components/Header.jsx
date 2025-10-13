@@ -46,9 +46,6 @@ const Header = ({
           
           </div>
           <p className="NameCompany">
-  {currentUser && currentUser.company && (
-    <span><strong>{currentUser.company}</strong></span>
-  )}
 </p>
 <p className="Nikname">
   {currentUser && (
