@@ -1,4 +1,6 @@
 import React from 'react';
+import '../styles/global.css';
+import '../styles/home.css';
 
 const LandingPage = ({ theme, toggleTheme }) => {
   const handleFeedbackSubmit = (e) => {

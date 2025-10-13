@@ -1,4 +1,7 @@
 import React from 'react';
+import '../styles/global.css';
+import '../styles/header.css';
+
 
 const Header = ({ 
   currentUser, 

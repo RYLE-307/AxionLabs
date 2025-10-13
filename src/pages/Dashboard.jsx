@@ -6,6 +6,9 @@ import TestRunModal from '../components/Dashboard/TestRunModal';
 import ReportModal from '../components/Dashboard/ReportModal';
 import TestCaseItemModal from '../components/Dashboard/TestCaseItemModal';
 import TestCaseCategoryModal from '../components/Dashboard/TestCaseCategoryModal';
+import '../styles/global.css';
+import '../styles/dashboard.css';
+import '../styles/reports.css';
 
 
 const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {

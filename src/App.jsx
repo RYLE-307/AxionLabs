@@ -4,7 +4,10 @@ import Home from './pages/Home';
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import './styles/global.css';
-
+import './styles/auth.css';
+import './styles/dashboard.css';
+import './styles/home.css';
+import './styles/reports.css';
 
 
 
