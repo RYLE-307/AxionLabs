@@ -327,6 +327,27 @@ body {
   text-decoration: underline;
 }
 
+.container_title {
+  line-height: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.container_title h1 {
+    font-size: 45px; /* или любой другой размер */
+}
+
+/* Для параграфов */
+.container_title p {
+    font-size: 20px; /* или любой другой размер */
+}
+
 /* Header & Navigation */
 header {
   background-color: var(--bg-secondary);

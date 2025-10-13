@@ -494,13 +494,14 @@ const toggleCategory = (categoryId) => {
 
       <section className="hero">
   <div className="container">
+    <div className='container_title'>
     <h1>Платформа для управления тестированием</h1>
     <p>Создавайте, запускайте и анализируйте тесты для ваших проектов</p>
     <h1>Проект: {projects.find(proj => proj.id === currentProjectId)?.name || 'Проект не найден'}</h1>
     <p>{projects.find(proj => proj.id === currentProjectId)?.description || 'Проект не найден'}</p>
     <p>{projects.find(proj => proj.id === currentProjectId)?.environment || 'Проект не найден'}</p>
     <p>{projects.find(proj => proj.id === currentProjectId)?.environment1 || 'Проект не найден'}</p>
-          
+</div>          
           <div className="hero-buttons">
             <button className="btn btn-outline" onClick={() => setActiveTab('reports')}>
               Посмотреть отчеты
