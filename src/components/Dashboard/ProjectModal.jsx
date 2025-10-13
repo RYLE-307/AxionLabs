@@ -1,12 +1,12 @@
-
 import React, { useState } from 'react';
 
-const ProjectModal = ({ onClose, onCreate }) => {
+const ProjectModal = ({ onClose, onCreate, distributions = [] }) => { // Добавьте distributions в пропсы
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     environment: 'разработка',
-    environment1: 'QWA'
+    environment1: 'QWA',
+    selectedDistributions: [] // Добавьте начальное значение
   });
 
   const handleChange = (e) => {
@@ -17,6 +17,18 @@ const ProjectModal = ({ onClose, onCreate }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onCreate(formData);
+  };
+
+  const handleDistributionChange = (distroId) => {
+    setFormData(prev => {
+      const isSelected = prev.selectedDistributions.includes(distroId);
+      return {
+        ...prev,
+        selectedDistributions: isSelected
+          ? prev.selectedDistributions.filter(id => id !== distroId)
+          : [...prev.selectedDistributions, distroId]
+      };
+    });
   };
 
   return (
@@ -61,6 +73,7 @@ const ProjectModal = ({ onClose, onCreate }) => {
               <option value="Продакшен">Продакшен</option>
             </select>
           </div>
+          
           <div className="form-group">
             <label htmlFor="projectEnvironment1">Вид тестировки</label>
             <select 
@@ -72,6 +85,30 @@ const ProjectModal = ({ onClose, onCreate }) => {
               <option value="CI/CD">CI/CD</option>
               <option value="что-то">что-то</option>
             </select>
+          </div>
+
+          {/* Секция выбора дистрибутивов */}
+          <div className="form-group">
+            <label>Выберите дистрибутивы для тестирования</label>
+            <div className="distributions-selection">
+              {distributions.length === 0 ? (
+                <p className="no-distributions">Нет доступных дистрибутивов. Сначала добавьте дистрибутивы.</p>
+              ) : (
+                distributions.map(distro => (
+                  <div key={distro.id} className="distribution-checkbox">
+                    <input
+                      type="checkbox"
+                      id={`distro-${distro.id}`}
+                      checked={formData.selectedDistributions.includes(distro.id)}
+                      onChange={() => handleDistributionChange(distro.id)}
+                    />
+                    <label htmlFor={`distro-${distro.id}`}>
+                      {distro.name} {distro.version} ({distro.type})
+                    </label>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
 
           <div className="form-actions">

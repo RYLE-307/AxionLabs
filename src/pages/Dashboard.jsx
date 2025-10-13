@@ -9,7 +9,9 @@ import TestCaseCategoryModal from '../components/Dashboard/TestCaseCategoryModal
 import '../styles/global.css';
 import '../styles/dashboard.css';
 import '../styles/reports.css';
-
+import TestPlanModal from '../components/Dashboard/TestPlanModal';
+import DistributionModal from '../components/Dashboard/DistributionModal';
+import TestExecutionModal from '../components/Dashboard/TestExecutionModal';
 
 const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
   const [activeTab, setActiveTab] = useState('test-cases');
@@ -32,6 +34,14 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
 
   const [showReportModal, setShowReportModal] = useState(false);
   const [selectedTestRun, setSelectedTestRun] = useState(null);
+
+const [testPlans, setTestPlans] = useState([]);
+const [distributions, setDistributions] = useState([]);
+const [showTestPlanModal, setShowTestPlanModal] = useState(false);
+const [showDistributionModal, setShowDistributionModal] = useState(false);
+const [showExecutionModal, setShowExecutionModal] = useState(false);
+const [currentExecutingTestRun, setCurrentExecutingTestRun] = useState(null);
+const [currentExecutingTestCase, setCurrentExecutingTestCase] = useState(null);
 
   // База данных ошибок для каждого теста
   const errorDatabase = {
@@ -68,17 +78,17 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
 
   
 
-  const createProject = (projectData) => {
-    const newProject = {
-      id: Date.now(),
-      ...projectData,
-      createdAt: new Date().toISOString()
-    };
-    setProjects([...projects, newProject]);
-    setCurrentProjectId(newProject.id);
-    setShowProjectModal(false);
+const createProject = (projectData) => {
+  const newProject = {
+    id: Date.now(),
+    ...projectData,
+    distributions: projectData.selectedDistributions || [],
+    createdAt: new Date().toISOString()
   };
-
+  setProjects([...projects, newProject]);
+  setCurrentProjectId(newProject.id);
+  setShowProjectModal(false);
+};
   const createTestCase = (testCaseData) => {
   console.log('Creating test case:', testCaseData); // Для отладки
   
@@ -211,26 +221,36 @@ const createTestRun = (formData) => {
   setShowTestRunModal(false);
 };
 
-const updateTestResult = (testRunId, testId, passed) => {
+const updateTestResult = (testRunId, testId, passed, stepResults = null) => {
   setTestRuns(prev =>
     prev.map(run => {
       if (run.id === testRunId) {
         const updatedTests = run.tests.map(test =>
           test.id === testId
-            ? { ...test, status: "completed", passed }
+            ? { 
+                ...test, 
+                status: "completed", 
+                passed,
+                ...(stepResults && { stepResults }) // Добавляем результаты шагов если есть
+              }
             : test
         );
         
         const passedCount = updatedTests.filter(t => t.passed).length;
         const failedCount = updatedTests.filter(t => t.status === "completed" && !t.passed).length;
         
-    
         setTestCaseCategories(prevCategories =>
           prevCategories.map(category => ({
             ...category,
             testCases: category.testCases.map(tc =>
               tc.id === testId
-                ? { ...tc, status: "completed", passed, errorDetails: passed ? null : (tc.errorDetails || {}) }
+                ? { 
+                    ...tc, 
+                    status: "completed", 
+                    passed, 
+                    errorDetails: passed ? null : (tc.errorDetails || {}),
+                    ...(stepResults && { stepResults })
+                  }
                 : tc
             )
           }))
@@ -287,7 +307,8 @@ const createTestCaseInCategory = (testCaseData) => {
     status: "not-run",
     passed: false,
     errorDetails: null,
-    ...testCase
+    ...testCase,
+    steps: testCase.steps || [] // Добавляем шаги
   };
 
   setTestCaseCategories(prevCategories =>
@@ -360,33 +381,50 @@ const handleDrop = (e, targetCategoryId) => {
   setDraggedTestCase(null);
 };
 
-const runTestRun = (testRunId) => {
 
+const runManualTestRun = (testRunId) => {
+  const testRun = testRuns.find(run => run.id === testRunId);
+  if (!testRun) return;
+
+  // Обновляем статус тест-рана
+  setTestRuns(prev =>
+    prev.map(run =>
+      run.id === testRunId
+        ? {
+            ...run,
+            status: "running",
+            tests: run.tests.map(test => ({ 
+              ...test, 
+              status: "not-run",
+              // Добавляем шаги если их нет
+              steps: test.steps || []
+            })),
+            passed: 0,
+            failed: 0
+          }
+        : run
+    )
+  );
+
+  // Открываем модальное окно выполнения
+  setCurrentExecutingTestRun(testRun);
+  setShowExecutionModal(true);
+};
+
+
+const runTestRun = (testRunId) => {
   const testRun = testRuns.find(run => run.id === testRunId);
   if (!testRun) return;
 
   if (testRun.type === "Hand") {
-
-    setTestRuns(prev =>
-      prev.map(run =>
-        run.id === testRunId
-          ? {
-              ...run,
-              status: "running",
-              tests: run.tests.map(test => ({ ...test, status: "not-run" })),
-              passed: 0,
-              failed: 0
-            }
-          : run
-      )
-    );
+    // Для ручного режима открываем модальное окно выполнения
+    runManualTestRun(testRunId);
   } else {
-    // Для автоматического режима
+    // Для автоматического режима оставляем старую логику
     setTestRuns(prevRuns =>
       prevRuns.map(run => {
         if (run.id !== testRunId) return run;
         
-        // Запускаем тест-ран
         const updatedTests = run.tests.map(test => ({
           ...test,
           status: 'running'
@@ -402,7 +440,6 @@ const runTestRun = (testRunId) => {
         prevRuns.map(run => {
           if (run.id !== testRunId) return run;
           
-          // Генерирование случайные результаты с деталями ошибок
           const updatedTests = run.tests.map(test => {
             const passed = Math.random() > 0.5;
             
@@ -410,7 +447,6 @@ const runTestRun = (testRunId) => {
               ...test,
               status: passed ? 'passed' : 'failed',
               passed: passed,
-            
               ...(!passed && {
                 errorDetails: errorDatabase[test.id] || {
                   location: "Неизвестно",
@@ -438,7 +474,27 @@ const runTestRun = (testRunId) => {
       );
     }, 2000);
   }
-};               
+};
+const handleTestRunExecutionComplete = (executionData) => {
+  const { testRunId, results } = executionData;
+  
+  // Обновляем результаты каждого тест-кейса
+  results.forEach(result => {
+    updateTestResult(
+      testRunId,
+      result.testCaseId,
+      result.passed,
+      result.stepResults
+    );
+  });
+
+  // Закрываем модальное окно
+  setShowExecutionModal(false);
+  setCurrentExecutingTestRun(null);
+  
+  alert('Тест-ран завершен!');
+};
+
   const deleteTestRun = (testRunId) => {
     if (window.confirm('Вы уверены, что хотите удалить этот тест-ран?')) {
       setTestRuns(testRuns.filter(run => run.id !== testRunId));
@@ -466,6 +522,7 @@ const saveManualReport = (reportData) => {
   alert('Отчет успешно сохранен!');
 };
 
+
 const [expandedCategories, setExpandedCategories] = useState({});
 const toggleCategory = (categoryId) => {
   setExpandedCategories(prev => ({
@@ -473,7 +530,49 @@ const toggleCategory = (categoryId) => {
     [categoryId]: !prev[categoryId]
   }));
 };
-  return (
+
+
+const createTestPlan = (planData) => {
+  const newTestPlan = {
+    id: Date.now(),
+    ...planData,
+    testCaseCategories: []
+  };
+  setTestPlans([...testPlans, newTestPlan]);
+  setShowTestPlanModal(false);
+};
+
+const createDistribution = (distroData) => {
+  const newDistribution = {
+    id: Date.now(),
+    ...distroData
+  };
+  setDistributions([...distributions, newDistribution]);
+  setShowDistributionModal(false);
+};
+
+// Обновите createProject для поддержки дистрибутивов
+
+
+// Функция для выполнения тест-кейса
+const executeTestCase = (testCase, testRun) => {
+  setCurrentExecutingTestCase({ testCase, testRun });
+  setShowExecutionModal(true);
+};
+
+const handleTestExecutionComplete = (executionResult) => {
+  // Обновите результаты тест-рана
+  updateTestResult(
+    executionResult.testRun.id,
+    executionResult.testCase.id,
+    executionResult.passed,
+    executionResult.stepResults
+  );
+  setShowExecutionModal(false);
+  setCurrentExecutingTestCase(null);
+};
+
+   return (
     <div className="main-content">
       <Header 
         currentUser={currentUser} 
@@ -487,15 +586,15 @@ const toggleCategory = (categoryId) => {
       />
 
       <section className="hero">
-  <div className="container">
-    <div className='container_title'>
-    <h1>Платформа для управления тестированием</h1>
-    <p>Создавайте, запускайте и анализируйте тесты для ваших проектов</p>
-    <h1>Проект: {projects.find(proj => proj.id === currentProjectId)?.name || 'Проект не найден'}</h1>
-    <p>{projects.find(proj => proj.id === currentProjectId)?.description || 'Проект не найден'}</p>
-    <p>{projects.find(proj => proj.id === currentProjectId)?.environment || 'Проект не найден'}</p>
-    <p>{projects.find(proj => proj.id === currentProjectId)?.environment1 || 'Проект не найден'}</p>
-</div>          
+        <div className="container">
+          <div className='container_title'>
+            <h1>Платформа для управления тестированием</h1>
+            <p>Создавайте, запускайте и анализируйте тесты для ваших проектов</p>
+            <h1>Проект: {projects.find(proj => proj.id === currentProjectId)?.name || 'Проект не найден'}</h1>
+            <p>{projects.find(proj => proj.id === currentProjectId)?.description || 'Проект не найден'}</p>
+            <p>{projects.find(proj => proj.id === currentProjectId)?.environment || 'Проект не найден'}</p>
+            <p>{projects.find(proj => proj.id === currentProjectId)?.environment1 || 'Проект не найден'}</p>
+          </div>          
           <div className="hero-buttons">
             <button className="btn btn-outline" onClick={() => setActiveTab('reports')}>
               Посмотреть отчеты
@@ -507,33 +606,32 @@ const toggleCategory = (categoryId) => {
       <section className="dashboard">
         <div className="container">
           <div className="dashboard-header">
-            <h1 className="dashboard-title">
-              Панель управления: 
-            </h1>
-            
+            <h1 className="dashboard-title">Панель управления:</h1>
           </div>
+          
           <div className="stats">
             <div className="stat-card">
               <h3>Всего тест-кейсов</h3>
               <div className="number">{totalTests}</div>
             </div>
-  <div className="stat-card">
-    <h3>Всего тест-ранов</h3>
-    <div className="number">{totalRuns}</div>
-  </div>
-  <div className="stat-card">
-    <h3>В процессе</h3>
-    <div className="number">{runningRuns}</div>
-  </div>
-  <div className="stat-card">
-    <h3>Завершено</h3>
-    <div className="number">{completedRuns}</div>
-  </div>
-  <div className="stat-card">
-    <h3>В ожидании</h3>
-    <div className="number">{notRunRuns}</div>
-  </div>
-</div>
+            <div className="stat-card">
+              <h3>Всего тест-ранов</h3>
+              <div className="number">{totalRuns}</div>
+            </div>
+            <div className="stat-card">
+              <h3>В процессе</h3>
+              <div className="number">{runningRuns}</div>
+            </div>
+            <div className="stat-card">
+              <h3>Завершено</h3>
+              <div className="number">{completedRuns}</div>
+            </div>
+            <div className="stat-card">
+              <h3>В ожидании</h3>
+              <div className="number">{notRunRuns}</div>
+            </div>
+          </div>
+          
           <div className="tabs">
             <div 
               className={`tab nav-tab ${activeTab === 'test-cases' ? 'active' : ''}`} 
@@ -555,125 +653,130 @@ const toggleCategory = (categoryId) => {
             </div>
           </div>
           
-    {activeTab === 'test-cases' && (
-  <div className="tab-content active" id="test-cases-content">
-    <div className="dashboard-header">
-      <h2>Управление тест-кейсами</h2>
-    </div>
-    <p>Создавайте группы и управляйте тест-кейсами:</p>
-    
-    <div className="category-controls">
-      <button className="btn btn-primary" onClick={() => setShowCategoryModal(true)}>
-        <i className="fas fa-folder-plus"></i> Создать группу кейсов
-      </button>
-      <button className="btn btn-outline" onClick={() => setShowTestCaseItemModal(true)}>
-        <i className="fas fa-plus"></i> Создать тест-кейс
-      </button>
-    </div>
-
-    {/* Рендер групп */}
-    <div className="test-case-categories">
-     {testCaseCategories.map(category => (
-  <div 
-    key={category.id} 
-    className="test-case-category"
-    onDragOver={(e) => handleDragOver(e, category.id)}
-    onDrop={(e) => handleDrop(e, category.id)}
-  >
-    <div className="category-header">
-      <div 
-        className="category-info"
-        onClick={() => toggleCategory(category.id)}
-        style={{ cursor: 'pointer', flex: 1 }}
-      >
-        <div className="category-title-wrapper">
-          <i 
-            className={`fas fa-chevron-${expandedCategories[category.id] ? 'down' : 'right'}`}
-            style={{ marginRight: '10px', transition: 'transform 0.3s' }}
-          ></i>
-          <h3>{category.name}</h3>
-        </div>
-        {category.description && <p>{category.description}</p>}
-        <span className="category-stats">
-          {category.testCases.length} тест-кейсов
-        </span>
-      </div>
-      <div className="category-actions">
-        <button 
-          className="btn btn-sm btn-outline"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowTestCaseItemModal(true);
-          }}
-        >
-          <i className="fas fa-plus"></i> Добавить тест-кейс
-        </button>
-        <button 
-          className="btn btn-sm btn-danger" 
-          onClick={(e) => {
-            e.stopPropagation();
-            deleteTestCaseCategory(category.id);
-          }}
-        >
-          <i className="fas fa-trash"></i> Удалить группу
-        </button>
-      </div>
-    </div>
-
-    {expandedCategories[category.id] && (
-      <div className="category-test-cases">
-        {category.testCases.length === 0 ? (
-          <div className="empty-category">
-            <p>Нет тест-кейсов в этой группе</p>
-            <p className="drop-hint">Перетащите тест-кейсы сюда</p>
-          </div>
-        ) : (
-          category.testCases.map(testCase => (
-            <div 
-              key={testCase.id} 
-              className="test-case-item"
-              draggable
-              onDragStart={(e) => handleDragStart(e, testCase, category.id)}
-            >
-              <div className="test-case-content">
-                <h4>{testCase.name}</h4>
-                <p>{testCase.description}</p>
-                <div className="test-case-meta">
-                  <span className={`priority-${testCase.priority}`}>
-                    {testCase.priority === 'high' ? 'Высокий' : 
-                     testCase.priority === 'medium' ? 'Средний' : 'Низкий'} приоритет
-                  </span>
-                  <span className={`type-${testCase.type}`}>
-                    {testCase.type === 'functional' ? 'Функциональный' : 
-                     testCase.type === 'api' ? 'API' : 
-                     testCase.type === 'performance' ? 'Производительность' : 'UI'}
-                  </span>
-                </div>
+          {activeTab === 'test-cases' && (
+            <div className="tab-content active" id="test-cases-content">
+              <div className="dashboard-header">
+                <h2>Управление тест-кейсами</h2>
               </div>
-              <div className="test-case-actions">
-                <button 
-                  className="btn btn-sm btn-danger" 
-                  onClick={() => deleteTestCase(testCase.id, category.id)}
-                >
-                  <i className="fas fa-trash"></i>
+              <p>Создавайте группы и управляйте тест-кейсами:</p>
+              
+              <div className="category-controls">
+                <button className="btn btn-primary" onClick={() => setShowTestPlanModal(true)}>
+                  <i className="fas fa-clipboard-list"></i> Создать тест-план
                 </button>
-                <span className="drag-handle">
-                  <i className="fas fa-grip-vertical"></i>
-                </span>
+                <button className="btn btn-outline" onClick={() => setShowDistributionModal(true)}>
+                  <i className="fas fa-server"></i> Управление дистрибутивами
+                </button>
+                <button className="btn btn-primary" onClick={() => setShowCategoryModal(true)}>
+                  <i className="fas fa-folder-plus"></i> Создать группу кейсов
+                </button>
+                <button className="btn btn-outline" onClick={() => setShowTestCaseItemModal(true)}>
+                  <i className="fas fa-plus"></i> Создать тест-кейс
+                </button>
+              </div>
+
+              {/* Рендер групп */}
+              <div className="test-case-categories">
+                {testCaseCategories.map(category => (
+                  <div 
+                    key={category.id} 
+                    className="test-case-category"
+                    onDragOver={(e) => handleDragOver(e, category.id)}
+                    onDrop={(e) => handleDrop(e, category.id)}
+                  >
+                    <div className="category-header">
+                      <div 
+                        className="category-info"
+                        onClick={() => toggleCategory(category.id)}
+                        style={{ cursor: 'pointer', flex: 1 }}
+                      >
+                        <div className="category-title-wrapper">
+                          <i 
+                            className={`fas fa-chevron-${expandedCategories[category.id] ? 'down' : 'right'}`}
+                            style={{ marginRight: '10px', transition: 'transform 0.3s' }}
+                          ></i>
+                          <h3>{category.name}</h3>
+                        </div>
+                        {category.description && <p>{category.description}</p>}
+                        <span className="category-stats">
+                          {category.testCases.length} тест-кейсов
+                        </span>
+                      </div>
+                      <div className="category-actions">
+                        <button 
+                          className="btn btn-sm btn-outline"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowTestCaseItemModal(true);
+                          }}
+                        >
+                          <i className="fas fa-plus"></i> Добавить тест-кейс
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-danger" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteTestCaseCategory(category.id);
+                          }}
+                        >
+                          <i className="fas fa-trash"></i> Удалить группу
+                        </button>
+                      </div>
+                    </div>
+
+                    {expandedCategories[category.id] && (
+                      <div className="category-test-cases">
+                        {category.testCases.length === 0 ? (
+                          <div className="empty-category">
+                            <p>Нет тест-кейсов в этой группе</p>
+                            <p className="drop-hint">Перетащите тест-кейсы сюда</p>
+                          </div>
+                        ) : (
+                          category.testCases.map(testCase => (
+                            <div 
+                              key={testCase.id} 
+                              className="test-case-item"
+                              draggable
+                              onDragStart={(e) => handleDragStart(e, testCase, category.id)}
+                            >
+                              <div className="test-case-content">
+                                <h4>{testCase.name}</h4>
+                                <p>{testCase.description}</p>
+                                <div className="test-case-meta">
+                                  <span className={`priority-${testCase.priority}`}>
+                                    {testCase.priority === 'high' ? 'Высокий' : 
+                                     testCase.priority === 'medium' ? 'Средний' : 'Низкий'} приоритет
+                                  </span>
+                                  <span className={`type-${testCase.type}`}>
+                                    {testCase.type === 'functional' ? 'Функциональный' : 
+                                     testCase.type === 'api' ? 'API' : 
+                                     testCase.type === 'performance' ? 'Производительность' : 'UI'}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="test-case-actions">
+                                <button 
+                                  className="btn btn-sm btn-danger" 
+                                  onClick={() => deleteTestCase(testCase.id, category.id)}
+                                >
+                                  <i className="fas fa-trash"></i>
+                                </button>
+                                <span className="drag-handle">
+                                  <i className="fas fa-grip-vertical"></i>
+                                </span>
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
-          ))
-        )}
-      </div>
-    )}
-  </div>
-))}
-    </div>
-  </div>
-)}
+          )}
 
-          
-          {/* вкладкa Тест-раны */}
+          {/* вкладка Тест-раны */}
           {activeTab === 'test-runs' && (
             <div className="tab-content active" id="test-runs-content">
               <h2>Управление тест-ранами</h2>
@@ -681,9 +784,8 @@ const toggleCategory = (categoryId) => {
               
               <div className="controls">
                 <button className="btn btn-new-run btn-primary" onClick={() => setShowTestRunModal(true)}>
-                   <i className="fas fa-plus"></i> Создать тест-ран
+                  <i className="fas fa-plus"></i> Создать тест-ран
                 </button>
-                {}
               </div>
               
               <div id="testRunsList">
@@ -700,7 +802,7 @@ const toggleCategory = (categoryId) => {
                             {testRun.type === 'Automatic' ? 'Автоматический прогон' : 
                              testRun.type === 'Hand' ? 'Ручной прогон' : `Неизвестный тип: ${testRun.type}`}
                           </span>
-                            </div>
+                        </div>
                       </div>
                       <div className="test-run-stats">
                         <div className="test-run-stat">
@@ -745,18 +847,17 @@ const toggleCategory = (categoryId) => {
                           </button>
                         )}
 
-                       
-{testRun.status === 'completed' && (
-  <button 
-    className="btn btn-show-log btn-careateReport btn-primary" 
-    onClick={() => {
-      setSelectedTestRun(testRun);
-      setShowManualReportModal(true);
-    }}
-  >
-    <i className="fas fa-edit"></i> Создать отчет
-  </button>
-)}
+                        {testRun.status === 'completed' && (
+                          <button 
+                            className="btn btn-show-log btn-careateReport btn-primary" 
+                            onClick={() => {
+                              setSelectedTestRun(testRun);
+                              setShowManualReportModal(true);
+                            }}
+                          >
+                            <i className="fas fa-edit"></i> Создать отчет
+                          </button>
+                        )}
 
                         <button 
                           className="btn btn-sm btn-danger" 
@@ -765,36 +866,14 @@ const toggleCategory = (categoryId) => {
                           <i className="fas fa-trash"></i>
                         </button>
                       </div>
-                      {testRun.status === "running" && testRun.type === "Hand" && (
-                          <div className="manual-controls">
-                            <h4>Ручное управление:</h4>
-                            {testRun.tests.map(test => (
-                              <div key={test.id} className="manual-test">
-                                <span>{test.name} - {test.status === "completed" ? "Завершен" : "Ожидание"}</span>
-                                {test.status !== "completed" ? (
-                                  <>
-                                    <button onClick={() => updateTestResult(testRun.id, test.id, true)}>
-                                         Пройден
-                                    </button>
-                                    <button onClick={() => updateTestResult(testRun.id, test.id, false)}>
-                                      Провален
-                                    </button>
-                                  </>
-                               ) : (
-                                  <span style={test.passed ? {} : { color: 'red' }}>Результат: {test.passed ? "Пройден" : "Провален"}</span>
-                                )}
-                             </div>
-                           ))}
-                          </div>
-                        )}
                     </div>
                   ))
                 )}
               </div>
             </div>
           )}
-          
-          {/* вкладкa История */}
+
+          {/* вкладка История */}
           {activeTab === 'reports' && (
             <div className="tab-content active" id="reports-content">
               <h2>История запусков тестирования</h2>
@@ -824,57 +903,75 @@ const toggleCategory = (categoryId) => {
       </section>
 
       {/* Модальные окна */}
+      {showProjectModal && (
+        <ProjectModal 
+          onClose={() => setShowProjectModal(false)} 
+          onCreate={createProject}
+          distributions={distributions}
+        />
+      )}
 
+      {showCategoryModal && (
+        <TestCaseCategoryModal 
+          onClose={() => setShowCategoryModal(false)} 
+          onCreate={createTestCaseCategory} 
+        />
+      )}
 
-{showProjectModal && (
-  <ProjectModal 
-    onClose={() => setShowProjectModal(false)} 
-    onCreate={createProject} 
-  />
-)}
+      {showTestCaseItemModal && (
+        <TestCaseItemModal 
+          onClose={() => setShowTestCaseItemModal(false)} 
+          onCreate={createTestCaseInCategory}
+          categories={testCaseCategories}
+        />
+      )}
 
-{showCategoryModal && (
-  <TestCaseCategoryModal 
-    onClose={() => setShowCategoryModal(false)} 
-    onCreate={createTestCaseCategory} 
-  />
-)}
+      {showTestRunModal && (
+        <TestRunModal 
+          onClose={() => setShowTestRunModal(false)} 
+          onCreate={createTestRun}
+          categories={testCaseCategories}
+        />
+      )}
 
-{showTestCaseItemModal && (
-  <TestCaseItemModal form-group
-    onClose={() => setShowTestCaseItemModal(false)} 
-    onCreate={createTestCaseInCategory}
-    categories={testCaseCategories}
-  />
-)}
+      {showManualReportModal && selectedTestRun && (
+        <ManualReportModal 
+          testRun={selectedTestRun}
+          onClose={() => setShowManualReportModal(false)}
+          onSave={saveManualReport}
+        />
+      )}
 
-{showTestRunModal && (
-  <TestRunModal 
-    onClose={() => setShowTestRunModal(false)} 
-    onCreate={createTestRun}
-    categories={testCaseCategories}
-  />
-)}
+      {showTestPlanModal && (
+        <TestPlanModal 
+          onClose={() => setShowTestPlanModal(false)} 
+          onCreate={createTestPlan} 
+        />
+      )}
 
+      {showDistributionModal && (
+        <DistributionModal 
+          onClose={() => setShowDistributionModal(false)} 
+          onCreate={createDistribution} 
+        />
+      )}
 
-{showManualReportModal && selectedTestRun && (
-  <ManualReportModal 
-    testRun={selectedTestRun}
-    onClose={() => setShowManualReportModal(false)}
-    onSave={saveManualReport}
-  />
-)}
+      {showExecutionModal && currentExecutingTestRun && (
+        <TestExecutionModal 
+          testRun={currentExecutingTestRun}
+          onClose={() => setShowExecutionModal(false)}
+          onComplete={handleTestRunExecutionComplete}
+        />
+      )}
 
-{showReportModal && selectedTestRun && (
-  <ReportModal 
-    testRun={selectedTestRun} 
-    onClose={() => setShowReportModal(false)} 
-  />
-)}
+      {showReportModal && selectedTestRun && (
+        <ReportModal 
+          testRun={selectedTestRun} 
+          onClose={() => setShowReportModal(false)} 
+        />
+      )}
     </div>
   );
 };
-
-
 
 export default Dashboard;

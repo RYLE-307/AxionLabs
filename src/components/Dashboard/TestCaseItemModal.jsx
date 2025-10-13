@@ -7,7 +7,8 @@ const TestCaseItemModal = ({ onClose, onCreate, categories }) => {
     type: 'functional',
     priority: 'medium',
     expectedResult: '',
-    categoryId: categories.length > 0 ? categories[0].id : ''
+    categoryId: categories.length > 0 ? categories[0].id : '',
+    steps: [{ step: '', expected: '' }]
   });
 
   const handleSubmit = (e) => {
@@ -23,6 +24,31 @@ const TestCaseItemModal = ({ onClose, onCreate, categories }) => {
     });
   };
 
+  const addStep = () => {
+    setFormData({
+      ...formData,
+      steps: [...formData.steps, { step: '', expected: '' }]
+    });
+  };
+
+  const removeStep = (index) => {
+    const newSteps = formData.steps.filter((_, i) => i !== index);
+    setFormData({
+      ...formData,
+      steps: newSteps
+    });
+  };
+
+  const updateStep = (index, field, value) => {
+    const newSteps = formData.steps.map((step, i) => 
+      i === index ? { ...step, [field]: value } : step
+    );
+    setFormData({
+      ...formData,
+      steps: newSteps
+    });
+  };
+
   return (
     <div className="modal active">
       <div className="modal-content">
@@ -32,7 +58,7 @@ const TestCaseItemModal = ({ onClose, onCreate, categories }) => {
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="testCaseCategory">группа</label>
+            <label htmlFor="testCaseCategory">Группа</label>
             <select 
               id="testCaseCategory" 
               name="categoryId"
@@ -71,6 +97,56 @@ const TestCaseItemModal = ({ onClose, onCreate, categories }) => {
               placeholder="Опишите цель тест-кейса" 
             />
           </div>
+
+          {/* Шаги тестирования */}
+          <div className="form-group">
+            <label>Шаги тестирования</label>
+            {formData.steps.map((step, index) => (
+              <div key={index} className="test-step">
+                <div className="step-header">
+                  <strong>Шаг {index + 1}</strong>
+                  {formData.steps.length > 1 && (
+                    <button 
+                      type="button" 
+                      className="btn btn-sm btn-danger"
+                      onClick={() => removeStep(index)}
+                    >
+                      <i className="fas fa-times"></i>
+                    </button>
+                  )}
+                </div>
+                <div className="step-fields">
+                  <div className="form-group">
+                    <label>Действие</label>
+                    <input 
+                      type="text" 
+                      value={step.step}
+                      onChange={(e) => updateStep(index, 'step', e.target.value)}
+                      placeholder="Опишите действие для выполнения"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Ожидаемый результат</label>
+                    <input 
+                      type="text" 
+                      value={step.expected}
+                      onChange={(e) => updateStep(index, 'expected', e.target.value)}
+                      placeholder="Опишите ожидаемый результат"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+            <button 
+              type="button" 
+              className="btn btn-outline btn-sm"
+              onClick={addStep}
+            >
+              <i className="fas fa-plus"></i> Добавить шаг
+            </button>
+          </div>
           
           <div className="form-group">
             <label htmlFor="testCaseType">Тип тест-кейса</label>
@@ -102,14 +178,14 @@ const TestCaseItemModal = ({ onClose, onCreate, categories }) => {
           </div>
           
           <div className="form-group">
-            <label htmlFor="testCaseExpected">Ожидаемый результат</label>
+            <label htmlFor="testCaseExpected">Общий ожидаемый результат</label>
             <textarea 
               id="testCaseExpected" 
               name="expectedResult"
               value={formData.expectedResult}
               onChange={handleChange}
               required 
-              placeholder="Опишите ожидаемый результат" 
+              placeholder="Опишите общий ожидаемый результат тест-кейса" 
             />
           </div>
           
