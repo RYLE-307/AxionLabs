@@ -12,8 +12,11 @@ import '../styles/reports.css';
 import TestPlanModal from '../components/Dashboard/TestPlanModal';
 import DistributionModal from '../components/Dashboard/DistributionModal';
 import TestExecutionModal from '../components/Dashboard/TestExecutionModal';
+import UserManagementModal from '../components/Dashboard/UserManagementModal';
+import { getRoleDisplayName } from '../utils/roles'; // Импортируем из utils
 
-const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
+
+const Dashboard = ({ currentUser, onLogout, theme, toggleTheme, hasPermission }) => {
   const [activeTab, setActiveTab] = useState('test-cases');
   const [projects, setProjects] = useState([
     { 
@@ -22,29 +25,93 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme }) => {
       description: "Основной проект для демонстрации",
       environment: "Разработка",
       environment1: "CI/CD",
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      assignedAdmins: [] // Админы, назначенные на проект
     }
   ]);
   const [currentProjectId, setCurrentProjectId] = useState(1);
   const [testCases, setTestCases] = useState([]);
   const [testRuns, setTestRuns] = useState([]);
   const [showProjectModal, setShowProjectModal] = useState(false);
- 
   const [showTestRunModal, setShowTestRunModal] = useState(false);
-
   const [showReportModal, setShowReportModal] = useState(false);
   const [selectedTestRun, setSelectedTestRun] = useState(null);
+  const [testPlans, setTestPlans] = useState([]);
+  const [distributions, setDistributions] = useState([]);
+  const [showTestPlanModal, setShowTestPlanModal] = useState(false);
+  const [showDistributionModal, setShowDistributionModal] = useState(false);
+  const [showExecutionModal, setShowExecutionModal] = useState(false);
+  const [currentExecutingTestRun, setCurrentExecutingTestRun] = useState(null);
+  const [showUserManagementModal, setShowUserManagementModal] = useState(false);
+  const [users, setUsers] = useState([]); // Все пользователи системы
 
-const [testPlans, setTestPlans] = useState([]);
-const [distributions, setDistributions] = useState([]);
-const [showTestPlanModal, setShowTestPlanModal] = useState(false);
-const [showDistributionModal, setShowDistributionModal] = useState(false);
-const [showExecutionModal, setShowExecutionModal] = useState(false);
-const [currentExecutingTestRun, setCurrentExecutingTestRun] = useState(null);
-const [currentExecutingTestCase, setCurrentExecutingTestCase] = useState(null);
+
+   const hasAccessToCurrentProject = () => {
+    if (!currentUser) return false;
+    
+    // Старшие админы имеют доступ ко всем проектам
+    if (currentUser.role === 'senior_admin') return true;
+    
+    // Админы имеют доступ только к назначенным проектам
+    if (currentUser.role === 'admin') {
+      return currentUser.assignedProjects.includes(currentProjectId);
+    }
+    
+    // Тестировщики имеют доступ ко всем проектам (или можно настроить аналогично админам)
+    return true;
+  };
+
+  // Проверка возможности редактирования
+  const canEdit = () => {
+    if (!currentUser) return false;
+    
+    // Старшие админы могут все редактировать
+    if (currentUser.role === 'senior_admin') return true;
+    
+    // Админы могут редактировать только в своих проектах
+    if (currentUser.role === 'admin') {
+      return hasAccessToCurrentProject();
+    }
+    
+    // Старшие тестировщики могут создавать тест-раны и кейсы
+    if (currentUser.role === 'senior_tester') {
+      return hasAccessToCurrentProject();
+    }
+    
+    // Обычные тестировщики и гости не могут редактировать
+    return false;
+  };
+
+  // Проверка возможности создания
+  const canCreate = (type) => {
+    if (!currentUser) return false;
+    
+    switch (type) {
+      case 'project':
+        return hasPermission(currentUser, 'createProject');
+      case 'testRun':
+        return hasPermission(currentUser, 'createTestRun') && hasAccessToCurrentProject();
+      case 'testCase':
+        return hasPermission(currentUser, 'createTestCase') && hasAccessToCurrentProject();
+      case 'testPlan':
+        return hasPermission(currentUser, 'createTestPlan') && hasAccessToCurrentProject();
+      default:
+        return false;
+    }
+  };
+
+  // Проверка возможности запуска
+  const canRun = () => {
+    return hasPermission(currentUser, 'runTestRun') && hasAccessToCurrentProject();
+  };
+
+  // Проверка возможности управления пользователями
+  const canManageUsers = () => {
+    return hasPermission(currentUser, 'manageUsers');
+  };
 
   // База данных ошибок для каждого теста
-  const errorDatabase = {
+   const errorDatabase = {
     1: {
       location: "Страница входа, форма аутентификации",
       description: "Неверные учетные данные не вызывают ожидаемую ошибку",
@@ -58,37 +125,31 @@ const [currentExecutingTestCase, setCurrentExecutingTestCase] = useState(null);
         { time: "14:30:15", level: "INFO", message: "Ввод некорректных учетных данных" },
         { time: "14:30:16", level: "ERROR", message: "Ожидалась ошибка 401, но получен код 200" }
       ]
-    },
-    2: {
-      location: "Страница регистрации, форма создания аккаунта",
-      description: "Поле 'Email' принимает некорректные форматы email-адресов",
-      reason: "Регулярное выражение для валидации email содержит ошибку",
-      solution: "Исправить регулярное выражение на /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/",
-      stackTrace: "Error: Invalid email format was accepted\n    at RegistrationTest.validateEmailField (registration-test.js:67:22)\n    at RegistrationTest.run (registration-test.js:31:9)",
-      logs: [
-        { time: "14:31:05", level: "INFO", message: "Запуск теста регистрации" },
-        { time: "14:31:06", level: "INFO", message: "Ввод валидных данных" },
-        { time: "14:31:07", level: "SUCCESS", message: "Успешная регистрация" },
-        { time: "14:31:08", level: "INFO", message: "Ввод email 'invalid-email'" },
-        { time: "14:31:09", level: "ERROR", message: "Некорректный email был принят системой" }
-      ]
     }
   };
+
 
 
   
 
 const createProject = (projectData) => {
-  const newProject = {
-    id: Date.now(),
-    ...projectData,
-    distributions: projectData.selectedDistributions || [],
-    createdAt: new Date().toISOString()
+    if (!canCreate('project')) {
+      alert('У вас нет прав для создания проектов');
+      return;
+    }
+
+    const newProject = {
+      id: Date.now(),
+      ...projectData,
+      distributions: projectData.selectedDistributions || [],
+      createdAt: new Date().toISOString(),
+      createdBy: currentUser.id,
+      assignedAdmins: [currentUser.id] // Создатель становится админом проекта
+    };
+    setProjects([...projects, newProject]);
+    setCurrentProjectId(newProject.id);
+    setShowProjectModal(false);
   };
-  setProjects([...projects, newProject]);
-  setCurrentProjectId(newProject.id);
-  setShowProjectModal(false);
-};
   const createTestCase = (testCaseData) => {
   console.log('Creating test case:', testCaseData); // Для отладки
   
@@ -178,6 +239,10 @@ const deleteTestCaseCategory = (categoryId) => {
 
 
 const createTestRun = (formData) => {
+   if (!canCreate('testRun')) {
+      alert('У вас нет прав для создания тест-ранов');
+      return;
+    }
   console.log('Creating test run with data:', formData);
   
   const { selectedTestCases, ...runData } = formData;
@@ -197,8 +262,33 @@ const createTestRun = (formData) => {
     status: test.status || 'not-run'
   }));
   
-  
-  
+   if (!hasAccessToCurrentProject()) {
+    return (
+      <div className="main-content">
+        <Header 
+          currentUser={currentUser} 
+          onLogout={onLogout} 
+          theme={theme} 
+          toggleTheme={toggleTheme}
+          projects={projects.filter(project => 
+            currentUser.role === 'senior_admin' || 
+            currentUser.assignedProjects.includes(project.id)
+          )}
+          currentProjectId={currentProjectId}
+          setCurrentProjectId={setCurrentProjectId}
+          setShowProjectModal={setShowProjectModal}
+          canCreateProject={canCreate('project')}
+        />
+        <div className="container">
+          <div className="access-denied">
+            <h2>Доступ запрещен</h2>
+            <p>У вас нет доступа к выбранному проекту.</p>
+            <p>Пожалуйста, выберите другой проект или обратитесь к администратору.</p>
+          </div>
+        </div>
+      </div>
+    );
+   }
   if (selectedTests.length === 0) {
     alert('Нет выбранных тест-кейсов для создания тест-рана');
     return;

@@ -12,7 +12,8 @@ const AuthPage = ({ onLogin }) => {
     const email = e.target.elements.registerEmail.value;
     const password = e.target.elements.registerPassword.value;
     const confirmPassword = e.target.elements.registerConfirmPassword.value;
-    const company = e.target.elements.registerCompany?.value || ''; // Добавлено получение company
+    const company = e.target.elements.registerCompany?.value || '';
+    const role = e.target.elements.registerRole?.value || 'tester';
 
     if (password !== confirmPassword) {
       alert('Пароли не совпадают');
@@ -29,12 +30,14 @@ const AuthPage = ({ onLogin }) => {
       name,
       email,
       password,
-      company, // Теперь company определен
+      company,
+      role,
+      assignedProjects: [],
       createdAt: new Date().toISOString()
     };
 
     setUsers([...users, newUser]);
-    onLogin({ id: newUser.id, name: newUser.name, email: newUser.email, company: newUser.company });
+    onLogin(newUser);
   };
 
   const handleLogin = (e) => {
@@ -111,6 +114,15 @@ const AuthPage = ({ onLogin }) => {
           <div className="form-group">
             <label htmlFor="registerCompany">Название компании</label>
             <input type="text" id="registerCompany" required placeholder="Введите название компании" />
+          </div>
+          <div className="form-group">
+            <label htmlFor="registerRole">Роль</label>
+            <select id="registerRole" name="registerRole" required>
+              <option value="tester">Тестировщик</option>
+              <option value="senior_tester">Старший тестировщик</option>
+              <option value="admin">Администратор</option>
+              <option value="senior_admin">Старший администратор</option>
+            </select>
           </div>
               
           <button type="submit" className="btn btn-primary" style={{width: '100%'}}>Зарегистрироваться</button>

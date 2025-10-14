@@ -1,6 +1,7 @@
 import React from 'react';
 import '../styles/global.css';
 import '../styles/header.css';
+import { getRoleDisplayName } from '../utils/roles'; // Импортируем из utils
 
 const Header = ({ 
   currentUser, 
@@ -10,7 +11,8 @@ const Header = ({
   projects, 
   currentProjectId, 
   setCurrentProjectId, 
-  setShowProjectModal 
+  setShowProjectModal,
+  canCreateProject
 }) => {
   return (
     <header>
@@ -36,15 +38,16 @@ const Header = ({
                 ))}
               </select>
             </div>
-            <button 
-              className="btn btn-primary" 
-              onClick={() => setShowProjectModal(true)}
-            >
-              <i className="fas fa-plus"></i> Новый проект
-            </button>
+            {canCreateProject && (
+              <button 
+                className="btn btn-primary" 
+                onClick={() => setShowProjectModal(true)}
+              >
+                <i className="fas fa-plus"></i> Новый проект
+              </button>
+            )}
           </div>
           
-          {/* Исправленное отображение информации о пользователе */}
           <div className="user-info">
             {currentUser && (
               <div className='profile'>
@@ -53,6 +56,9 @@ const Header = ({
                 </p>
                 <p className="Nikname">
                   <span><strong>{currentUser.company}</strong></span>
+                </p>
+                <p className="UserRole" style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+                  {getRoleDisplayName(currentUser.role)}
                 </p>
               </div>
             )}

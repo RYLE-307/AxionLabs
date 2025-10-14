@@ -9,7 +9,8 @@ import './styles/dashboard.css';
 import './styles/home.css';
 import './styles/reports.css';
 
-
+// Импортируем из отдельного файла
+import { ROLES, hasPermission } from './utils/roles';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -43,8 +44,15 @@ function App() {
   };
 
   const handleLogin = (user) => {
-    setCurrentUser(user);
-    localStorage.setItem('AxionLabsUser', JSON.stringify(user));
+    // Добавляем роль по умолчанию если не указана
+    const userWithRole = {
+      ...user,
+      role: user.role || ROLES.TESTER,
+      assignedProjects: user.assignedProjects || [] // Проекты, к которым имеет доступ пользователь
+    };
+    
+    setCurrentUser(userWithRole);
+    localStorage.setItem('AxionLabsUser', JSON.stringify(userWithRole));
     localStorage.setItem('AxionLabsAuth', 'true');
   };
 
@@ -79,6 +87,7 @@ function App() {
                 onLogout={handleLogout} 
                 theme={theme} 
                 toggleTheme={toggleTheme} 
+                hasPermission={hasPermission}
               /> : 
               <Navigate to="/auth" replace />
             } 
