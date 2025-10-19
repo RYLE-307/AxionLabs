@@ -145,7 +145,7 @@ header {
   margin-bottom: 30px;
 }
 
-/* Center titles in tab header when inside tab-content */
+
 .tab-content .dashboard-header {
   justify-content: center;
 }
@@ -195,7 +195,6 @@ header {
   display: block;
 }
 
-/* Improved styling for tab content area */
 .tab-content {
   background: var(--bg-secondary);
   padding: 20px;
@@ -217,7 +216,7 @@ header {
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 
-/* Test-case categories: make columns responsive and add padding */
+
 .test-case-categories {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -225,7 +224,7 @@ header {
   margin-top: 20px;
 }
 
-/* Ensure empty-state inside the categories grid spans full width and centers */
+
 .test-case-categories > .empty-state {
   grid-column: 1 / -1;
   justify-self: center;
@@ -237,7 +236,7 @@ header {
   padding: 18px;
 }
 
-/* Test-run cards improvements */
+/* Test-run cards */
 .test-run {
   display: flex;
   flex-direction: column;
@@ -404,7 +403,7 @@ header {
   gap: 10px;
 }
 
-/* User list styles */
+/* User list*/
 .user-list h4 {
   margin-bottom: 12px;
 }
@@ -489,7 +488,6 @@ header {
   margin: 8px 0;
 }
 
-/* Make headings and descriptions in empty states more prominent and consistent */
 .empty-state h3, .empty-category h3 {
   font-size: 1.4rem;
   margin: 0 0 8px 0;
@@ -503,7 +501,7 @@ header {
   font-size: 14px;
 }
 
-/* Center and size buttons inside empty state blocks */
+
 .empty-state .btn,
 .empty-category .btn {
   display: inline-block;
@@ -519,14 +517,14 @@ header {
   margin-top: 14px;
 }
 
-/* Ensure the button group inside the empty-state does not stretch the parent */
+
 .empty-state > * .btn-group {
   max-width: 720px;
   margin-left: auto;
   margin-right: auto;
 }
 
-/* Small screens: make buttons full width for easier tapping */
+
 @media (max-width: 480px) {
   .empty-state .btn,
   .empty-category .btn {
@@ -870,7 +868,7 @@ header {
   transform: translateY(5px);
 }
 
-/* Make test-case items visually consistent with test-run cards */
+
 .test-case-item {
   display: flex;
   flex-direction: column;
