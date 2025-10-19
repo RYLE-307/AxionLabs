@@ -10,8 +10,18 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
   });
   const [loading, setLoading] = useState(false);
 
+  // Добавьте эту функцию для обработки изменений в текстовых полях и селектах
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Form submitted with data:', formData); // ДОБАВЬТЕ ЭТУ СТРОКУ
     setLoading(true);
     
     try {
@@ -22,7 +32,6 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
       setLoading(false);
     }
   };
-
   const handleDistributionChange = (distroId) => {
     setFormData(prev => {
       const isSelected = prev.selectedDistributions.includes(distroId);
@@ -48,10 +57,11 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
             <input 
               type="text" 
               id="name" 
+              name="name" // Добавьте атрибут name
               required 
               placeholder="Введите название проекта"
               value={formData.name}
-              onChange={handleChange}
+              onChange={handleChange} // Теперь handleChange определена
             />
           </div>
           
@@ -59,9 +69,10 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
             <label htmlFor="projectDescription">Описание проекта</label>
             <textarea 
               id="description" 
+              name="description" // Добавьте атрибут name
               placeholder="Опишите цель проекта"
               value={formData.description}
-              onChange={handleChange}
+              onChange={handleChange} // Теперь handleChange определена
             ></textarea>
           </div>
           
@@ -69,8 +80,9 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
             <label htmlFor="projectEnvironment">Тестовая среда</label>
             <select 
               id="environment" 
+              name="environment" // Добавьте атрибут name
               value={formData.environment}
-              onChange={handleChange}
+              onChange={handleChange} // Теперь handleChange определена
             >
               <option value="Разработка">Разработка</option>
               <option value="Стейджинг">Стейджинг</option>
@@ -82,8 +94,9 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
             <label htmlFor="projectEnvironment1">Вид тестировки</label>
             <select 
               id="environment1" 
+              name="environment1" // Добавьте атрибут name
               value={formData.environment1}
-              onChange={handleChange}
+              onChange={handleChange} // Теперь handleChange определена
             >
               <option value="QWA">кваква</option>
               <option value="CI/CD">CI/CD</option>
@@ -117,7 +130,9 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
 
           <div className="form-actions">
             <button type="button" className="btn btn-outline" onClick={onClose}>Отмена</button>
-            <button type="submit" className="btn btn-primary">Создать проект</button>
+            <button type="submit" className="btn btn-primary" disabled={loading}>
+              {loading ? 'Создание...' : 'Создать проект'}
+            </button>
           </div>
         </form>
       </div>

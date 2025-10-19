@@ -63,18 +63,56 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme, hasPermission })
   }, [currentProjectId]);
 
   const initializeData = async () => {
-    try {
-      setLoading(true);
-      await loadProjects();
-      await loadUsers();
-      await loadDistributions();
-    } catch (err) {
-      setError('Ошибка загрузки данных');
-      console.error('Failed to initialize data:', err);
-    } finally {
-      setLoading(false);
+  try {
+    setLoading(true);
+    setError(null);
+    
+    // Загружаем данные параллельно для скорости
+    await Promise.all([
+      loadProjects(),
+      loadUsers(),
+      loadDistributions()
+    ]);
+    
+    // Если проект выбран, загружаем его данные
+    if (currentProjectId) {
+      await loadProjectData(currentProjectId);
     }
-  };
+    
+  } catch (err) {
+    console.error('Failed to initialize data:', err);
+    setError('Ошибка загрузки данных. Проверьте подключение к серверу.');
+    
+    // Показываем уведомление пользователю
+    alert('Не удалось загрузить данные. Проверьте подключение к интернету.');
+  } finally {
+    setLoading(false);
+  }
+};
+
+const handleApiError = (err, context) => {
+  console.error(`Failed to ${context}:`, err);
+  
+  if (err.response) {
+    switch (err.response.status) {
+      case 401:
+        return 'Требуется авторизация';
+      case 403:
+        return `Недостаточно прав для ${context}`;
+      case 404:
+        return `Ресурс не найден (${context})`;
+      case 500:
+        return `Ошибка сервера при ${context}`;
+      default:
+        return `Ошибка ${err.response.status} при ${context}`;
+    }
+  } else if (err.request) {
+    return 'Нет соединения с сервером';
+  } else {
+    return `Ошибка при ${context}`;
+  }
+};
+
 
   const loadProjects = async () => {
     try {
@@ -112,62 +150,190 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme, hasPermission })
     }
   };
 
-  const loadTestCases = async (projectId) => {
-    try {
-      // Временная реализация - адаптируйте под ваш API
-      const testCasesData = await mockLoadTestCases(projectId);
-      setTestCases(testCasesData);
-    } catch (err) {
-      console.error('Failed to load test cases:', err);
-    }
-  };
+const loadTestCases = async (projectId) => {
+  try {
+  
+    
+    // Загружаем тест-кейсы и категории параллельно
+      const [testCasesData, categoriesData] = await Promise.all([
+      apiService.listTestCases(projectId),
+      apiService.listTestCaseCategories(projectId)
+    ]);
+    
+    // Форматируем категории
+    const formattedCategories = categoriesData.map(category => ({
+      id: category.id,
+      name: category.name,
+      description: category.description,
+      projectId: category.project_id || projectId,
+      planId: category.plan_id || null,
+      testCases: []
+    }));
+    
+    // Группируем тест-кейсы по категориям
+    testCasesData.forEach(testCase => {
+      const categoryId = testCase.category_id;
+      const category = formattedCategories.find(cat => cat.id === categoryId);
+      
+      if (category) {
+        category.testCases.push({
+          id: testCase.id,
+          name: testCase.title || testCase.name,
+          description: testCase.description || '',
+          priority: testCase.priority || 'medium',
+          type: testCase.type || 'functional',
+          status: testCase.status || 'not-run',
+          steps: testCase.steps || [],
+          projectId: testCase.project_id || projectId
+        });
+      }
+    });
+    
+    setTestCaseCategories(formattedCategories);
+    
+  } catch (err) {
+    console.error('Failed to load test cases:', err);
+    
+    // Fallback на демо-данные
+       const demoCategories = getDemoCategories(projectId);
+    setTestCaseCategories(demoCategories);
+  } 
+};
 
-  const loadTestRuns = async (projectId) => {
-    try {
-      // Временная реализация
-      const testRunsData = await mockLoadTestRuns(projectId);
-      setTestRuns(testRunsData);
-    } catch (err) {
-      console.error('Failed to load test runs:', err);
-    }
-  };
+const loadTestRuns = async (projectId) => {
+  try {
+    // Используем метод listTestRuns вместо listRunItems
+    const testRunsData = await apiService.listTestRuns(projectId);
+    
+    const formattedTestRuns = testRunsData.map(testRun => ({
+      id: testRun.id,
+      projectId: testRun.project_id || projectId,
+      name: testRun.name,
+      description: testRun.description || '',
+      type: testRun.type || 'Automatic',
+      status: testRun.status || 'not-run',
+      date: testRun.created_at ? new Date(testRun.created_at).toLocaleString() : new Date().toLocaleString(),
+      tests: testRun.test_cases || testRun.tests || [],
+      passed: testRun.passed_count || testRun.passed || 0,
+      failed: testRun.failed_count || testRun.failed || 0,
+      total: testRun.total_tests || testRun.tests?.length || 0,
+      startTime: testRun.started_at,
+      endTime: testRun.completed_at
+    }));
+    
+    setTestRuns(formattedTestRuns);
+    
+  } catch (err) {
+    console.error('Failed to load test runs:', err);
+    
+    // Fallback на демо-данные
+    const demoTestRuns = getDemoTestRuns(projectId);
+    setTestRuns(demoTestRuns);
+  }
+};
 
-  const loadTestPlans = async (projectId) => {
-    try {
-      // Временная реализация
-      const testPlansData = await mockLoadTestPlans(projectId);
-      setTestPlans(testPlansData);
-    } catch (err) {
-      console.error('Failed to load test plans:', err);
-    }
-  };
+const loadTestPlans = async (projectId) => {
+  try {
+    const testPlansData = await apiService.listTestPlans(projectId);
+    
+    const formattedTestPlans = testPlansData.map(plan => ({
+      id: plan.id,
+      projectId: plan.project_id || projectId,
+      name: plan.name,
+      description: plan.description || '',
+      version: plan.version || '1.0',
+      status: plan.status || 'active',
+      createdAt: plan.created_at || new Date().toISOString(),
+      testCaseCount: plan.test_case_count || 0
+    }));
+    
+    setTestPlans(formattedTestPlans);
+    
+  } catch (err) {
+    console.error('Failed to load test plans:', err);
+    
+    // Fallback на демо-данные
+    const demoTestPlans = getDemoTestPlans(projectId);
+    setTestPlans(demoTestPlans);
+  }
+};
 
-  const loadProjectStatuses = async (projectId) => {
-    try {
-      const statuses = await apiService.listProjectStatuses(projectId);
-      // Обработать статусы если нужно
-    } catch (err) {
-      console.error('Failed to load project statuses:', err);
+const loadProjectStatuses = async (projectId) => {
+  try {
+    const statuses = await apiService.listProjectStatuses(projectId);
+    
+    // Обновляем статус проекта если есть актуальный статус
+    if (statuses && statuses.length > 0) {
+      const latestStatus = statuses[statuses.length - 1]; // берем последний статус
+      setProjects(prev => prev.map(project => 
+        project.id === projectId 
+          ? { ...project, status: latestStatus.status }
+          : project
+      ));
     }
-  };
+    
+  } catch (err) {
+    console.error('Failed to load project statuses:', err);
+  }
+};
 
-  const loadUsers = async () => {
-    try {
-      // Временная реализация - загрузка пользователей
+const loadUsers = async () => {
+  try {
+    if (!hasPermission(currentUser, 'viewUsers')) {
       setUsers([currentUser]);
-    } catch (err) {
-      console.error('Failed to load users:', err);
+      return;
     }
-  };
+    
+    const usersData = await apiService.listUsers();
+    
+    const formattedUsers = usersData.map(user => ({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      assignedProjects: user.assigned_projects || [],
+      isActive: user.is_active !== false,
+      lastLogin: user.last_login
+    }));
+    
+    setUsers(formattedUsers);
+    
+  } catch (err) {
+    console.error('Failed to load users:', err);
+    setUsers([currentUser]);
+  }
+};
 
-  const loadDistributions = async () => {
-    try {
-      // Временная реализация
+const loadDistributions = async () => {
+  try {
+    if (!hasPermission(currentUser, 'viewDistributions')) {
       setDistributions([]);
-    } catch (err) {
-      console.error('Failed to load distributions:', err);
+      return;
     }
-  };
+    
+    const distributionsData = await apiService.listDistributions();
+    
+    const formattedDistributions = distributionsData.map(dist => ({
+      id: dist.id,
+      name: dist.name,
+      version: dist.version,
+      type: dist.type || 'release',
+      status: dist.status || 'stable',
+      description: dist.description || '',
+      downloadUrl: dist.download_url,
+      createdAt: dist.created_at
+    }));
+    
+    setDistributions(formattedDistributions);
+    
+  } catch (err) {
+    console.error('Failed to load distributions:', err);
+    
+    // Fallback на демо-данные
+    const demoDistributions = getDemoDistributions();
+    setDistributions(demoDistributions);
+  }
+};
 
   // Проверки прав доступа
   const hasAccessToCurrentProject = () => {
@@ -201,30 +367,35 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme, hasPermission })
   };
 
   // Основные функции
-  const createProject = async (projectData) => {
-    if (!canCreate('project')) {
-      alert('У вас нет прав для создания проектов');
-      return;
-    }
+const createProject = async (projectData) => {
+  console.log('createProject called with:', projectData); // ДОБАВЬТЕ ЭТУ СТРОКУ
+  
+  if (!canCreate('project')) {
+    alert('У вас нет прав для создания проектов');
+    return;
+  }
 
-    try {
-      const newProject = await apiService.createProject({
-        name: projectData.name,
-        description: projectData.description,
-        environment: projectData.environment,
-        environment1: projectData.environment1,
-      });
+  try {
+    console.log('Sending API request...'); // ДОБАВЬТЕ ЭТУ СТРОКУ
+    
+    const newProject = await apiService.createProject({
+      name: projectData.name,
+      description: projectData.description,
+      environment: projectData.environment,
+      environment1: projectData.environment1,
+    });
 
-      setProjects(prev => [...prev, newProject]);
-      setCurrentProjectId(newProject.id);
-      setShowProjectModal(false);
-      alert('Проект успешно создан!');
-    } catch (err) {
-      alert('Ошибка при создании проекта');
-      console.error('Failed to create project:', err);
-    }
-  };
+    console.log('API response:', newProject); // ДОБАВЬТЕ ЭТУ СТРОКУ
 
+    setProjects(prev => [...prev, newProject]);
+    setCurrentProjectId(newProject.id);
+    setShowProjectModal(false);
+    alert('Проект успешно создан!');
+  } catch (err) {
+    console.error('Failed to create project:', err);
+    alert('Ошибка при создании проекта: ' + (err.message || 'Неизвестная ошибка'));
+  }
+};
   const createTestCaseCategory = async (categoryData) => {
     try {
       const newCategory = {
@@ -641,6 +812,166 @@ const Dashboard = ({ currentUser, onLogout, theme, toggleTheme, hasPermission })
       </div>
     );
   }
+
+// Вспомогательные функции для демо-данных (добавьте перед render)
+const getDemoCategories = (projectId) => [
+  {
+    id: 1,
+    name: "Основные функциональные тесты",
+    description: "Тесты основной функциональности приложения",
+    projectId: projectId,
+    testCases: [
+      {
+        id: 1,
+        name: "Авторизация пользователя",
+        description: "Проверка входа в систему",
+        priority: "high",
+        type: "functional",
+        status: "not-run",
+        steps: [
+          "Открыть страницу авторизации",
+          "Ввести корректные учетные данные", 
+          "Нажать кнопку 'Войти'",
+          "Проверить переход на главную страницу"
+        ],
+        projectId: projectId
+      },
+      {
+        id: 2,
+        name: "Создание нового проекта",
+        description: "Проверка создания проекта",
+        priority: "medium",
+        type: "functional",
+        status: "not-run",
+        steps: [
+          "Перейти в раздел управления проектами",
+          "Нажать кнопку 'Создать проект'",
+          "Заполнить обязательные поля",
+          "Сохранить проект"
+        ],
+        projectId: projectId
+      }
+    ]
+  },
+  {
+    id: 2,
+    name: "API тесты",
+    description: "Тестирование REST API endpoints",
+    projectId: projectId,
+    testCases: [
+      {
+        id: 3,
+        name: "GET /api/projects",
+        description: "Проверка получения списка проектов",
+        priority: "high",
+        type: "api",
+        status: "not-run",
+        steps: [
+          "Отправить GET запрос на /api/projects",
+          "Проверить статус код 200",
+          "Проверить структуру ответа",
+          "Проверить наличие обязательных полей"
+        ],
+        projectId: projectId
+      }
+    ]
+  }
+];
+
+const getDemoTestRuns = (projectId) => [
+  {
+    id: 1,
+    projectId: projectId,
+    name: "Регрессионное тестирование v1.0",
+    description: "Полное регрессионное тестирование версии 1.0",
+    type: "Automatic",
+    status: "completed",
+    date: new Date().toLocaleString(),
+    tests: [
+      { id: 1, status: 'passed', passed: true },
+      { id: 2, status: 'passed', passed: true },
+      { id: 3, status: 'failed', passed: false }
+    ],
+    passed: 2,
+    failed: 1,
+    total: 3,
+    startTime: new Date(Date.now() - 3600000).toISOString(),
+    endTime: new Date().toISOString()
+  },
+  {
+    id: 2,
+    projectId: projectId,
+    name: "Дымовое тестирование",
+    description: "Быстрая проверка основных функций",
+    type: "Hand",
+    status: "not-run",
+    date: new Date().toLocaleString(),
+    tests: [
+      { id: 1, status: 'not-run', passed: false },
+      { id: 2, status: 'not-run', passed: false }
+    ],
+    passed: 0,
+    failed: 0,
+    total: 2
+  }
+];
+
+const getDemoTestPlans = (projectId) => [
+  {
+    id: 1,
+    projectId: projectId,
+    name: "Основной тест-план",
+    description: "Основной план тестирования функциональности",
+    version: "1.0",
+    status: "active",
+    createdAt: new Date().toISOString(),
+    testCaseCount: 15
+  },
+  {
+    id: 2,
+    projectId: projectId,
+    name: "Регрессионный тест-план", 
+    description: "План для регрессионного тестирования",
+    version: "2.1",
+    status: "active",
+    createdAt: new Date().toISOString(),
+    testCaseCount: 8
+  }
+];
+
+const getDemoDistributions = () => [
+  {
+    id: 1,
+    name: "Production Release",
+    version: "1.0.0",
+    type: "release",
+    status: "stable",
+    description: "Стабильная версия для продакшена",
+    downloadUrl: "http://example.com/distro/v1.0.0",
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 2,
+    name: "Beta Release", 
+    version: "1.1.0-beta",
+    type: "beta",
+    status: "testing",
+    description: "Бета-версия для тестирования новых функций",
+    downloadUrl: "http://example.com/distro/v1.1.0-beta",
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 3,
+    name: "Development Build",
+    version: "2.0.0-dev",
+    type: "development", 
+    status: "unstable",
+    description: "Ночная сборка для разработчиков",
+    downloadUrl: "http://example.com/distro/v2.0.0-dev",
+    createdAt: new Date().toISOString()
+  }
+];
+
 
   return (
     <div className="main-content">
