@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
   const [formData, setFormData] = useState({
     name: '',
+    slug: '',
     description: '',
     environment: 'разработка',
     environment1: 'OpenQA'
@@ -61,6 +62,19 @@ const ProjectModal = ({ onClose, onCreate, distributions = [] }) => {
               placeholder="Введите название проекта"
               value={formData.name}
               onChange={handleChange} 
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="projectSlug">Slug (уникальный идентификатор)</label>
+            <input
+              type="text"
+              id="slug"
+              name="slug"
+              required
+              placeholder="Введите slug, например my-project"
+              value={formData.slug}
+              onChange={handleChange}
             />
           </div>
           

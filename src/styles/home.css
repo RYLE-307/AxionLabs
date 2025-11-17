@@ -222,6 +222,18 @@
   color: var(--text-secondary);
 }
 
+.fa-envelope{
+  margin-right: 20px;
+}
+
+.fa-map-marker-alt{
+  margin-right: 23px;
+}
+
+.home_logo{
+ 
+}
+
 /* Responsive Design для Home */
 @media (max-width: 768px) {
   .hero-content {

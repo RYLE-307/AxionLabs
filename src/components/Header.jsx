@@ -12,7 +12,8 @@ const Header = ({
   currentProjectId, 
   setCurrentProjectId, 
   setShowProjectModal,
-  canCreateProject 
+  canCreateProject,
+  onDeleteProject
 }) => {
   const logoPath = theme === 'dark' ? '/logo_dark.svg' : '/logo_Theme.svg';
 
@@ -47,6 +48,17 @@ const Header = ({
                     </option>
                   ))}
                 </select>
+                {/* Delete current project button */}
+                {typeof onDeleteProject === 'function' && currentProjectId && (
+                  <button 
+                    className="btn btn-outline"
+                    title="Удалить проект"
+                    onClick={() => onDeleteProject(currentProjectId)}
+                    style={{ marginLeft: '8px' }}
+                  >
+                    <i className="fas fa-trash"></i>
+                  </button>
+                )}
               </div>
             )}
             

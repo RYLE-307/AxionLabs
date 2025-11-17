@@ -17,7 +17,7 @@ const logoPath = theme === 'dark' ? '/logo_dark.svg' : '/logo_Theme.svg';
         <div className="container">
           <nav className="landing-nav">
             <a href="#" className="landing-logo">
-               <img className='logo' src={logoPath} alt="AxionLabs Logo" />  AxionLabs
+               <img className='logo home_logo' src={logoPath} alt="AxionLabs Logo" />
             </a>
             <div className="landing-auth">
               <button className="theme-toggle" onClick={toggleTheme}>

@@ -16,6 +16,9 @@
   gap: 2rem;
 }
 
+.logo__image { max-height: 40px; width: auto; display: block; }
+.logo { display: flex; align-items: center; gap: 0.5rem; }
+
 /* Элементы управления */
 .navbar__controls {
   display: flex;
@@ -49,10 +52,10 @@
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   min-width: 12.5rem;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--transition), background-color var(--transition);
 }
 
 .project-selector__dropdown:focus,

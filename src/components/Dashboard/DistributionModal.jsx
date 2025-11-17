@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const DistributionModal = ({ onClose, onCreate, distributions = [], onDelete, currentProjectId }) => {
+const DistributionModal = ({ onClose, onCreate, distributions = [], onDelete, currentProjectId, isCreating = false }) => {
   const [formData, setFormData] = useState({
     name: '',
     version: '',
@@ -10,12 +10,8 @@ const DistributionModal = ({ onClose, onCreate, distributions = [], onDelete, cu
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onCreate({
-      id: Date.now(),
-      ...formData,
-      projectId: currentProjectId,
-      createdAt: new Date().toISOString()
-    });
+  // pass raw form data to parent; parent will call API and refresh list
+  if (!isCreating) onCreate({ ...formData });
     setFormData({ name: '', version: '', type: 'linux', description: '' });
   };
 
@@ -42,12 +38,12 @@ const DistributionModal = ({ onClose, onCreate, distributions = [], onDelete, cu
 
   <div className="dist-list-wrapper">
           <h3>Существующие дистрибутивы</h3>
-          {distributions.length === 0 ? (
+          {distributions.filter(d => Number(d.projectId) === Number(currentProjectId)).length === 0 ? (
             <p className="no-distributions">Нет дистрибутивов для этого проекта.</p>
           ) : (
             <div className="dist-cards">
               {distributions
-                .filter(d => d.projectId === currentProjectId)
+                .filter(d => Number(d.projectId) === Number(currentProjectId))
                 .map(d => (
                 <div key={d.id} className="dist-card">
                   <div className="dist-main">
@@ -74,6 +70,7 @@ const DistributionModal = ({ onClose, onCreate, distributions = [], onDelete, cu
               value={formData.name}
               onChange={handleChange}
               required 
+              disabled={isCreating}
               placeholder="Например: Ubuntu, Windows, macOS" 
             />
           </div>
@@ -87,6 +84,7 @@ const DistributionModal = ({ onClose, onCreate, distributions = [], onDelete, cu
               value={formData.version}
               onChange={handleChange}
               required 
+              disabled={isCreating}
               placeholder="Например: 22.04, 11, 14.0" 
             />
           </div>
@@ -98,6 +96,7 @@ const DistributionModal = ({ onClose, onCreate, distributions = [], onDelete, cu
               name="type"
               value={formData.type}
               onChange={handleChange}
+              disabled={isCreating}
             >
               <option value="linux">Linux</option>
               <option value="windows">Windows</option>
@@ -115,6 +114,7 @@ const DistributionModal = ({ onClose, onCreate, distributions = [], onDelete, cu
               name="description"
               value={formData.description}
               onChange={handleChange}
+              disabled={isCreating}
               placeholder="Дополнительная информация о дистрибутиве" 
               rows="3"
             />
@@ -124,8 +124,8 @@ const DistributionModal = ({ onClose, onCreate, distributions = [], onDelete, cu
             <button type="button" className="btn btn-outline" onClick={onClose}>
               Закрыть
             </button>
-            <button type="submit" className="btn btn-primary">
-              Добавить дистрибутив
+            <button type="submit" className="btn btn-primary" disabled={isCreating}>
+              {isCreating ? 'Добавление...' : 'Добавить дистрибутив'}
             </button>
           </div>
         </form>

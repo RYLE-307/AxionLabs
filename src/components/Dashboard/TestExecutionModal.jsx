@@ -14,11 +14,20 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
   const currentStep = steps[currentStepIndex] || {};
 
  
+  // Helper to get a stable key for a testCase (backend/mocks sometimes omit numeric id)
+  const getTestCaseKey = (testCase, index) => {
+    if (!testCase) return `tc-${index}`;
+    if (testCase.id !== undefined && testCase.id !== null && String(testCase.id) !== '') return String(testCase.id);
+    if (testCase.key) return String(testCase.key);
+    return `tc-${index}`;
+  };
+
   useEffect(() => {
     if (testCases.length > 0) {
       const initialResults = {};
       testCases.forEach((testCase, index) => {
-        initialResults[testCase.id] = {
+        const k = getTestCaseKey(testCase, index);
+        initialResults[k] = {
           passed: false,
           completed: false,
           stepResults: {}
@@ -35,7 +44,8 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
   }, [currentStepIndex, currentTestCaseIndex]);
 
   const handleStepResult = (passed) => {
-    if (!currentTestCase.id) return;
+    // allow execution even if backend didn't provide numeric id — use stable key
+    const tcKey = getTestCaseKey(currentTestCase, currentTestCaseIndex);
 
     const newStepResults = {
       ...stepResults,
@@ -60,7 +70,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
       
       const newTestResults = {
         ...testResults,
-        [currentTestCase.id]: {
+        [tcKey]: {
           passed: allStepsPassed,
           completed: true,
           stepResults: newStepResults
@@ -85,13 +95,45 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
 
   const completeTestRun = (results) => {
     setIsExecuting(false);
-    
-    const executionResults = Object.entries(results).map(([testCaseId, result]) => ({
-      testCaseId: parseInt(testCaseId),
-      passed: result.passed,
-      stepResults: result.stepResults
-    }));
+    // Build mapping from generated stable keys to actual numeric ids if available
+    const keyToIdMap = {};
+    (testRun?.tests || []).forEach((tc, idx) => {
+      const k = getTestCaseKey(tc, idx);
+      if (tc && tc.id !== undefined && tc.id !== null && String(tc.id) !== '') {
+        keyToIdMap[k] = tc.id;
+      } else if (tc && tc.key) {
+        keyToIdMap[k] = tc.key; // fallback mapping to key (non-numeric)
+      } else {
+        keyToIdMap[k] = null;
+      }
+    });
 
+    const executionResults = Object.entries(results).map(([testCaseKeyOrId, result]) => {
+      const numericId = parseInt(testCaseKeyOrId);
+      const isNumeric = !Number.isNaN(numericId);
+
+      if (isNumeric) {
+        return {
+          testCaseId: numericId,
+          testCaseKey: null,
+          passed: result.passed,
+          stepResults: result.stepResults
+        };
+      }
+
+      // it's a non-numeric stable key (like tc-0 or a test.key). Try to map to actual id
+      const mapped = keyToIdMap[testCaseKeyOrId];
+      const mappedIsNumeric = mapped !== undefined && mapped !== null && !Number.isNaN(parseInt(mapped));
+
+      return {
+        testCaseId: mappedIsNumeric ? parseInt(mapped) : null,
+        testCaseKey: mappedIsNumeric ? null : testCaseKeyOrId,
+        passed: result.passed,
+        stepResults: result.stepResults
+      };
+    });
+
+    console.debug('TestExecutionModal.completeTestRun -> keyToIdMap:', keyToIdMap, 'results:', results, 'executionResults:', executionResults);
     onComplete({
       testRunId: testRun.id,
       results: executionResults,
@@ -100,11 +142,11 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
   };
 
   const skipTestCase = () => {
-    if (!currentTestCase.id) return;
+    const tcKey = getTestCaseKey(currentTestCase, currentTestCaseIndex);
 
     const newTestResults = {
       ...testResults,
-      [currentTestCase.id]: {
+      [tcKey]: {
         passed: false,
         completed: true,
         stepResults: {},
@@ -358,14 +400,15 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
             <h4>Обзор выполнения:</h4>
             <div className="test-cases-overview">
               {testCases.map((testCase, index) => {
-                const result = testResults[testCase.id];
+                const tcKey = getTestCaseKey(testCase, index);
+                const result = testResults[tcKey];
                 const status = result?.completed 
                   ? (result.passed ? 'passed' : 'failed')
                   : (index === currentTestCaseIndex ? 'current' : 'pending');
                 
                 return (
                   <div 
-                    key={testCase.id} 
+                    key={tcKey} 
                     className={`test-case-overview ${status}`}
                     onClick={() => {
                       if (index < currentTestCaseIndex) {

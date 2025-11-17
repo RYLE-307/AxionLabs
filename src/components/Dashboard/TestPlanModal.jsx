@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useToast } from '../UI/ToastContext';
 
 const TestPlanModal = ({ onClose, onCreate, onSave, distributions = [], currentProjectId, initialData = null }) => {
   const [formData, setFormData] = useState(initialData ? {
@@ -17,11 +18,27 @@ const TestPlanModal = ({ onClose, onCreate, onSave, distributions = [], currentP
     selectedDistributions: []
   });
 
+  const { addToast } = useToast();
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Distributions requirement:
+    const availableDistForProject = distributions.filter(d => Number(d.projectId) === Number(currentProjectId));
+    const selected = formData.selectedDistributions || [];
+    // If there are no distributions at all for the project, block creation and instruct to add distributions first
+    if (availableDistForProject.length === 0) {
+      addToast('Нельзя создать тест-план пока не добавлены дистрибутивы для проекта. Сначала добавьте дистрибутивы.', 'error');
+      return;
+    }
+    // If distributions exist, require selecting at least one
+    if (selected.length === 0) {
+      addToast('Выберите хотя бы один дистрибутив для тест-плана', 'error');
+      return;
+    }
+
     const payload = {
       ...formData,
-      selectedDistributions: formData.selectedDistributions
+      selectedDistributions: selected
     };
     if (initialData && onSave) {
       onSave(initialData.id, payload);
@@ -127,14 +144,14 @@ const TestPlanModal = ({ onClose, onCreate, onSave, distributions = [], currentP
           <div className="form-group">
             <label>Целевые дистрибутивы</label>
             <div className="distributions-selection">
-              {distributions.filter(d => d.projectId === currentProjectId).length === 0 ? (
+              {distributions.filter(d => Number(d.projectId) === Number(currentProjectId)).length === 0 ? (
                 <p className="no-distributions">
                   Нет доступных дистрибутивов для этого проекта. Сначала добавьте дистрибутивы в настройках проекта.
                 </p>
               ) : (
                 <div className="dist-cards dist-cards--selectable">
                   {distributions
-                    .filter(d => d.projectId === currentProjectId)
+                    .filter(d => Number(d.projectId) === Number(currentProjectId))
                     .map(distro => (
                       <label key={distro.id} className="dist-card dist-card--selectable">
                         <input
@@ -156,7 +173,7 @@ const TestPlanModal = ({ onClose, onCreate, onSave, distributions = [], currentP
             {formData.selectedDistributions && formData.selectedDistributions.length > 0 && (
               <div className="selected-distributions">
                 {formData.selectedDistributions.map(id => {
-                  const d = distributions.find(x => x.id === id);
+                  const d = distributions.find(x => Number(x.id) === Number(id));
                   if (!d) return null;
                   return (
                     <div key={id} className="dist-chip">
@@ -175,7 +192,7 @@ const TestPlanModal = ({ onClose, onCreate, onSave, distributions = [], currentP
             <button type="button" className="btn btn-outline" onClick={onClose}>
               Отмена
             </button>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" disabled={distributions.filter(d => Number(d.projectId) === Number(currentProjectId)).length === 0 || !(formData.selectedDistributions && formData.selectedDistributions.length > 0)}>
               {initialData ? 'Сохранить изменения' : 'Создать тест-план'}
             </button>
           </div>
