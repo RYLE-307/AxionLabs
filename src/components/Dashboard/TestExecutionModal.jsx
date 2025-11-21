@@ -14,7 +14,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
   const currentStep = steps[currentStepIndex] || {};
 
  
-  // Helper to get a stable key for a testCase (backend/mocks sometimes omit numeric id)
+  // Helper to get a stable key for a testCase
   const getTestCaseKey = (testCase, index) => {
     if (!testCase) return `tc-${index}`;
     if (testCase.id !== undefined && testCase.id !== null && String(testCase.id) !== '') return String(testCase.id);
@@ -68,7 +68,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
      
       const allStepsPassed = Object.values(newStepResults).every(step => step.passed);
       
-      const newTestResults = {
+      let newTestResults = {
         ...testResults,
         [tcKey]: {
           passed: allStepsPassed,
@@ -76,6 +76,20 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
           stepResults: newStepResults
         }
       };
+
+      // Если текущий кейс провален, заблокировать все остальные
+      if (!allStepsPassed) {
+        for (let i = currentTestCaseIndex + 1; i < testCases.length; i++) {
+          const remainingTcKey = getTestCaseKey(testCases[i], i);
+          newTestResults[remainingTcKey] = {
+            passed: false,
+            completed: true,
+            blocked: true,
+            stepResults: {},
+            comment: 'Тест-кейс заблокирован (предыдущий кейс провален)'
+          };
+        }
+      }
       
       setTestResults(newTestResults);
       setStepResults({});
@@ -84,7 +98,8 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
       setActualResult('');
 
      
-      if (currentTestCaseIndex < testCases.length - 1) {
+      if (currentTestCaseIndex < testCases.length - 1 && allStepsPassed) {
+        // Продолжить только если текущий кейс прошел успешно
         setCurrentTestCaseIndex(currentTestCaseIndex + 1);
       } else {
        
@@ -117,11 +132,12 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
           testCaseId: numericId,
           testCaseKey: null,
           passed: result.passed,
+          blocked: result.blocked || false,
           stepResults: result.stepResults
         };
       }
 
-      // it's a non-numeric stable key (like tc-0 or a test.key). Try to map to actual id
+   
       const mapped = keyToIdMap[testCaseKeyOrId];
       const mappedIsNumeric = mapped !== undefined && mapped !== null && !Number.isNaN(parseInt(mapped));
 
@@ -129,6 +145,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
         testCaseId: mappedIsNumeric ? parseInt(mapped) : null,
         testCaseKey: mappedIsNumeric ? null : testCaseKeyOrId,
         passed: result.passed,
+        blocked: result.blocked || false,
         stepResults: result.stepResults
       };
     });
@@ -402,9 +419,16 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
               {testCases.map((testCase, index) => {
                 const tcKey = getTestCaseKey(testCase, index);
                 const result = testResults[tcKey];
-                const status = result?.completed 
-                  ? (result.passed ? 'passed' : 'failed')
-                  : (index === currentTestCaseIndex ? 'current' : 'pending');
+                let status = 'pending';
+                if (result?.completed) {
+                  if (result.blocked) {
+                    status = 'blocked';
+                  } else {
+                    status = result.passed ? 'passed' : 'failed';
+                  }
+                } else if (index === currentTestCaseIndex) {
+                  status = 'current';
+                }
                 
                 return (
                   <div 
@@ -425,6 +449,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
                       {status === 'current' && 'Текущий'}
                       {status === 'passed' && 'Пройден'}
                       {status === 'failed' && 'Провален'}
+                      {status === 'blocked' && 'Заблокирован'}
                       {status === 'pending' && 'Ожидание'}
                     </span>
                   </div>

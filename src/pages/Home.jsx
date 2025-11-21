@@ -65,7 +65,7 @@ const logoPath = theme === 'dark' ? '/logo_dark.svg' : '/logo_Theme.svg';
             
             <div className="hero-image">
               <div className="hero-image-placeholder">
-                NovaTest Platform
+                AxionLabs Test Managment Platform
               </div>
             </div>
           </div>
@@ -143,7 +143,7 @@ const logoPath = theme === 'dark' ? '/logo_dark.svg' : '/logo_Theme.svg';
             <div className="footer-section">
               <h3 className="footer-title">Контакты</h3>
               <ul className="footer-links">
-                <li><i className="fas fa-envelope"></i><a href="mailto:info@NovaTest.ru">info@NovaTest.ru</a></li>
+                <li><i className="fas fa-envelope"></i><a href="mailto:info@AxionLabs.ru">info@AxionLabs.ru</a></li>
                 <li><i className="fas fa-phone"></i> <a href="tel:+7(999)123-45-67">+7 (999) 123-45-67</a></li>
                 <li><i className="fas fa-map-marker-alt"></i> Москва, Россия</li>
               </ul>

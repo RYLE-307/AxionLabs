@@ -241,6 +241,7 @@ const loadTestRuns = async (projectId) => {
       tests: testRun.test_cases || testRun.tests || [],
       passed: testRun.passed_count || testRun.passed || 0,
       failed: testRun.failed_count || testRun.failed || 0,
+      blocked: testRun.blocked_count || testRun.blocked || 0,
       total: testRun.total_tests || testRun.tests?.length || 0,
       started_at: testRun.started_at || null,
       finished_at: testRun.finished_at || testRun.completed_at || null
@@ -699,17 +700,41 @@ const createProject = async (projectData) => {
       prevRuns.map(run => {
         if (run.id !== testRunId) return run;
         
-        const updatedTests = run.tests.map(test => {
+        const updatedTests = run.tests.map((test, index) => {
           const passed = Math.random() > 0.3;
           return {
             ...test,
             status: passed ? 'passed' : 'failed',
-            passed: passed
+            passed: passed,
+            blocked: false
           };
         });
         
-        const passedCount = updatedTests.filter(t => t.passed).length;
-        const failedCount = updatedTests.filter(t => !t.passed).length;
+        // Найти первый проваленный кейс и заблокировать все кейсы после него
+        let firstFailedIndex = -1;
+        for (let i = 0; i < updatedTests.length; i++) {
+          if (!updatedTests[i].passed && !updatedTests[i].blocked) {
+            firstFailedIndex = i;
+            break;
+          }
+        }
+        
+        // Если найден проваленный кейс, заблокировать все остальные
+        if (firstFailedIndex !== -1) {
+          for (let i = firstFailedIndex + 1; i < updatedTests.length; i++) {
+            updatedTests[i] = {
+              ...updatedTests[i],
+              status: 'blocked',
+              passed: false,
+              blocked: true,
+              comment: 'Тест-кейс заблокирован (предыдущий кейс провален в цепи выполнения)'
+            };
+          }
+        }
+        
+        const passedCount = updatedTests.filter(t => t.passed && !t.blocked).length;
+        const failedCount = updatedTests.filter(t => !t.passed && !t.blocked).length;
+        const blockedCount = updatedTests.filter(t => t.blocked).length;
         
         return {
           ...run, 
@@ -717,6 +742,7 @@ const createProject = async (projectData) => {
           tests: updatedTests,
           passed: passedCount,
           failed: failedCount,
+          blocked: blockedCount,
           endTime: new Date().toISOString()
         };
       })
@@ -773,20 +799,23 @@ const createProject = async (projectData) => {
           const merged = {
             ...test,
             passed: result.passed !== undefined ? result.passed : test.passed,
+            blocked: result.blocked || false,
             stepResults: result.stepResults || test.stepResults || [],
             completed: true
           };
           return merged;
         });
         
-        const passedCount = updatedTests.filter(t => t.passed).length;
-        const failedCount = updatedTests.filter(t => !t.passed).length;
+        const passedCount = updatedTests.filter(t => t.passed && !t.blocked).length;
+        const failedCount = updatedTests.filter(t => !t.passed && !t.blocked).length;
+        const blockedCount = updatedTests.filter(t => t.blocked).length;
         
         return {
           ...run,
           tests: updatedTests,
           passed: passedCount,
           failed: failedCount,
+          blocked: blockedCount,
           status: 'completed',
           endTime: new Date().toISOString()
         };
@@ -825,12 +854,14 @@ const createProject = async (projectData) => {
 
           if (!res) return tc;
 
-          // update status/passed
+          // update status/passed/blocked
           const passed = res.passed === true;
+          const blocked = res.blocked === true;
           return {
             ...tc,
-            status: passed ? 'passed' : 'failed',
+            status: blocked ? 'blocked' : (passed ? 'passed' : 'failed'),
             passed: passed,
+            blocked: blocked,
             stepResults: res.stepResults || tc.stepResults || []
           };
         });
@@ -1546,7 +1577,7 @@ const createProject = async (projectData) => {
 
     {showExecutionModal && currentExecutingTestRun && (
         <TestExecutionModal 
-      testRun={Array.isArray(testRuns) ? testRuns.find(run => run.id === currentExecutingTestRun) : null}
+          testRun={Array.isArray(testRuns) ? testRuns.find(run => run.id === currentExecutingTestRun) : null}
           onClose={() => {
             setShowExecutionModal(false);
             setCurrentExecutingTestRun(null);

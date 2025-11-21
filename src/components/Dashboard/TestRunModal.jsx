@@ -29,6 +29,7 @@ const TestRunModal = ({ onClose, onCreate, testCases, projectId, groups = [], cu
     configuration: '' // JSON string; will be parsed before send
   });
   const [newProfileError, setNewProfileError] = useState('');
+  const [formError, setFormError] = useState('');
 
   // `testCases` is a flat array of test case objects (no categories)
   const allTestCases = Array.isArray(testCases) ? testCases : [];
@@ -167,8 +168,6 @@ const TestRunModal = ({ onClose, onCreate, testCases, projectId, groups = [], cu
     setFormError('');
   };
 
-  const [formError, setFormError] = useState('');
-
 
   const handleTestCaseSelection = (testCaseId) => {
     if (selectedTestCases.includes(testCaseId)) {
@@ -186,7 +185,7 @@ const TestRunModal = ({ onClose, onCreate, testCases, projectId, groups = [], cu
     }
   };
 
-  // no category selection; select cases directly
+  // no category selection;
 
   return (
     <div className="modal active">

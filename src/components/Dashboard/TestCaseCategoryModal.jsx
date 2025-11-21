@@ -56,7 +56,7 @@ const TestCaseCategoryModal = ({ onClose, onCreate, testPlans = [], currentProje
 
           <div className="form-group">
             {defaultPlanId ? (
-              // When opened from a plan header, defaultPlanId is provided — show plan name and lock selection
+            
               <>
                 <label>Привязать к тест-плану</label>
                 <div className="muted">
