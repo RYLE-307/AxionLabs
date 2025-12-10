@@ -78,7 +78,7 @@ const TestCaseItemModal = ({ onClose, onCreate, projectId, groups = [], defaultG
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group" style={{display:'none'}}>
-            <label htmlFor="testCaseKey">Key</label>
+            <label htmlFor="testCaseKey">Идентификатор</label>
             <input
               type="text"
               id="testCaseKey"

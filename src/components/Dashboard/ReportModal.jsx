@@ -22,9 +22,11 @@ const ReportModal = ({ testRun, onClose }) => {
     );
   }
 
-  const passedTests = testRun.tests.filter(test => test.passed).length;
+  const passedTests = testRun.tests.filter(test => test.passed && !test.blocked).length;
+  const failedTests = testRun.tests.filter(test => !test.passed && !test.blocked).length;
+  const blockedTests = testRun.tests.filter(test => test.blocked).length;
   const totalTests = testRun.tests.length;
-  const successRate = totalTests > 0 ? Math.round((passedTests / totalTests) * 100) : 0;
+  const successRate = totalTests > blockedTests ? Math.round((passedTests / (totalTests - blockedTests)) * 100) : 0;
 
 
   const formatDate = (date) => {
@@ -64,10 +66,18 @@ const ReportModal = ({ testRun, onClose }) => {
             </div>
             <div className="report-stat">
               <div className="report-stat-value" style={{color: 'var(--danger)'}}>
-                {totalTests - passedTests}
+                {failedTests}
               </div>
               <div className="report-stat-label">Провалено</div>
             </div>
+            {blockedTests > 0 && (
+              <div className="report-stat">
+                <div className="report-stat-value" style={{color: 'var(--warning)'}}>
+                  {blockedTests}
+                </div>
+                <div className="report-stat-label">Заблокировано</div>
+              </div>
+            )}
             <div className="report-stat">
               <div className="report-stat-value" style={{color: 'var(--primary)'}}>
                 {successRate}%
@@ -79,16 +89,21 @@ const ReportModal = ({ testRun, onClose }) => {
           <h4>Детализация по тестам:</h4>
           
           {testRun.tests.map((test, index) => (
-            <div key={index} className={`test-case-result ${test.passed ? 'passed' : 'failed'}`}>
+            <div key={index} className={`test-case-result ${test.blocked ? 'blocked' : (test.passed ? 'passed' : 'failed')}`}>
               <div className="test-case-header">
                 <strong>{index + 1}. {test.name || 'Без названия'}</strong>
-                <span className={`status-badge ${test.passed ? 'status-passed' : 'status-failed'}`}>
-                  {test.passed ? 'Пройден' : 'Провален'}
+                <span className={`status-badge ${test.blocked ? 'status-blocked' : (test.passed ? 'status-passed' : 'status-failed')}`}>
+                  {test.blocked ? 'Заблокирован' : (test.passed ? 'Пройден' : 'Провален')}
                 </span>
               </div>
               {test.description && <p>{test.description}</p>}
+              {test.blocked && (
+                <div className="blocked-details">
+                  <p><em>Тест-кейс был заблокирован из-за провала предыдущего тест-кейса в цепи выполнения.</em></p>
+                </div>
+              )}
               
-              {!test.passed && test.errorDetails && (
+              {!test.passed && !test.blocked && test.errorDetails && (
                 <div className="error-details">
                   <h5>Детали ошибки:</h5>
                   {test.errorDetails.location && (

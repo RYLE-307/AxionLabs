@@ -273,8 +273,9 @@ const HierarchicalPlanTree = ({
                                 ) : (
                                   testRuns.filter(r => Number(r.plan_id || r.planId) === Number(plan.id)).map(testRun => {
                                     const total = testRun.total || testRun.tests?.length || 0;
-                                    const passed = typeof testRun.passed === 'number' ? testRun.passed : (Array.isArray(testRun.tests) ? testRun.tests.filter(t => t.passed === true).length : 0);
-                                    const failed = typeof testRun.failed === 'number' ? testRun.failed : (Array.isArray(testRun.tests) ? testRun.tests.filter(t => t.passed === false).length : 0);
+                                    const passed = typeof testRun.passed === 'number' ? testRun.passed : (Array.isArray(testRun.tests) ? testRun.tests.filter(t => t.passed === true && !t.blocked).length : 0);
+                                    const failed = typeof testRun.failed === 'number' ? testRun.failed : (Array.isArray(testRun.tests) ? testRun.tests.filter(t => t.passed === false && !t.blocked).length : 0);
+                                    const blocked = typeof testRun.blocked === 'number' ? testRun.blocked : (Array.isArray(testRun.tests) ? testRun.tests.filter(t => t.blocked === true).length : 0);
                                     const isExpanded = !!expandedRuns[String(testRun.id)];
 
                                     return (
@@ -285,6 +286,9 @@ const HierarchicalPlanTree = ({
                                             <span className="muted">Всего: <strong>{total}</strong></span>
                                             <span className="muted">Пройдено: <strong>{passed}</strong></span>
                                             <span className="muted">Не пройдено: <strong>{failed}</strong></span>
+                                            {blocked > 0 && (
+                                              <span className="muted">Заблокировано: <strong style={{color: '#ffc107'}}>{blocked}</strong></span>
+                                            )}
                                           </div>
                                           <div className="test-run-date">{testRun.date}</div>
                                           <div className="test-run-actions">
@@ -313,11 +317,11 @@ const HierarchicalPlanTree = ({
                                         {isExpanded && Array.isArray(testRun.tests) && (
                                           <div className="run-test-list">
                                             {testRun.tests.map((t, idx) => {
-                                              // normalize t: it can be an object, or a primitive id/string
+                                             
                                               const raw = t;
                                               const statusClass = (raw && raw.status === 'running') ? 'running' : (raw && raw.passed === true ? 'passed' : (raw && raw.passed === false ? 'failed' : 'unknown'));
 
-                                              // collect candidate ids/keys from multiple possible shapes
+                                       
                                               const candidates = [];
                                               const candidateKeys = [];
 
@@ -325,7 +329,7 @@ const HierarchicalPlanTree = ({
                                               const pushKeyIf = (k) => { if (k) candidateKeys.push(String(k)); };
 
                                               if (raw === null || raw === undefined) {
-                                                // nothing
+                                              
                                               } else if (typeof raw === 'string' || typeof raw === 'number') {
                                                 pushIf(raw);
                                               } else if (typeof raw === 'object') {
@@ -345,7 +349,7 @@ const HierarchicalPlanTree = ({
                                                 if (raw.tcKey) pushKeyIf(raw.tcKey);
                                               }
 
-                                              // search in global testCases by any candidate id or key
+                                  
                                               let globalMatch = null;
                                               if (Array.isArray(testCases)) {
                                                 for (const cid of candidates) {
@@ -397,11 +401,14 @@ const HierarchicalPlanTree = ({
                                   {testRuns.filter(r => Number(r.plan_id || r.planId) === Number(plan.id)).length === 0 ? (
                                     <div className="result-line result-success">Нет данных о запусках</div>
                                   ) : (
-                                    testRuns.filter(r => Number(r.plan_id || r.planId) === Number(plan.id)).slice(0, 10).map(run => (
-                                      <div key={run.id} className={`result-line ${run.status === 'completed' ? 'result-success' : run.status === 'running' ? 'result-warning' : 'result-error'}`}>
-                                        {run.date} - {run.name} ({run.passed}/{run.tests?.length || 0} пройдено) - {run.status}
-                                      </div>
-                                    ))
+                                    testRuns.filter(r => Number(r.plan_id || r.planId) === Number(plan.id)).slice(0, 10).map(run => {
+                                      const blockedCount = Array.isArray(run.tests) ? run.tests.filter(t => t.blocked === true).length : (run.blocked || 0);
+                                      return (
+                                        <div key={run.id} className={`result-line ${run.status === 'completed' ? 'result-success' : run.status === 'running' ? 'result-warning' : 'result-error'}`}>
+                                          {run.date} - {run.name} ({run.passed}/{run.tests?.length || 0} пройдено{blockedCount > 0 ? `, ${blockedCount} заблокировано` : ''}) - {run.status}
+                                        </div>
+                                      );
+                                    })
                                   )}
                                 </div>
                               </div>

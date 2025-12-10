@@ -8,10 +8,10 @@ const TestCaseViewModal = ({ testCase, onClose }) => {
 
   const description = lv.description || lv.desc || testCase.Description || testCase.description || '';
 
-  // Steps: try several possible field names and nested shapes
+  // Steps:
   const steps = lv.steps || lv.Steps || lv.instructions || lv.steps_text || lv.step_list || testCase.Steps || testCase.steps || testCase.instructions || '';
 
-  // Expected/result: try multiple field names
+  // Expected/result:
   const expected = lv.expected || lv.Expected || lv.expected_result || lv.expectedResult || lv.expected_output || testCase.Expected || testCase.expected || '';
 
   const priority = lv.priority || testCase.Priority || testCase.priority || 'low';
@@ -54,7 +54,7 @@ const TestCaseViewModal = ({ testCase, onClose }) => {
       try { return <pre style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(s, null, 2)}</pre>; } catch (e) { return <div>{String(s)}</div>; }
     }
 
-    // string: split lines into ordered list if multiple lines, otherwise simple div
+    // string:
     if (isNonEmptyString(s)) {
       if (s.indexOf('\n') !== -1) {
         const lines = s.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
@@ -101,7 +101,7 @@ const TestCaseViewModal = ({ testCase, onClose }) => {
         </div>
         <div className="modal-body">
           <div className="form-group">
-            <label>Key</label>
+            <label>Идентификатор</label>
             <div className="readonly-field">{testCase.key}</div>
           </div>
           <div className="form-group">

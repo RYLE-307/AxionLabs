@@ -12,9 +12,31 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
   const currentTestCase = testCases[currentTestCaseIndex] || {};
   const steps = currentTestCase?.steps || [];
   const currentStep = steps[currentStepIndex] || {};
+  const expectedForCase = (
+    currentTestCase.Expected ||
+    currentTestCase.expected ||
+    currentTestCase.expected_result ||
+    currentTestCase.expectedResult ||
+    currentTestCase.expected_output ||
+    ''
+  );
+  const getCaseValue = (names) => {
+    for (let n of names) {
+      if (currentTestCase && (currentTestCase[n] !== undefined && currentTestCase[n] !== null && String(currentTestCase[n]) !== '')) {
+        return currentTestCase[n];
+      }
+    }
+    return '';
+  };
+
+  const caseId = getCaseValue(['id', 'key', 'ID']);
+  const preconditions = getCaseValue(['Preconditions', 'preconditions', 'precondition']);
+  const priority = getCaseValue(['Priority', 'priority']);
+  const tags = currentTestCase.tags || currentTestCase.labels || currentTestCase.Labels || [];
+  const author = getCaseValue(['author', 'creator', 'createdBy']);
 
  
-  // Helper to get a stable key for a testCase (backend/mocks sometimes omit numeric id)
+  // Helper to get a stable key for a testCase
   const getTestCaseKey = (testCase, index) => {
     if (!testCase) return `tc-${index}`;
     if (testCase.id !== undefined && testCase.id !== null && String(testCase.id) !== '') return String(testCase.id);
@@ -43,6 +65,16 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
     setActualResult('');
   }, [currentStepIndex, currentTestCaseIndex]);
 
+  // Debug: показываем текущий кейс и рассчитанные поля в консоли при смене кейса
+  useEffect(() => {
+    console.debug('TestExecutionModal: currentTestCaseIndex', currentTestCaseIndex, {
+      currentTestCase,
+      expectedForCase,
+      stepsCount: steps.length,
+      steps
+    });
+  }, [currentTestCaseIndex, currentTestCase, expectedForCase, steps]);
+
   const handleStepResult = (passed) => {
     // allow execution even if backend didn't provide numeric id — use stable key
     const tcKey = getTestCaseKey(currentTestCase, currentTestCaseIndex);
@@ -68,7 +100,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
      
       const allStepsPassed = Object.values(newStepResults).every(step => step.passed);
       
-      const newTestResults = {
+      let newTestResults = {
         ...testResults,
         [tcKey]: {
           passed: allStepsPassed,
@@ -76,6 +108,20 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
           stepResults: newStepResults
         }
       };
+
+      // Если текущий кейс провален, заблокировать все остальные
+      if (!allStepsPassed) {
+        for (let i = currentTestCaseIndex + 1; i < testCases.length; i++) {
+          const remainingTcKey = getTestCaseKey(testCases[i], i);
+          newTestResults[remainingTcKey] = {
+            passed: false,
+            completed: true,
+            blocked: true,
+            stepResults: {},
+            comment: 'Тест-кейс заблокирован (предыдущий кейс провален)'
+          };
+        }
+      }
       
       setTestResults(newTestResults);
       setStepResults({});
@@ -84,7 +130,8 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
       setActualResult('');
 
      
-      if (currentTestCaseIndex < testCases.length - 1) {
+      if (currentTestCaseIndex < testCases.length - 1 && allStepsPassed) {
+        // Продолжить только если текущий кейс прошел успешно
         setCurrentTestCaseIndex(currentTestCaseIndex + 1);
       } else {
        
@@ -117,11 +164,12 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
           testCaseId: numericId,
           testCaseKey: null,
           passed: result.passed,
+          blocked: result.blocked || false,
           stepResults: result.stepResults
         };
       }
 
-      // it's a non-numeric stable key (like tc-0 or a test.key). Try to map to actual id
+   
       const mapped = keyToIdMap[testCaseKeyOrId];
       const mappedIsNumeric = mapped !== undefined && mapped !== null && !Number.isNaN(parseInt(mapped));
 
@@ -129,6 +177,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
         testCaseId: mappedIsNumeric ? parseInt(mapped) : null,
         testCaseKey: mappedIsNumeric ? null : testCaseKeyOrId,
         passed: result.passed,
+        blocked: result.blocked || false,
         stepResults: result.stepResults
       };
     });
@@ -235,7 +284,57 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
             {currentTestCase.description && (
               <p className="test-case-description">{currentTestCase.description}</p>
             )}
+            {/* Данные тест-кейса: id/key, ожидание, предусловия, приоритет, теги */}
+            <div className="case-data">
+              {caseId !== '' && (
+                <div className="case-data-row"><strong>ID:</strong> {caseId}</div>
+              )}
+              {expectedForCase && (
+                <div className="case-data-row"><strong>Ожидаемый результат:</strong> {expectedForCase}</div>
+              )}
+              {preconditions && (
+                <div className="case-data-row"><strong>Предусловия:</strong> {preconditions}</div>
+              )}
+              {priority && (
+                <div className="case-data-row"><strong>Приоритет:</strong> {priority}</div>
+              )}
+              {tags && tags.length > 0 && (
+                <div className="case-data-row"><strong>Теги:</strong> {Array.isArray(tags) ? tags.join(', ') : String(tags)}</div>
+              )}
+              {author && (
+                <div className="case-data-row"><strong>Автор:</strong> {author}</div>
+              )}
+            </div>
             
+            {/* Ожидаемый результат по кейсу и полный список шагов (из описания кейса) */}
+            <div className="case-expected-steps">
+              {expectedForCase ? (
+                <div className="case-expected">
+                  <strong>Ожидается (по кейсу):</strong>
+                  <div className="expected-result-box">{expectedForCase}</div>
+                </div>
+              ) : (
+                <div className="case-expected case-expected--empty"><em>Ожидаемый результат не задан в данных кейса</em></div>
+              )}
+
+              {steps.length > 0 ? (
+                <div className="case-steps">
+                  <strong>Шаги, указанные в кейсе:</strong>
+                  <ol className="case-steps-list">
+                    {steps.map((s, i) => (
+                      <li key={i} className="case-step-item">
+                        <div className="case-step-title">{s.step || `Шаг ${i + 1}`}</div>
+                        {s.expected && (
+                          <div className="case-step-expected"><em>Ожидаемый результат шага:</em> {s.expected}</div>
+                        )}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              ) : (
+                <div className="case-steps case-steps--empty"><em>В кейсе не указаны детальные шаги</em></div>
+              )}
+            </div>
             {/* Прогресс шагов текущего тест-кейса */}
             {steps.length > 0 && (
               <div className="steps-progress">
@@ -321,6 +420,12 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
                 <p>Этот тест-кейс не содержит детальных шагов.</p>
                 
                 {/* Поля для тест-кейса без шагов */}
+                {expectedForCase && (
+                  <div className="form-group">
+                    <label>Ожидаемый результат:</label>
+                    <div className="expected-result-box">{expectedForCase}</div>
+                  </div>
+                )}
                 <div className="form-group">
                   <label htmlFor="actualResult">Фактический результат тестирования:</label>
                   <textarea 
@@ -402,9 +507,16 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
               {testCases.map((testCase, index) => {
                 const tcKey = getTestCaseKey(testCase, index);
                 const result = testResults[tcKey];
-                const status = result?.completed 
-                  ? (result.passed ? 'passed' : 'failed')
-                  : (index === currentTestCaseIndex ? 'current' : 'pending');
+                let status = 'pending';
+                if (result?.completed) {
+                  if (result.blocked) {
+                    status = 'blocked';
+                  } else {
+                    status = result.passed ? 'passed' : 'failed';
+                  }
+                } else if (index === currentTestCaseIndex) {
+                  status = 'current';
+                }
                 
                 return (
                   <div 
@@ -425,6 +537,7 @@ const TestExecutionModal = ({ testRun, onClose, onComplete }) => {
                       {status === 'current' && 'Текущий'}
                       {status === 'passed' && 'Пройден'}
                       {status === 'failed' && 'Провален'}
+                      {status === 'blocked' && 'Заблокирован'}
                       {status === 'pending' && 'Ожидание'}
                     </span>
                   </div>

@@ -23,7 +23,7 @@ const Header = ({
         <nav className="navbar">
           {/* Логотип и название */}
           <a href="/dashboard" className="logo">
-            <img src={logoPath} alt="AxionLabs Logo" className="logo__image" />
+            <img src={logoPath} alt="Логотип AxionLabs" className="logo__image" />
            
           </a>
           
