@@ -64,9 +64,9 @@ const TestRunModal = ({ onClose, onCreate, testCases, projectId, groups = [], cu
       addToast('Название профиля обязательно', 'error');
       return;
     }
-    if (!newProfileData.baseUrl || !newProfileData.baseUrl.trim()) {
-      setNewProfileError('Base URL обязателен');
-      addToast('Base URL обязателен', 'error');
+  if (!newProfileData.baseUrl || !newProfileData.baseUrl.trim()) {
+  setNewProfileError('Базовый URL обязателен');
+  addToast('Базовый URL обязателен', 'error');
       return;
     }
 
@@ -76,7 +76,7 @@ const TestRunModal = ({ onClose, onCreate, testCases, projectId, groups = [], cu
       try {
         payload.configuration = JSON.parse(payload.configuration);
       } catch (e) {
-        addToast('Configuration должна быть валидным JSON', 'error');
+        addToast('Конфигурация должна быть валидным JSON', 'error');
         return;
       }
     } else {
@@ -277,7 +277,7 @@ const TestRunModal = ({ onClose, onCreate, testCases, projectId, groups = [], cu
                     )}
                   </div>
                   <div className="col">
-                    <label htmlFor="profileBaseUrl">Base URL</label>
+                    <label htmlFor="profileBaseUrl">Базовый URL</label>
                     <input
                       id="profileBaseUrl"
                       type="text"
@@ -304,15 +304,15 @@ const TestRunModal = ({ onClose, onCreate, testCases, projectId, groups = [], cu
 
                 <div className="form-group row">
                   <div className="col">
-                    <label htmlFor="profileMode">Mode</label>
+                    <label htmlFor="profileMode">Режим</label>
                     <select
                       id="profileMode"
                       value={newProfileData.mode}
                       onChange={(e) => setNewProfileData(prev => ({ ...prev, mode: e.target.value }))}
                     >
-                      <option value="template">template</option>
-                      <option value="job">job</option>
-                      <option value="iso">iso</option>
+                      <option value="template">Шаблон</option>
+                      <option value="job">Задача</option>
+                      <option value="iso">ISO (образ)</option>
                     </select>
                   </div>
                   <div className="col">
@@ -322,15 +322,15 @@ const TestRunModal = ({ onClose, onCreate, testCases, projectId, groups = [], cu
                       value={newProfileData.priority}
                       onChange={(e) => setNewProfileData(prev => ({ ...prev, priority: e.target.value }))}
                     >
-                      <option value="low">Low</option>
-                      <option value="normal">Normal</option>
-                      <option value="high">High</option>
+                      <option value="low">Низкий</option>
+                      <option value="normal">Нормальный</option>
+                      <option value="high">Высокий</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="profileConfig">Configuration (JSON)</label>
+                  <label htmlFor="profileConfig">Конфигурация (JSON)</label>
                   <textarea
                     id="profileConfig"
                     value={newProfileData.configuration}
@@ -397,7 +397,7 @@ const TestRunModal = ({ onClose, onCreate, testCases, projectId, groups = [], cu
                               } else {
                                 setSelectedTestCases(prev => Array.from(new Set([...(prev || []), ...ids])));
                               }
-                            }}>Toggle group</button>
+                            }}>Переключить группу</button>
                           </div>
                         </div>
                         <div style={{ paddingLeft: 8, marginTop: 6 }}>

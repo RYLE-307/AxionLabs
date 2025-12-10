@@ -101,7 +101,7 @@ const TestCaseViewModal = ({ testCase, onClose }) => {
         </div>
         <div className="modal-body">
           <div className="form-group">
-            <label>Key</label>
+            <label>Идентификатор</label>
             <div className="readonly-field">{testCase.key}</div>
           </div>
           <div className="form-group">
