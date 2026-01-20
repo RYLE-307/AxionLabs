@@ -18,9 +18,9 @@
   --transition: 180ms cubic-bezier(.2,.9,.2,1);
 
   /* Темная тема по умолчанию */
-  --bg-primary: #121212;
-  --bg-secondary: #1e1e1e;
-  --bg-tertiary: #2d2d2d;
+  --bg-primary: #333333;
+  --bg-secondary: #404040;
+  --bg-tertiary: #555555;
   --text-primary: #e0e0e0;
   --text-secondary: #a0a0a0;
   --text-tertiary: #808080;
