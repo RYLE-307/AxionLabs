@@ -8,7 +8,7 @@ const About = ({ theme, toggleTheme }) => {
     e.preventDefault();
     e.target.reset();
   };
-  const logoPath = theme === 'dark' ? '/logo_dark.svg' : '/logo_Theme.svg';
+  const logoPath = theme === 'dark' ? process.env.PUBLIC_URL + '/logo_dark.svg' : process.env.PUBLIC_URL + '/logo_Theme.svg';
 
   return (
     <div className="landing-page">

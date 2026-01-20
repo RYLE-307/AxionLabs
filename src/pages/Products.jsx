@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/global.css';
 import '../styles/home.css';
-const firstImg = '/img/first.jpg';
-const secondImg = '/img/second.jpg';
-const thirdImg = '/img/third.jpg';
-const fourthImg = '/img/fourth.jpg';
+const firstImg = process.env.PUBLIC_URL + '/img/first.jpg';
+const secondImg = process.env.PUBLIC_URL + '/img/second.jpg';
+const thirdImg = process.env.PUBLIC_URL + '/img/third.jpg';
+const fourthImg = process.env.PUBLIC_URL + '/img/fourth.jpg';
 
 
 const Products = ({ theme, toggleTheme }) => {
-  const logoPath = theme === 'dark' ? '/logo_dark.svg' : '/logo_Theme.svg';
+  const logoPath = theme === 'dark' ? process.env.PUBLIC_URL + '/logo_dark.svg' : process.env.PUBLIC_URL + '/logo_Theme.svg';
   const [selectedImage, setSelectedImage] = useState(null);
 
   const openModal = (src) => setSelectedImage(src);
