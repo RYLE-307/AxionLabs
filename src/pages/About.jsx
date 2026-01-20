@@ -58,7 +58,7 @@ const About = ({ theme, toggleTheme }) => {
 
             <div className="hero-image">
               <div className="hero-image-placeholder">
-                AxionLabs Software Development
+                AxionLabs
               </div>
             </div>
           </div>
