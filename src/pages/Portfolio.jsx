@@ -48,7 +48,7 @@ const Portfolio = ({ theme, toggleTheme }) => {
         </div>
       </header>
 
-      <section className="portfolio-hero-section enhanced-hero">
+      <section className={`portfolio-hero-section enhanced-hero ${theme}`}>
         <div className="container">
           <h1 className="portfolio-title enhanced-title">Наши проекты</h1>
         
@@ -124,7 +124,7 @@ const Portfolio = ({ theme, toggleTheme }) => {
 
       <section className="portfolio-cta-section">
         <div className="container">
-          <h2>ИНДИВИДУАЛЬНАЯ КОНСУЛЬТАЦИЯ</h2>
+          <h2 className="section-title">ИНДИВИДУАЛЬНАЯ КОНСУЛЬТАЦИЯ</h2>
           <p>МЫ РАБОТАЕМ С БЮДЖЕТАМИ ОТ 50 000 РУБЛЕЙ. ЭТОГО ХВАТАЕТ ДЛЯ РЕАЛИЗАЦИИ БАЗОВОГО ФУНКЦИОНАЛА ПРОДУКТА И ЕГО ДАЛЬНЕЙШЕГО РАЗВИТИЯ</p>
           <Link to="/contacts" className="btn btn-primary">СВЯЗАТЬСЯ С НАМИ</Link>
         </div>

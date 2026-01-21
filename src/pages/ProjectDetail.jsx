@@ -142,7 +142,7 @@ AxionTMP предназначена для централизованного у
         </div>
       </header>
 
-      <section className="project-hero">
+      <section className={`project-hero ${theme}`}>
         <div className="container">
           <div className="project-hero-content">
             <div className="project-hero-text">
@@ -272,7 +272,7 @@ AxionTMP предназначена для централизованного у
       <section className="project-contact">
         <div className="container">
           <div className="contact-content">
-            <h2>ИНДИВИДУАЛЬНАЯ КОНСУЛЬТАЦИЯ</h2>
+            <h2 className="section-title">ИНДИВИДУАЛЬНАЯ КОНСУЛЬТАЦИЯ</h2>
             <p>МЫ РАБОТАЕМ С БЮДЖЕТАМИ ОТ 10 000 EURO. ЭТОГО ХВАТАЕТ ДЛЯ РЕАЛИЗАЦИИ БАЗОВОГО ФУНКЦИОНАЛА ПРОДУКТА И ЕГО ДАЛЬНЕЙШЕГО РАЗВИТИЯ</p>
             
             <form className="contact-form" onSubmit={(e) => e.preventDefault()}>

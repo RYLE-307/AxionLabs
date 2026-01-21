@@ -58,22 +58,12 @@ const About = ({ theme, toggleTheme }) => {
         </div>
       </header>
 
-      <section className="hero-section enhanced-hero">
+      <section className={`hero-section enhanced-hero ${theme}`}>
         <div className="container">
           <div className="hero-content">
-            <div className="hero-category-tag">ВЕБ-ПРИЛОЖЕНИЯ</div>
             <h1 className="hero-title enhanced-title">СОЗДАЕМ ЛУЧШИЕ ЦИФРОВЫЕ РЕШЕНИЯ ДЛЯ БИЗНЕСА</h1>
             <p className="hero-subtitle enhanced-subtitle">РУССКОЯЗЫЧНАЯ КОМПАНИЯ ДЛЯ ИННОВАЦИОННЫХ IT-РЕШЕНИЙ</p>
-
-            <div className="hero-works-tags">
-              <span className="work-tag">Исследование</span>
-              <span className="work-tag">Дизайн</span>
-              <span className="work-tag">Frontend разработка</span>
-              <span className="work-tag">Backend разработка</span>
-              <span className="work-tag">Тестирование</span>
-              <span className="work-tag">Документация</span>
-            </div>
-
+            
             <div className="stats-grid">
               <div className="stat-item">
                 <div className="stat-number">3+</div>
@@ -136,44 +126,7 @@ const About = ({ theme, toggleTheme }) => {
         </div>
       </section>
 
-      <section id="portfolio" className="portfolio-section">
-        <div className="container">
-          <h2 className="section-title">ПОРТФОЛИО</h2>
-          
-          <div className="portfolio-grid">
-            <div className="portfolio-item">
-              <img src={process.env.PUBLIC_URL + '/img/first.jpg'} alt="Проект 1" />
-              <div className="portfolio-overlay">
-                <h4>AxionTMP - Test Management Platform</h4>
-                <p>Платформа для управления тестированием ПО</p>
-                <Link to="/products" className="btn btn-secondary">Подробнее</Link>
-              </div>
-            </div>
-            <div className="portfolio-item">
-              <img src={process.env.PUBLIC_URL + '/img/second.jpg'} alt="Проект 2" />
-              <div className="portfolio-overlay">
-                <h4>Веб-приложение для бизнеса</h4>
-                <p>Индивидуальное решение для компании</p>
-                <a href="#contact" className="btn btn-secondary">Связаться</a>
-              </div>
-            </div>
-            <div className="portfolio-item">
-              <img src={process.env.PUBLIC_URL + '/img/third.jpg'} alt="Проект 3" />
-              <div className="portfolio-overlay">
-                <h4>Мобильное приложение</h4>
-                <p>Кросс-платформенное решение</p>
-                <a href="#contact" className="btn btn-secondary">Связаться</a>
-              </div>
-            </div>
-          </div>
-          
-          <div className="portfolio-cta">
-            <Link to="/products" className="btn btn-primary">ПОСМОТРЕТЬ ДРУГИЕ ПРОЕКТЫ</Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="clients-section">
+          <section className="clients-section">
         <div className="container">
           <h2 className="section-title">НАМ ДОВЕРЯЮТ</h2>
           <p className="clients-subtitle">Мы работаем с компаниями различных масштабов и отраслей</p>
@@ -209,7 +162,7 @@ const About = ({ theme, toggleTheme }) => {
         </div>
       </section>
 
-      <section id="contact" className="contact-section enhanced-hero">
+      <section id="contact" className={`contact-section enhanced-hero ${theme}`}>
         <div className="container">
           <h2 className="section-title enhanced-title">ИНДИВИДУАЛЬНАЯ КОНСУЛЬТАЦИЯ</h2>
           <p className="contact-subtitle enhanced-subtitle">Запишитесь на консультацию. Доверьте Вашу задачу профессионалам</p>

@@ -125,49 +125,47 @@ const Contacts = ({ theme, toggleTheme }) => {
               </div>
             </div>
             
-            <div className="contact-form-section enhanced-hero">
-              <h2 className="enhanced-title">Напишите нам</h2>
-              <p className="enhanced-subtitle">Заполните форму, и мы свяжемся с вами в ближайшее время</p>
-              
-              <form onSubmit={handleFeedbackSubmit} className="contact-form">
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="contactName">Имя *</label>
-                    <input type="text" id="contactName" name="from_name" required placeholder="Ваше имя" />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="contactCompany">Компания *</label>
-                    <input type="text" id="contactCompany" name="company" required placeholder="Название компании" />
-                  </div>
-                </div>
-                
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="contactEmail">Email *</label>
-                    <input type="email" id="contactEmail" name="from_email" required placeholder="ваш@email.com" />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="contactPhone">Номер телефона *</label>
-                    <input type="tel" id="contactPhone" name="phone" required placeholder="+7 (999) 123-45-67" />
-                  </div>
-                </div>
-
+             <div className="contact-form">
+            <h2>Свяжитесь с нами</h2>
+            <form onSubmit={handleFeedbackSubmit}>
+              <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="contactMessage">Сообщение *</label>
-                  <textarea id="contactMessage" name="message" required placeholder="Опишите ваш проект или задайте вопрос"></textarea>
+                  <label htmlFor="feedbackName">Имя *</label>
+                  <input type="text" id="feedbackName" name="from_name" required placeholder="Ваше имя" />
                 </div>
-
-                <div className="form-group checkbox-group">
-                  <input type="checkbox" id="privacy" required />
-                  <label htmlFor="privacy">Да, я прочитал и согласен с <a href="#privacy">Политикой конфиденциальности</a></label>
+                <div className="form-group">
+                  <label htmlFor="feedbackCompany">Компания *</label>
+                  <input type="text" id="feedbackCompany" name="company" required placeholder="Название компании" />
                 </div>
+              </div>
+              
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="feedbackEmail">Email *</label>
+                  <input type="email" id="feedbackEmail" name="from_email" required placeholder="ваш@email.com" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="feedbackPhone">Номер телефона *</label>
+                  <input type="tel" id="feedbackPhone" name="phone" required placeholder="+7 (999) 123-45-67" />
+                </div>
+              </div>
 
-                <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                  {isSubmitting ? 'Отправка...' : 'ОТПРАВИТЬ СООБЩЕНИЕ'}
-                </button>
-              </form>
-              {submitMessage && <p className={`submit-message ${messageType}`}>{submitMessage}</p>}
-            </div>
+              <div className="form-group">
+                <label htmlFor="feedbackMessage">Несколько слов о Вашем проекте *</label>
+                <textarea id="feedbackMessage" name="message" required placeholder="Опишите ваш проект, удобный способ связи или другие важные детали"></textarea>
+              </div>
+
+              <div className="form-group checkbox-group">
+                <input type="checkbox" id="privacy" required />
+                <label htmlFor="privacy">Да, я прочитал и согласен с <a href="#privacy">Политикой конфиденциальности</a></label>
+              </div>
+
+              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                {isSubmitting ? 'Отправка...' : 'ОТПРАВИТЬ'}
+              </button>
+            </form>
+            {submitMessage && <p className={`submit-message ${messageType}`}>{submitMessage}</p>}
+          </div>
           </div>
         </div>
       </section>
@@ -205,7 +203,7 @@ const Contacts = ({ theme, toggleTheme }) => {
               <h3 className="footer-title">Быстрые ссылки</h3>
               <ul className="footer-links">
                 <li><Link to="/">Главная</Link></li>
-                <li><Link to="/products">Продукты</Link></li>
+        
                 <li><Link to="/portfolio">Портфолио</Link></li>
                 <li><Link to="/contacts">Контакты</Link></li>
               </ul>

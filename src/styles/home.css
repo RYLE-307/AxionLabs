@@ -1175,19 +1175,28 @@
 
 .portfolio-project-card {
   background: var(--bg-primary);
-  border-radius: 15px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 10px 30px var(--shadow-color);
-  transition: transform 0.3s;
+  box-shadow: 0 15px 35px var(--shadow-color);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+  margin-bottom: 40px;
+}
+
+.light-theme .portfolio-project-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .portfolio-project-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 20px 40px var(--shadow-color);
 }
 
 .project-image {
   position: relative;
-  height: 250px;
+  height: 280px;
   overflow: hidden;
 }
 
@@ -1215,7 +1224,7 @@
 }
 
 .project-content {
-  padding: 30px;
+  padding: 40px;
 }
 
 .project-category {
@@ -1223,39 +1232,47 @@
   font-weight: 600;
   font-size: 14px;
   text-transform: uppercase;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  margin-left: 20px;
 }
 
 .project-title {
   font-size: 24px;
   color: var(--text-primary);
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   font-weight: 600;
+  line-height: 1.3;
+  margin-left: 20px;
 }
 
 .project-description {
   color: var(--text-secondary);
-  line-height: 1.6;
-  margin-bottom: 25px;
+  line-height: 1.7;
+  margin-bottom: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .project-details {
-  margin-bottom: 25px;
+  margin-bottom: 30px;
+  margin-left: 20px;
 }
 
 .project-works h4,
 .project-stack h4 {
   font-size: 16px;
   color: var(--text-primary);
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   font-weight: 600;
+  margin-left: 20px;
 }
 
 .works-tags,
 .stack-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
+  margin-left: 20px;
 }
 
 .work-tag,
@@ -1276,6 +1293,8 @@
   align-items: center;
   gap: 8px;
   transition: color 0.3s;
+  margin-top: 20px;
+  margin-left: 20px;
 }
 
 .project-link:hover {
@@ -1846,74 +1865,6 @@
   z-index: 1;
 }
 
-/* Enhanced hero styling for other pages */
-.enhanced-hero {
-  background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-.enhanced-hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(circle at 20% 80%, rgba(64, 224, 208, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(64, 224, 208, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(138, 43, 226, 0.05) 0%, transparent 50%);
-  z-index: 1;
-}
-
-.enhanced-hero::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image:
-    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2340e0d0' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  z-index: 1;
-}
-
-.enhanced-hero .container,
-.enhanced-hero .hero-content,
-.enhanced-hero .portfolio-title,
-.enhanced-hero .portfolio-description,
-.enhanced-hero .contacts-title,
-.enhanced-hero .contacts-subtitle,
-.enhanced-hero .contact-form-section h2,
-.enhanced-hero .contact-form-section p {
-  position: relative;
-  z-index: 2;
-}
-
-/* Enhanced text styling for hero sections */
-.enhanced-title {
-  font-size: 56px;
-  font-weight: 800;
-  margin-bottom: 30px;
-  line-height: 1.1;
-  color: white;
-  background: linear-gradient(135deg, white 0%, rgba(255, 255, 255, 0.8) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: fadeInUp 1s ease-out 0.2s both;
-}
-
-.enhanced-subtitle {
-  font-size: 20px;
-  margin-bottom: 40px;
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.7;
-  font-weight: 400;
-  animation: fadeInUp 1s ease-out 0.4s both;
-}
-
 .project-hero-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1995,6 +1946,12 @@
   box-shadow: 0 10px 25px rgba(64, 224, 208, 0.3);
 }
 
+.light-theme .work-tag {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
 .project-hero-image {
   position: relative;
   animation: fadeInRight 1s ease-out 0.8s both;
@@ -2029,6 +1986,97 @@
   z-index: -1;
   opacity: 0.1;
   filter: blur(20px);
+}
+
+.enhanced-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.enhanced-hero.dark {
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+.enhanced-hero.light {
+  background: linear-gradient(135deg, #c0c0c0 0%, #a0a0a0 50%, #808080 100%);
+}
+
+.enhanced-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(64, 224, 208, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(64, 224, 208, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(138, 43, 226, 0.05) 0%, transparent 50%);
+  z-index: 1;
+}
+
+.enhanced-hero::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2340e0d0' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  z-index: 1;
+}
+
+.enhanced-hero .container,
+.enhanced-hero .hero-content,
+.enhanced-hero .portfolio-title,
+.enhanced-hero .portfolio-description,
+.enhanced-hero .contacts-title,
+.enhanced-hero .contacts-subtitle,
+.enhanced-hero .contact-form-section h2,
+.enhanced-hero .contact-form-section p {
+  position: relative;
+  z-index: 2;
+}
+
+/* Enhanced text styling for hero sections */
+.enhanced-title {
+  font-size: 56px;
+  font-weight: 800;
+  margin-bottom: 30px;
+  line-height: 1.1;
+}
+
+.enhanced-hero.dark .enhanced-title {
+  color: white;
+  background: linear-gradient(135deg, white 0%, rgba(255, 255, 255, 0.8) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+.enhanced-hero.light .enhanced-title {
+  color: var(--text-primary);
+  -webkit-text-fill-color: var(--text-primary);
+}
+
+.enhanced-subtitle {
+  font-size: 20px;
+  margin-bottom: 40px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.7;
+  font-weight: 400;
+  animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+.enhanced-hero.light .enhanced-subtitle {
+  color: var(--text-primary);
+}
+
+.light-theme .section-title {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
 }
 
 /* Анимации */
@@ -2336,6 +2384,11 @@
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 }
 
+.light-theme .stat-item {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 .stat-number {
   display: block;
   font-size: 32px;
@@ -2353,6 +2406,10 @@
   text-transform: uppercase;
   letter-spacing: 2px;
   font-weight: 500;
+}
+
+.light-theme .stat-label {
+  color: var(--text-primary);
 }
 
 /* Команда */
@@ -2441,6 +2498,11 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.light-theme .contact-form {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2461,9 +2523,21 @@
   font-family: inherit;
 }
 
+.light-theme .contact-form input,
+.light-theme .contact-form textarea {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  color: var(--text-primary) !important;
+}
+
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
   color: rgba(255, 255, 255, 0.5);
+}
+
+.light-theme .contact-form input::placeholder,
+.light-theme .contact-form textarea::placeholder {
+  color: rgba(0, 0, 0, 0.5) !important;
 }
 
 .contact-form input:focus,
@@ -2472,6 +2546,11 @@
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(64, 224, 208, 0.1);
   background: rgba(255, 255, 255, 0.08);
+}
+
+.light-theme .contact-form input:focus,
+.light-theme .contact-form textarea:focus {
+  background: rgba(255, 255, 255, 1) !important;
 }
 
 .contact-form textarea {
