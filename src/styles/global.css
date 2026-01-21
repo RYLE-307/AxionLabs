@@ -132,6 +132,21 @@ textarea:focus {
   color: white;
 }
 
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.btn-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
 .btn-danger {
   background-color: var(--danger);
   color: white;

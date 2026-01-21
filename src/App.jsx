@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Home from './pages/Home';
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import { ToastProvider } from './components/UI/ToastContext';
@@ -71,7 +70,11 @@ function App() {
         <Routes>
           <Route 
             path="/" 
-            element={<Home theme={theme} toggleTheme={toggleTheme} />} 
+            element={
+              currentUser ? 
+              <Navigate to="/dashboard" replace /> : 
+              <Navigate to="/auth" replace />
+            } 
           />
           <Route 
             path="/auth" 
