@@ -249,7 +249,7 @@ const About = ({ theme, toggleTheme }) => {
               <h3 className="footer-title">Контакты</h3>
               <ul className="footer-links">
                 <li><i className="fas fa-envelope"></i><a href="mailto:info@AxionLabs.ru">info@AxionLabs.ru</a></li>
-                <li><i className="fas fa-phone"></i> <a href="tel:+7(999)123-45-67">+7 (999) 672-67-47</a></li>
+                <li><i className="fas fa-phone"></i> <a href="tel:+7(999)672-67-47">+7 (999) 672-67-47</a></li>
                 <li><i className="fas fa-map-marker-alt"></i> Москва, Россия</li>
               </ul>
             </div>
