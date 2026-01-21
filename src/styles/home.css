@@ -50,6 +50,14 @@
   background-color: var(--bg-tertiary);
 }
 
+.theme-toggle i {
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle.light i {
+  transform: rotate(180deg);
+}
+
 .hero-section {
   flex: 1;
   display: flex;
