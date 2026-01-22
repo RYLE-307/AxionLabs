@@ -14,8 +14,9 @@ const Portfolio = ({ theme, toggleTheme }) => {
       title: 'AxionTMP - Test Management Platform',
       category: 'ВЕБ-ПРИЛОЖЕНИЯ',
       description: 'Современная платформа для управления процессом тестирования программного обеспечения с комплексным инструментарием.',
-      works: ['Research', 'Design', 'Front-end', 'Back-end', 'Testing'],
-      stack: ['React', 'Node.js', 'PostgreSQL', 'Jest', 'Docker'],
+      works: ['Design', 'Front-end', 'Back-end', 'Testing'],
+      stack: ['React', 'Node.js', 'PostgreSQL', 'React Router DOM', 'Context API'],
+      architecture: ['Модульная структура', 'Переиспользуемые UI компоненты', 'Пользовательские хуки для работы с API', 'Адаптивный  Слой для работы с API и данными'],
       image: process.env.PUBLIC_URL + '/img/first.jpg',
       status: 'В разработке'
     },
@@ -102,6 +103,15 @@ const Portfolio = ({ theme, toggleTheme }) => {
                       </div>
                     </div>
                     
+                    <div className="project-stack">
+                      <h4>Архитектура:</h4>
+                      <div className="stack-tags">
+                        {project.architecture.map(arch => (
+                          <span key={arch} className="stack-tag">{arch}</span>
+                        ))}
+                      </div>
+                    </div>
+
                     <div className="project-stack">
                       <h4>Стэк:</h4>
                       <div className="stack-tags">

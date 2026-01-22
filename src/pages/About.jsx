@@ -4,6 +4,11 @@ import '../styles/global.css';
 import '../styles/home.css';
 import emailjs from '@emailjs/browser';
 
+const BaseAltLogo = process.env.PUBLIC_URL + '/Basealt_logo_bw.png';
+const VegaLogo = process.env.PUBLIC_URL + '/Logo_Vega_dark.svg';
+
+
+
 const About = ({ theme, toggleTheme }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
@@ -130,35 +135,20 @@ const About = ({ theme, toggleTheme }) => {
         <div className="container">
           <h2 className="section-title">НАМ ДОВЕРЯЮТ</h2>
           <p className="clients-subtitle">Мы работаем с компаниями различных масштабов и отраслей</p>
-          
-          <div className="clients-grid">
-            <div className="client-logo">
-              <div className="client-placeholder">Компания 1</div>
+              <div className="clients-grid">
+                        <div className="client-logo">
+              <div className="client-placeholder">
+                 <a href="http://basealt.ru/" target="_blank" rel="noopener noreferrer" className="client-logo">
+              <img className='client-logo-img' src={BaseAltLogo} alt="BaseAlt Logo" />
+                 </a>
+                  <a href="https://vega-absolute.ru/" target="_blank" rel="noopener noreferrer" className="client-logo">
+              <img className='client-logo-img' src={VegaLogo} alt="Vega Logo" />
+                 </a>
+              </div>
             </div>
-            <div className="client-logo">
-              <div className="client-placeholder">Компания 2</div>
-            </div>
-            <div className="client-logo">
-              <div className="client-placeholder">Компания 3</div>
-            </div>
-            <div className="client-logo">
-              <div className="client-placeholder">Компания 4</div>
-            </div>
-            <div className="client-logo">
-              <div className="client-placeholder">Компания 5</div>
-            </div>
-            <div className="client-logo">
-              <div className="client-placeholder">Компания 6</div>
-            </div>
-            <div className="client-logo">
-              <div className="client-placeholder">Компания 7</div>
-            </div>
-            <div className="client-logo">
-              <div className="client-placeholder">Компания 8</div>
-            </div>
+            
           </div>
           
-          <p className="budget-note">МЫ РАБОТАЕМ С БЮДЖЕТАМИ ОТ 50 000 РУБЛЕЙ. ЭТОГО ХВАТАЕТ ДЛЯ РЕАЛИЗАЦИИ БАЗОВОГО ФУНКЦИОНАЛА ПРОДУКТА И ЕГО ДАЛЬНЕЙШЕГО РАЗВИТИЯ</p>
         </div>
       </section>
 

@@ -17,6 +17,21 @@
   align-items: center;
 }
 
+.client-logo {
+  margin-top: 10px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+ 
+}
+
+.client-logo-img {
+  width: 100px;
+  height: auto; 
+}
+
+
 .landing-logo {
   font-size: 28px;
   font-weight: 700;
@@ -2499,8 +2514,8 @@
 }
 
 .light-theme .contact-form {
-  background: rgba(0, 0, 0, 0.05) !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .form-row {
@@ -2525,9 +2540,9 @@
 
 .light-theme .contact-form input,
 .light-theme .contact-form textarea {
-  background: rgba(255, 255, 255, 0.9) !important;
-  border: 1px solid rgba(0, 0, 0, 0.2) !important;
-  color: var(--text-primary) !important;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  color: var(--text-primary);
 }
 
 .contact-form input::placeholder,
@@ -2537,7 +2552,7 @@
 
 .light-theme .contact-form input::placeholder,
 .light-theme .contact-form textarea::placeholder {
-  color: rgba(0, 0, 0, 0.5) !important;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .contact-form input:focus,
@@ -2550,7 +2565,7 @@
 
 .light-theme .contact-form input:focus,
 .light-theme .contact-form textarea:focus {
-  background: rgba(255, 255, 255, 1) !important;
+  background: rgba(255, 255, 255, 1);
 }
 
 .contact-form textarea {
