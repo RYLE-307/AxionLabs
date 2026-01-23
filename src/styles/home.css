@@ -2247,12 +2247,14 @@
 .feature-item {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(15px);
-  padding: 40px;
+  padding: 40px 10px 40px 10px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .feature-item::before {
@@ -2279,9 +2281,11 @@
 
 .feature-item h3 {
   color: var(--primary);
-  font-size: 24px;
+  font-size: 22px;
+  margin-right: auto;
+  margin-left: auto;
   margin-bottom: 20px;
-  font-weight: 700;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -2331,7 +2335,8 @@
 
 .stat-item {
   text-align: center;
-  padding: 40px 30px;
+  padding-right: 10px;
+  padding: 20px 10px 20px 10px; 
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(15px);
   border-radius: 20px;
@@ -2369,7 +2374,7 @@
 
 .stat-number {
   display: block;
-  font-size: 32px;
+  font-size: 26px;
   font-weight: 800;
   background: linear-gradient(135deg, var(--primary), #8a2be2);
   -webkit-background-clip: text;
