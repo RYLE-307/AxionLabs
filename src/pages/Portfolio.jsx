@@ -160,8 +160,8 @@ const Portfolio = ({ theme, toggleTheme }) => {
               <h3 className="footer-title">Быстрые ссылки</h3>
               <ul className="footer-links">
                 <li><Link to="/">Главная</Link></li>
-                <li><Link to="/products">Продукты</Link></li>
-                <li><Link to="/portfolio">Портфолио</Link></li>
+                    <li><Link to="/portfolio">Портфолио</Link></li>
+                 <li><Link to="/contacts">Контакты</Link></li>
               </ul>
             </div>
           </div>

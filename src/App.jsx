@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import About from './pages/About';
-import Products from './pages/Products';
 import Portfolio from './pages/Portfolio';
 import ProjectDetail from './pages/ProjectDetail';
 import Contacts from './pages/Contacts';
@@ -40,7 +39,6 @@ function App() {
         <div className="app">
           <Routes>
             <Route path="/" element={<About theme={theme} toggleTheme={toggleTheme} />} />
-            <Route path="/products" element={<Products theme={theme} toggleTheme={toggleTheme} />} />
             <Route path="/portfolio" element={<Portfolio theme={theme} toggleTheme={toggleTheme} />} />
             <Route path="/portfolio/:id" element={<ProjectDetail theme={theme} toggleTheme={toggleTheme} />} />
             <Route path="/contacts" element={<Contacts theme={theme} toggleTheme={toggleTheme} />} />
