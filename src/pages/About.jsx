@@ -5,7 +5,7 @@ import '../styles/home.css';
 import emailjs from '@emailjs/browser';
 
 const BaseAltLogo = process.env.PUBLIC_URL + '/Basealt_logo_inv.svg';
-const VegaLogo = process.env.PUBLIC_URL + '/Logo_Vega.svg';
+const VegaLogo = process.env.PUBLIC_URL + '/logo_vega.svg';
 
 
 
