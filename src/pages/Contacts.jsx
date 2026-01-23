@@ -50,9 +50,7 @@ const Contacts = ({ theme, toggleTheme }) => {
               <Link to="/contacts" className="nav-link active">Контакты</Link>
             </div>
             <div className="landing-auth">
-              <button className={`theme-toggle ${theme}`} onClick={toggleTheme}>
-                <i className="fas fa-circle-half-stroke"></i>
-              </button>
+              
             </div>
           </nav>
         </div>
@@ -170,18 +168,7 @@ const Contacts = ({ theme, toggleTheme }) => {
         </div>
       </section>
 
-      <section className="map-section">
-        <div className="container">
-          <h2>Как нас найти</h2>
-          <div className="map-placeholder">
-            <i className="fas fa-map-marked-alt"></i>
-            <p>Москва, Россия</p>
-            <small>Интерактивная карта будет добавлена позже</small>
-          </div>
-        </div>
-      </section>
-
-      <footer className="footer">
+         <footer className="footer">
         <div className="container">
           <div className="footer-content">
             <div className="footer-section">

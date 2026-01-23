@@ -26,9 +26,7 @@ const Products = ({ theme, toggleTheme }) => {
               <Link to="/contacts" className="nav-link">Контакты</Link>
             </div>
             <div className="landing-auth">
-              <button className={`theme-toggle ${theme}`} onClick={toggleTheme}>
-                <i className="fas fa-circle-half-stroke"></i>
-              </button>
+              
             </div>
           </nav>
         </div>
