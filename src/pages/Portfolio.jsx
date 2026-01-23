@@ -7,6 +7,7 @@ const Portfolio = ({ theme, toggleTheme }) => {
   const logoPath = theme === 'dark' ? process.env.PUBLIC_URL + '/logo_dark.svg' : process.env.PUBLIC_URL + '/logo_Theme.svg';
 
   const [filter, setFilter] = useState('all');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const projects = [
     {
@@ -35,13 +36,15 @@ const Portfolio = ({ theme, toggleTheme }) => {
             <Link to="/" className="landing-logo">
               <img className='logo home_logo' src={logoPath} alt="AxionLabs Logo" />
             </Link>
-            <div className="landing-nav-links">
-              <Link to="/" className="nav-link">Главная</Link>
-              <Link to="/portfolio" className="nav-link active">Портфолио</Link>
-              <Link to="/contacts" className="nav-link">Контакты</Link>
+            <div className={`landing-nav-links ${isMenuOpen ? 'active' : ''}`}>
+              <Link to="/" className="nav-link" onClick={() => setIsMenuOpen(false)}>Главная</Link>
+              <Link to="/portfolio" className="nav-link active" onClick={() => setIsMenuOpen(false)}>Портфолио</Link>
+              <Link to="/contacts" className="nav-link" onClick={() => setIsMenuOpen(false)}>Контакты</Link>
             </div>
             <div className="landing-auth">
-             
+              <button className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
+                <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
+              </button>
             </div>
           </nav>
         </div>

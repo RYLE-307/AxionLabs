@@ -13,6 +13,8 @@ const About = ({ theme, toggleTheme }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
 
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
@@ -49,13 +51,15 @@ const About = ({ theme, toggleTheme }) => {
             <Link to="/" className="landing-logo">
               <img className='logo home_logo' src={logoPath} alt="AxionLabs Logo" />
             </Link>
-            <div className="landing-nav-links">
-              <Link to="/" className="nav-link">Главная</Link>
-              <Link to="/portfolio" className="nav-link">Портфолио</Link>
-              <Link to="/contacts" className="nav-link">Контакты</Link>
+            <div className={`landing-nav-links ${isMenuOpen ? 'active' : ''}`}>
+              <Link to="/" className="nav-link" onClick={() => setIsMenuOpen(false)}>Главная</Link>
+              <Link to="/portfolio" className="nav-link" onClick={() => setIsMenuOpen(false)}>Портфолио</Link>
+              <Link to="/contacts" className="nav-link" onClick={() => setIsMenuOpen(false)}>Контакты</Link>
             </div>
             <div className="landing-auth">
-             
+              <button className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
+                <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
+              </button>
             </div>
           </nav>
         </div>
