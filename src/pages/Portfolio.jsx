@@ -17,7 +17,7 @@ const Portfolio = ({ theme, toggleTheme }) => {
       works: ['Design', 'Front-end', 'Back-end', 'Testing'],
       stack: ['React', 'Node.js', 'PostgreSQL', 'React Router DOM', 'Context API'],
       architecture: ['Модульная структура', 'Переиспользуемые UI компоненты', 'Пользовательские хуки для работы с API', 'Адаптивный  Слой для работы с API и данными'],
-      image: process.env.PUBLIC_URL + '/img/first.jpg',
+      image: process.env.PUBLIC_URL + '/img/maybe.jpg',
       status: 'В разработке'
     },
 

@@ -147,7 +147,10 @@ const ProjectDetail = ({ theme, toggleTheme }) => {
             </div>
             <div className="project-images">
               <img src={process.env.PUBLIC_URL + '/img/first.jpg'} alt="AxionTMP Dashboard" />
+              <img src={process.env.PUBLIC_URL + '/img/fourth.jpg'} alt="Test Management Interface" />
+              <img src={process.env.PUBLIC_URL + '/img/third.jpg'} alt="Test Management Interface" />
               <img src={process.env.PUBLIC_URL + '/img/second.jpg'} alt="Test Management Interface" />
+
             </div>
           </div>
 

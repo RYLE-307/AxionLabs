@@ -1214,7 +1214,7 @@
 
 .project-image {
   position: relative;
-  height: 280px;
+  height: 300px;
   overflow: hidden;
 }
 
@@ -2095,11 +2095,7 @@
   }
 }
 
-/* Секции контента с улучшенным дизайном */
-.project-content {
 
-  padding: 100px 0;
-}
 
 .project-section {
   margin-bottom: 120px;
