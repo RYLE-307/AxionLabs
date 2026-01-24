@@ -101,8 +101,9 @@ textarea:focus {
 }
 
 .btn-primary {
-  margin-left: 100px;
-  width: auto;
+  margin-right: auto;
+  margin-left: auto;
+  width: 25%;
   background-color: var(--primary);
   color: white;
   border-radius: var(--radius-sm);
