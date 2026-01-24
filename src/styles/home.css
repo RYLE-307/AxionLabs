@@ -994,10 +994,14 @@
   }
   
   .solutions-content {
-    grid-template-columns: 1fr;
+    display: block;
     gap: 30px;
   }
   
+.Tech{
+  display: none;
+}
+
   .portfolio-grid {
     grid-template-columns: 1fr;
   }
@@ -2627,6 +2631,8 @@
   .project-hero {
     padding: 80px 0 60px;
   }
+
+
 
   .project-hero-content {
     grid-template-columns: 1fr;
