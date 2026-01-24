@@ -29,7 +29,14 @@
  
 }
 
+.Tech {
+  color: #8947f3;
+  max-height: 500px;
+}
+
+
 .client-logo-img {
+  margin-left: 20px;
   width: 100px;
   height: auto; 
 }
@@ -737,7 +744,6 @@
   gap: 30px;
   margin: 50px 0;
   width: 100%;
-  max-width: 800px;
 }
 
 .stat-item {
@@ -2352,11 +2358,7 @@
 
 .stat-item::before {
   content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+
   background: linear-gradient(135deg, rgba(64, 224, 208, 0.05), rgba(138, 43, 226, 0.05));
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -2585,6 +2587,40 @@
 .form-consent a:hover {
   text-decoration: underline;
 }
+
+
+.tech-stack {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px;
+  margin: 20px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.tech-stack li {
+  background: rgba(100, 255, 218, 0.05);
+  padding: 10px 15px;
+  border-radius: 8px;
+  border-left: 3px solid #8947f3;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tech-stack li::before {
+  content: '▹';
+  color: #8947f3;
+    padding-right: 0px;
+}
+
+.tech-stack li:hover {
+  background: rgba(96, 26, 207, 0.411);
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(117, 13, 187, 0.452);
+}
+
+
 
 /* Адаптивность */
 @media (max-width: 768px) {

@@ -110,7 +110,7 @@ const Contacts = ({ theme, toggleTheme }) => {
               <div className="social-links">
                 <h3>Мы в социальных сетях</h3>
                 <div className="social-icons">
-                  <a href="#" className="social-link">
+                  <a href="https://t.me/+gq9qzKIMWRVlMGNi" className="social-link">
                     <i className="fab fa-telegram"></i>
                   </a>
                   <a href="#" className="social-link">

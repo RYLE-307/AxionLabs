@@ -120,9 +120,9 @@ const ProjectDetail = ({ theme, toggleTheme }) => {
 
           {/* ТРЕБОВАНИЯ */}
           <div className="project-section">
-            <h2 className="section-title">ТРЕБОВАНИЯ</h2>
+            <h2 className="section-title">ФУНКЦИОНАЛ</h2>
             <div className="section-content">
-              <p>AxionLabs требовалась современная платформа для управления процессом тестирования программного обеспечения. Ключевые требования включали:</p>
+              
               <ul>
                 <li>Комплексный инструментарий для создания, организации и выполнения тестов</li>
                 <li>Генерация детальных отчетов и метрик тестирования</li>

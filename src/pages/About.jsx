@@ -6,7 +6,7 @@ import emailjs from '@emailjs/browser';
 
 const BaseAltLogo = process.env.PUBLIC_URL + '/Basealt_logo_inv.svg';
 const VegaLogo = process.env.PUBLIC_URL + '/logo_vega.svg';
-
+const Tech = process.env.PUBLIC_URL + '/tech.svg';
 
 
 const About = ({ theme, toggleTheme }) => {
@@ -106,6 +106,7 @@ const About = ({ theme, toggleTheme }) => {
           <h2 className="section-title">УНИКАЛЬНЫЕ РЕШЕНИЯ</h2>
           
           <div className="solutions-content">
+           
             <div className="solution-text">
               <h3>ВАЖНОЕ ПРЕИМУЩЕСТВО ПРИ РАБОТЕ С НАМИ</h3>
               <p>При работе с нами, Вы получаете исключительное право собственности на продукт. Мы не станем повторять Ваш программный код в других проектах. Для нас каждый проект уникален, а Вы - его владелец.</p>
@@ -113,9 +114,14 @@ const About = ({ theme, toggleTheme }) => {
               <h3>ДЛЯ ОБЕСПЕЧЕНИЯ ВЫСОКОЙ ПРОИЗВОДИТЕЛЬНОСТИ ВЫБИРАЕМ:</h3>
               <ul className="tech-stack">
                 <li>React.js для современных веб-приложений</li>
-                <li>Node.js для backend-разработки</li>
+                <li>JavaScript (ES6+) — фундамент веб-разработки.</li>
+                <li>TypeScript — для повышения надежности, поддерживаемости и масштабируемости кода.</li>
+                <li>Rust — для системного программирования, где критичны безопасность памяти и производительность.</li>
+                <li> Go для backend-разработки</li>
+                <li>Docker — создание контейнеров для унификации окружения.</li>
                 <li>Python для аналитики и AI</li>
                 <li>Облачные платформы (AWS, Azure)</li>
+                <li>GitHub Actions, GitLab CI, Jenkins — автоматизация процессов сборки, тестирования и развертывания.</li>
                 <li>Современные базы данных</li>
               </ul>
               
@@ -123,13 +129,9 @@ const About = ({ theme, toggleTheme }) => {
               <p>Мы обеспечиваем полный цикл разработки от архитектурных решений до регулярных релизов и поддержки.</p>
             </div>
             
-            <div className="solution-image">
-              <div className="placeholder-image">
-                <i className="fas fa-code"></i>
-                <span>Инновационные технологии</span>
+            <img className='Tech' src={Tech} alt="" />
+
               </div>
-            </div>
-          </div>
         </div>
       </section>
 
