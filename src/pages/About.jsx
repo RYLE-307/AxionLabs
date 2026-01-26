@@ -85,7 +85,11 @@ const About = ({ theme, toggleTheme }) => {
         <div className="container">
           <div className="hero-content">
             <h1 className="hero-title enhanced-title">СОЗДАЕМ ЛУЧШИЕ ЦИФРОВЫЕ РЕШЕНИЯ ДЛЯ БИЗНЕСА</h1>
-            <p className="hero-subtitle enhanced-subtitle">РУССКОЯЗЫЧНАЯ КОМПАНИЯ ДЛЯ ИННОВАЦИОННЫХ IT-РЕШЕНИЙ</p>
+            <p className="hero-subtitle enhanced-subtitle">Наша компания специализируется на разработке программного обеспечения под заказ,
+ориентируясь на потребности и цели каждого клиента. Мы не используем шаблонные
+решения — каждый проект создается с нуля, с учетом специфики бизнеса, особенностей
+процессов и желаемого результата. Индивидуальный подход позволяет нам разрабатывать
+продукты, которые действительно работают эффективно и приносят пользу заказчику</p>
             
             <div className="stats-grid">
               <div className="stat-item">
@@ -110,14 +114,105 @@ const About = ({ theme, toggleTheme }) => {
               </div>
             </div>
 
-            <a href="#contact" className="btn btn-primary hero-cta">
-              <i className="fas fa-calculator"></i> РАССЧИТАТЬ СТОИМОСТЬ ПРОЕКТА
-            </a>
+           
           </div>
         </div>
       </section>
 
-      <section className="unique-solutions-section">
+
+<section className="unique-solutions-section">
+  <div className="container">
+    <h2 className="section-title">НАШИ УСЛУГИ</h2>
+    
+    <div className="solution-text">
+      <p class="intro-text">Мы создаем комплексные IT-решения, которые помогают бизнесу оптимизировать процессы, повысить эффективность и получить конкурентное преимущество. Каждое решение разрабатывается с учетом специфики вашей отрасли и бизнес-задач.</p>
+      
+      <ul className="tech-stack">
+        <li className='tech_li'>
+          <div className="service-item">
+            <h3 className="service-title">Корпоративное ПО и автоматизация</h3>
+            <p className="service-description">Разработка специализированного программного обеспечения для внутренних бизнес-процессов: системы управления ресурсами, инструменты анализа данных, платформы для автоматизации рутинных операций. Интеграция с существующей инфраструктурой компании.</p>
+          </div>
+        </li>
+        
+        <li className='tech_li'>
+          <div className="service-item">
+            <h3 className="service-title">Веб-разработка</h3>
+            <p className="service-description">Создание современных веб-приложений, интернет-магазинов, корпоративных порталов и SaaS-платформ. Используем передовые технологии (React, Vue.js, Angular) для быстрых, отзывчивых и безопасных решений с удобным интерфейсом.</p>
+          </div>
+        </li>
+        
+        <li className='tech_li'>
+          <div className="service-item">
+            <h3 className="service-title">Мобильные приложения</h3>
+            <p className="service-description">Разработка нативных (iOS/Android) и кроссплатформенных мобильных приложений. От прототипирования и дизайна до публикации в магазинах приложений и последующей поддержки. Фокус на UX и производительности.</p>
+          </div>
+        </li>
+        
+        <li className='tech_li'>
+          <div className="service-item">
+            <h3 className="service-title">AI/ML для бизнеса</h3>
+            <p className="service-description">Внедрение искусственного интеллекта и машинного обучения для решения бизнес-задач: прогнозная аналитика, обработка естественного языка, компьютерное зрение, рекомендательные системы и автоматизация принятия решений.</p>
+          </div>
+        </li>
+        
+        <li className='tech_li'>
+          <div className="service-item">
+            <h3 className="service-title">QA-сопровождение разработки</h3>
+            <p className="service-description">Полный цикл тестирования на всех этапах разработки: от планирования тестовой стратегии до выполнения тестов и отчетности. Гарантируем качество и надежность вашего продукта через автоматизированное и ручное тестирование.</p>
+          </div>
+        </li>
+        
+        <li className='tech_li'>
+          <div className="service-item">
+            <h3 className="service-title">CRM, ЭДО, интеграции и API</h3>
+            <p className="service-description">Разработка и внедрение систем управления взаимоотношениями с клиентами (CRM), электронного документооборота (ЭДО). Создание API для интеграции с внешними сервисами, платежными системами и партнерскими платформами.</p>
+          </div>
+        </li>
+        
+        <li className='tech_li'>
+          <div className="service-item">
+            <h3 className="service-title">Порталы и сервисы</h3>
+            <p className="service-description">Создание комплексных портальных решений для клиентов, сотрудников и партнеров: личные кабинеты, системы самообслуживания, биллинговые платформы, образовательные порталы и корпоративные социальные сети.</p>
+          </div>
+        </li>
+        
+        <li className='tech_li'>
+          <div className="service-item">
+            <h3 className="service-title">iOS/Android и кроссплатформенные решения</h3>
+            <p className="service-description">Разработка нативных мобильных приложений с использованием Swift/Kotlin или кроссплатформенных решений на Flutter/React Native. Оптимальный подход в зависимости от требований к производительности, бюджету и времени выхода на рынок.</p>
+          </div>
+        </li>
+        
+        <li className='tech_li'>
+          <div className="service-item">
+            <h3 className="service-title">LLM, RAG, чат-боты</h3>
+            <p className="service-description">Создание интеллектуальных чат-ботов и систем на основе больших языковых моделей (LLM) с использованием Retrieval-Augmented Generation (RAG) для точных ответов на основе ваших данных. Внедрение AI-ассистентов для поддержки клиентов и сотрудников.</p>
+          </div>
+        </li>
+        
+        <li className='tech_li'>
+          <div className="service-item">
+            <h3 className="service-title">Авто/ручное/нагрузочное тестирование</h3>
+            <p className="service-description">Комплексное тестирование программного обеспечения: автоматизированное тестирование для регрессии, ручное тестирование UX/UI, нагрузочное тестирование для проверки стабильности под высокой нагрузкой, безопасность и тестирование производительности.</p>
+          </div>
+        </li>
+      </ul>
+      
+      <div className="conclusion-text">
+        <p>Развивающемуся бизнесу часто становится мало готовых сервис-решений, и требуется индивидуальная система, способная покрыть все действующие потребности.</p>
+        <p>Мы обеспечиваем полный цикл разработки от архитектурных решений до регулярных релизов и поддержки. Наши решения масштабируются вместе с вашим бизнесом и адаптируются к меняющимся требованиям рынка.</p>
+      </div>
+    </div>
+  </div>
+  
+  <a href="#contact" className="btn btn-primary hero-cta">
+    <i className="fas fa-calculator"></i> РАССЧИТАТЬ СТОИМОСТЬ ПРОЕКТА
+  </a>
+</section>
+
+
+       <section className="unique-solutions-section">
         <div className="container">
           <h2 className="section-title">УНИКАЛЬНЫЕ РЕШЕНИЯ</h2>
           

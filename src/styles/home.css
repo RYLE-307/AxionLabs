@@ -2677,6 +2677,81 @@
   }
 }
 
+
+.intro-text {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  color: white;
+  text-align: center;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.service-title {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  color: #2c80ff;
+}
+
+.service-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: white;
+  margin: 0;
+}
+
+
+.conclusion-text {
+  max-width: 900px;
+  margin: 50px auto 0;
+  padding: 30px;
+
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.conclusion-text p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.hero-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #2c80ff, #6a5af9);
+  color: white;
+  padding: 16px 32px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  width: fit-content;
+  margin: 50px auto 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(44, 128, 255, 0.3);
+}
+
+.hero-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(44, 128, 255, 0.4);
+}
+
+@media (max-width: 768px) {
+  .tech-stack {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+}
+
 /* Медиа-запросы для ноутбуков 1366x768 и подобных */
 @media (min-width: 1024px) and (max-width: 1366px) {
   .container {
