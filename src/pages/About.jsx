@@ -6,7 +6,6 @@ import emailjs from '@emailjs/browser';
 
 const BaseAltLogo = process.env.PUBLIC_URL + '/Basealt_logo_inv.svg';
 const VegaLogo = process.env.PUBLIC_URL + '/logo_vega.svg';
-const Tech = process.env.PUBLIC_URL + '/tech.svg';
 
 const React_icon = process.env.PUBLIC_URL + '/react.svg';
 const python = process.env.PUBLIC_URL + '/python.svg';
@@ -137,7 +136,7 @@ const About = ({ theme, toggleTheme }) => {
                 <li className='tech_li' ><p>Python для аналитики и AI </p> <img className='icon_stack' src={python} alt=""/></li>
                 <li className='tech_li' ><p>Облачные платформы (AWS, Azure) </p> <img className='icon_stack' src={aws} alt=""/></li>
                 <li className='tech_li' ><p>GitHub Actions, GitLab CI, Jenkins — автоматизация процессов сборки, тестирования и развертывания. </p> <img className='icon_stack' src={github} alt=""/></li>
-                <li className='tech_li' ><p>Современные базы данных <br /><ul><li className='tech_li'><p>PostgreSQL</p> <img className='icon_stack'  src={PostgreSQL} alt=""/></li><li className='tech_li'><p>MySQL</p> <img className='icon_stack' src={mysql} alt=""/></li></ul></p> <img className='icon_stack' src={database} alt=""/></li>
+                <li className='tech_li' ><p>Современные базы данных <br /><ul><li className='tech_li tech_li_bd'><p>PostgreSQL</p> <img className='icon_stack'  src={PostgreSQL} alt=""/></li><li className='tech_li tech_li_bd'><p>MySQL</p> <img className='icon_stack' src={mysql} alt=""/></li></ul></p> <img className='icon_stack' src={database} alt=""/></li>
                 <li className='tech_li'><p>Next.js — full-stack фреймворк для React с рендерингом на стороне сервера, маршрутизацией и API-роутами.</p><img className='icon_stack' src={next} alt="Next.js"/></li>
                 <li className='tech_li'><p>Redis — кэширование и работа со структурами данных в памяти для высокой производительности приложений.</p><img className='icon_stack' src={redis} alt="Redis"/></li>
               </ul>
