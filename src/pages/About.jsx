@@ -121,11 +121,9 @@ const About = ({ theme, toggleTheme }) => {
         <div className="container">
           <h2 className="section-title">УНИКАЛЬНЫЕ РЕШЕНИЯ</h2>
           
-          <div className="solutions-content">
+         
            
             <div className="solution-text">
-              <h3>ВАЖНОЕ ПРЕИМУЩЕСТВО ПРИ РАБОТЕ С НАМИ</h3>
-              <p>При работе с нами, Вы получаете исключительное право собственности на продукт. Мы не станем повторять Ваш программный код в других проектах. Для нас каждый проект уникален, а Вы - его владелец.</p>
               
               <h3>ДЛЯ ОБЕСПЕЧЕНИЯ ВЫСОКОЙ ПРОИЗВОДИТЕЛЬНОСТИ ВЫБИРАЕМ:</h3>
               <ul className="tech-stack">
@@ -138,17 +136,19 @@ const About = ({ theme, toggleTheme }) => {
                 <li className='tech_li' ><p>Python для аналитики и AI </p> <img className='icon_stack' src={python} alt=""/></li>
                 <li className='tech_li' ><p>Облачные платформы (AWS, Azure) </p> <img className='icon_stack' src={aws} alt=""/></li>
                 <li className='tech_li' ><p>GitHub Actions, GitLab CI, Jenkins — автоматизация процессов сборки, тестирования и развертывания. </p> <img className='icon_stack' src={github} alt=""/></li>
-                <li className='tech_li' ><p>Современные базы данных <br /><ul><li className='tech_li'><p>PostgreSQL</p> <img className='icon_stack' src={PostgreSQL} alt=""/></li><li className='tech_li'><p>MySQL</p> <img className='icon_stack' src={mysql} alt=""/></li></ul></p> <img className='icon_stack' src={database} alt=""/></li>
+                <li className='tech_li' ><p>Современные базы данных <br /><ul><li className='tech_li'><p>PostgreSQL</p> <img className='icon_stack'  src={PostgreSQL} alt=""/></li><li className='tech_li'><p>MySQL</p> <img className='icon_stack' src={mysql} alt=""/></li></ul></p> <img className='icon_stack' src={database} alt=""/></li>
+                <li className='tech_li' ><p>Python для аналитики и AI </p> <img className='icon_stack' src={python} alt=""/></li>
+                <li className='tech_li' ><p>Облачные платформы (AWS, Azure) </p> <img className='icon_stack' src={aws} alt=""/></li>
               </ul>
               
               <p>Развивающемуся бизнесу часто становится мало готовых сервис-решений, и требуется индивидуальная система, способная покрыть все действующие потребности.</p>
               <p>Мы обеспечиваем полный цикл разработки от архитектурных решений до регулярных релизов и поддержки.</p>
             </div>
             
-            <img className='Tech' src={Tech} alt="" />
+           
 
               </div>
-        </div>
+      
       </section>
 
           <section className="clients-section">
