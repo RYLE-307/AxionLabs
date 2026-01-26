@@ -7,20 +7,20 @@ import emailjs from '@emailjs/browser';
 const BaseAltLogo = process.env.PUBLIC_URL + '/Basealt_logo_inv.svg';
 const VegaLogo = process.env.PUBLIC_URL + '/logo_vega.svg';
 
-const React_icon = process.env.PUBLIC_URL + '/react.svg';
-const python = process.env.PUBLIC_URL + '/python.svg';
-const mysql = process.env.PUBLIC_URL + '/mysql.svg';
-const go = process.env.PUBLIC_URL + '/go.svg';
-const database = process.env.PUBLIC_URL + '/database.svg';
-const PostgreSQL = process.env.PUBLIC_URL + '/postgresql.svg';
-const docker = process.env.PUBLIC_URL + '/docker.svg';
-const github = process.env.PUBLIC_URL + '/github.svg';
-const aws = process.env.PUBLIC_URL + '/aws.svg';
-const javascript = process.env.PUBLIC_URL + '/javascript.svg';
-const Typescript = process.env.PUBLIC_URL + '/Typescript.svg';
-const Rust = process.env.PUBLIC_URL + '/Rust.svg';
-const next = process.env.PUBLIC_URL + '/next.svg';
-const redis = process.env.PUBLIC_URL + '/redis.svg';
+const React_icon = process.env.PUBLIC_URL + '/react1.svg';
+const python = process.env.PUBLIC_URL + '/python1.svg';
+const mysql = process.env.PUBLIC_URL + '/mysql1.svg';
+const go = process.env.PUBLIC_URL + '/go1.svg';
+const database = process.env.PUBLIC_URL + '/database1.svg';
+const PostgreSQL = process.env.PUBLIC_URL + '/postgresql1.svg';
+const docker = process.env.PUBLIC_URL + '/docker1.svg';
+const github = process.env.PUBLIC_URL + '/github1.svg';
+const aws = process.env.PUBLIC_URL + '/aws1.svg';
+const javascript = process.env.PUBLIC_URL + '/javascript1.svg';
+const Typescript = process.env.PUBLIC_URL + '/Typescript1.svg';
+const Rust = process.env.PUBLIC_URL + '/Rust1.svg';
+const next = process.env.PUBLIC_URL + '/next1.svg';
+const redis = process.env.PUBLIC_URL + '/redis1.svg';
 
 
 
