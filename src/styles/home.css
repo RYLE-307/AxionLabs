@@ -2580,7 +2580,7 @@ border-bottom: 1px solid var(--border-color);
 .contact-form input,
 .contact-form textarea {
  
-  padding: 18px 24px;
+  padding: 18px 10%;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
@@ -3024,15 +3024,9 @@ border-bottom: 1px solid var(--border-color);
   transition: transform 0.4s ease;
 }
 
-.why-choose-card:hover::before {
-  transform: scaleX(1);
-}
 
-.why-choose-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(64, 224, 208, 0.15);
-  border-color: rgba(64, 224, 208, 0.3);
-}
+
+
 
 .why-choose-icon {
   font-size: 48px;
@@ -3041,9 +3035,7 @@ border-bottom: 1px solid var(--border-color);
   transition: transform 0.3s ease;
 }
 
-.why-choose-card:hover .why-choose-icon {
-  transform: scale(1.1) rotate(5deg);
-}
+
 
 .why-choose-title {
   font-size: 20px;
