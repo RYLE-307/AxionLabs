@@ -4,7 +4,7 @@ import '../styles/global.css';
 import '../styles/home.css';
 
 const Portfolio = ({ theme, toggleTheme }) => {
-  const logoPath = theme === 'dark' ? process.env.PUBLIC_URL + '/logo_dark.svg' : process.env.PUBLIC_URL + '/logo_Theme.svg';
+  const logoPath = theme === 'dark' ? import.meta.env.BASE_URL + 'logo_dark.svg' : import.meta.env.BASE_URL + 'logo_Theme.svg';
 
   const [filter, setFilter] = useState('all');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,10 +15,9 @@ const Portfolio = ({ theme, toggleTheme }) => {
       title: 'AxionTMP - Test Management Platform',
       category: 'ВЕБ-ПРИЛОЖЕНИЯ',
       description: 'Современная платформа для управления процессом тестирования программного обеспечения с комплексным инструментарием.',
-      works: ['Design', 'Front-end', 'Back-end', 'Testing'],
       stack: ['React', 'PostgreSQL', 'CSS3' , 'GOlang'],
       architecture: ['Модульная структура', 'Переиспользуемые UI компоненты', 'Пользовательские хуки для работы с API', 'Адаптивный  Слой для работы с API и данными'],
-      image: process.env.PUBLIC_URL + '/img/maybe.jpg',
+      image: import.meta.env.BASE_URL + 'img/maybe.jpg',
       status: 'В разработке'
     },
 
@@ -95,15 +94,7 @@ const Portfolio = ({ theme, toggleTheme }) => {
                   <p className="project-description">{project.description}</p>
                   
                   <div className="project-details">
-                    <div className="project-works">
-                      <h4>Работы:</h4>
-                      <div className="works-tags">
-                        {project.works.map(work => (
-                          <span key={work} className="work-tag">{work}</span>
-                        ))}
-                      </div>
-                    </div>
-                    
+                                       
                     <div className="project-stack">
                       <h4>Архитектура:</h4>
                       <div className="stack-tags">

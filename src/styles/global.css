@@ -104,7 +104,7 @@ textarea:focus {
   margin-right: auto;
   margin-left: auto;
   width: 25%;
-  background-color: var(--primary);
+  background: linear-gradient(135deg, var(--primary),#8a2be2);
   color: white;
   border-radius: var(--radius-sm);
   box-shadow: 0 8px 22px rgba(67,97,238,0.12);

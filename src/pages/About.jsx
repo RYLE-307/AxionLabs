@@ -3,24 +3,25 @@ import { Link } from 'react-router-dom';
 import '../styles/global.css';
 import '../styles/home.css';
 import emailjs from '@emailjs/browser';
+import PrivacyPolicy from '../components/UI/PrivacyPolicy';
 
-const BaseAltLogo = process.env.PUBLIC_URL + '/Basealt_logo_inv.svg';
-const VegaLogo = process.env.PUBLIC_URL + '/logo_vega.svg';
+const BaseAltLogo = import.meta.env.BASE_URL + 'Basealt_logo_inv.svg';
+const VegaLogo = import.meta.env.BASE_URL + 'logo_vega.svg';
 
-const React_icon = process.env.PUBLIC_URL + '/react1.svg';
-const python = process.env.PUBLIC_URL + '/python1.svg';
-const mysql = process.env.PUBLIC_URL + '/mysql1.svg';
-const go = process.env.PUBLIC_URL + '/go1.svg';
-const database = process.env.PUBLIC_URL + '/database1.svg';
-const PostgreSQL = process.env.PUBLIC_URL + '/postgresql1.svg';
-const docker = process.env.PUBLIC_URL + '/docker1.svg';
-const github = process.env.PUBLIC_URL + '/github1.svg';
-const aws = process.env.PUBLIC_URL + '/aws1.svg';
-const javascript = process.env.PUBLIC_URL + '/javascript1.svg';
-const Typescript = process.env.PUBLIC_URL + '/Typescript1.svg';
-const Rust = process.env.PUBLIC_URL + '/Rust1.svg';
-const next = process.env.PUBLIC_URL + '/next1.svg';
-const redis = process.env.PUBLIC_URL + '/redis1.svg';
+const React_icon = import.meta.env.BASE_URL + 'react1.svg';
+const python = import.meta.env.BASE_URL + 'python1.svg';
+const mysql = import.meta.env.BASE_URL + 'mysql1.svg';
+const go = import.meta.env.BASE_URL + 'go1.svg';
+const database = import.meta.env.BASE_URL + 'database1.svg';
+const PostgreSQL = import.meta.env.BASE_URL + 'postgresql1.svg';
+const docker = import.meta.env.BASE_URL + 'docker1.svg';
+const github = import.meta.env.BASE_URL + 'github1.svg';
+const aws = import.meta.env.BASE_URL + 'aws1.svg';
+const javascript = import.meta.env.BASE_URL + 'javascript1.svg';
+const Typescript = import.meta.env.BASE_URL + 'Typescript1.svg';
+const Rust = import.meta.env.BASE_URL + 'Rust1.svg';
+const next = import.meta.env.BASE_URL + 'next1.svg';
+const redis = import.meta.env.BASE_URL + 'redis1.svg';
 
 
 
@@ -30,6 +31,80 @@ const About = ({ theme, toggleTheme }) => {
   const [submitMessage, setSubmitMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [expandedFAQ, setExpandedFAQ] = useState(null);
+
+  const toggleFAQ = (index) => {
+    setExpandedFAQ(expandedFAQ === index ? null : index);
+  };
+
+  const whyChooseUs = [
+    {
+      icon: 'fa-rocket',
+      title: 'Быстрая разработка',
+      description: 'Оптимизированные процессы позволяют нам быстро воплощать идеи в жизнь без потери качества'
+    },
+    {
+      icon: 'fa-shield-alt',
+      title: 'Гарантия качества',
+      description: 'Полный цикл тестирования и контроля качества на каждом этапе разработки'
+    },
+    {
+      icon: 'fa-headset',
+      title: 'Поддержка 24/7',
+      description: 'Наша команда всегда готова помочь и решить любые возникающие проблемы'
+    },
+    {
+      icon: 'fa-expand',
+      title: 'Масштабируемость',
+      description: 'Архитектура, которая растет вместе с вашим бизнесом и адаптируется к изменениям'
+    },
+    {
+      icon: 'fa-handshake',
+      title: 'Прозрачность',
+      description: 'Открытая коммуникация и регулярные отчеты о ходе разработки проекта'
+    },
+    {
+      icon: 'fa-chart-line',
+      title: 'ROI ориентированность',
+      description: 'Каждое решение разработано для максимизации возврата инвестиций'
+    }
+  ];
+
+  const faqItems = [
+    {
+      question: 'Сколько времени занимает разработка проекта?',
+      answer: 'Время разработки зависит от сложности и объема проекта. Простые проекты могут быть реализованы за 2-4 недели, а сложные системы требуют 3-6 месяцев. Мы предоставляем детальную оценку после анализа требований.'
+    },
+    {
+      question: 'Какова стоимость разработки?',
+      answer: 'Стоимость зависит от функциональности, технологий и сложности проекта. Мы работаем с бюджетами от 50 000 рублей. Предлагаем гибкие модели сотрудничества: фиксированная цена, время и материалы, или выделенная команда.'
+    },
+    {
+      question: 'Предоставляете ли вы поддержку после запуска?',
+      answer: 'Да, мы предоставляем полную техническую поддержку после запуска. Это включает исправление ошибок, оптимизацию производительности, добавление новых функций и мониторинг системы.'
+    },
+    {
+      question: 'Какие технологии вы используете?',
+      answer: 'Мы используем современный стек: React, Vue.js, Angular для фронтенда; Node.js, Python, Go, Rust для бэкенда; PostgreSQL, MySQL для БД; Docker, Kubernetes для DevOps. Выбор технологий зависит от требований проекта.'
+    },
+    {
+      question: 'Можете ли вы работать с существующим кодом?',
+      answer: 'Конечно! Мы часто работаем с унаследованным кодом, проводим его рефакторинг, оптимизацию и добавляем новые функции. Предварительно проводим аудит кода для оценки состояния.'
+    },
+    {
+      question: 'Как происходит процесс разработки?',
+      answer: 'Процесс включает: 1) Анализ требований и планирование, 2) Дизайн архитектуры, 3) Разработка спринтами, 4) Тестирование, 5) Деплой и запуск, 6) Поддержка. Мы используем Agile методологию с еженедельными встречами.'
+    },
+    {
+      question: 'Подписываете ли вы NDA?',
+      answer: 'Да, мы готовы подписать соглашение о конфиденциальности (NDA) для защиты вашей интеллектуальной собственности и коммерческой информации.'
+    },
+    {
+      question: 'Как начать сотрудничество?',
+      answer: 'Свяжитесь с нами через форму обратной связи или напрямую по телефону/email. Мы проведем консультацию, обсудим ваши требования, предоставим смету и предложим оптимальный вариант сотрудничества.'
+    }
+  ];
 
 
   const handleFeedbackSubmit = async (e) => {
@@ -57,7 +132,7 @@ const About = ({ theme, toggleTheme }) => {
     }
   };
 
-  const logoPath = theme === 'dark' ? process.env.PUBLIC_URL + '/logo_dark.svg' : process.env.PUBLIC_URL + '/logo_Theme.svg';
+  const logoPath = theme === 'dark' ? import.meta.env.BASE_URL + 'logo_dark.svg' : import.meta.env.BASE_URL + 'logo_Theme.svg';
 
   return (
     <div className="landing-page">
@@ -125,7 +200,7 @@ const About = ({ theme, toggleTheme }) => {
     <h2 className="section-title">НАШИ УСЛУГИ</h2>
     
     <div className="solution-text">
-      <p class="intro-text">Мы создаем комплексные IT-решения, которые помогают бизнесу оптимизировать процессы, повысить эффективность и получить конкурентное преимущество. Каждое решение разрабатывается с учетом специфики вашей отрасли и бизнес-задач.</p>
+      <p className="intro-text">Мы создаем комплексные IT-решения, которые помогают бизнесу оптимизировать процессы, повысить эффективность и получить конкурентное преимущество. Каждое решение разрабатывается с учетом специфики вашей отрасли и бизнес-задач.</p>
       
       <ul className="tech-stack">
         <li className='tech_li'>
@@ -197,6 +272,20 @@ const About = ({ theme, toggleTheme }) => {
             <p className="service-description">Комплексное тестирование программного обеспечения: автоматизированное тестирование для регрессии, ручное тестирование UX/UI, нагрузочное тестирование для проверки стабильности под высокой нагрузкой, безопасность и тестирование производительности.</p>
           </div>
         </li>
+
+        <li className='tech_li'>
+          <div className="service-item">
+            <h3 className="service-title">Консультирование и аудит</h3>
+            <p className="service-description">Стратегическое консультирование по выбору технологий, архитектуре системы и оптимизации процессов разработки. Проведение аудита существующего кода, инфраструктуры и процессов для выявления узких мест и рекомендаций по улучшению.</p>
+          </div>
+        </li>
+
+        <li className='tech_li'>
+          <div className="service-item">
+            <h3 className="service-title">Поддержка и развитие проектов</h3>
+            <p className="service-description">Долгосрочная техническая поддержка, исправление ошибок, оптимизация производительности и добавление новых функций. Мониторинг системы, управление версиями и планирование развития продукта в соответствии с потребностями бизнеса.</p>
+          </div>
+        </li>
       </ul>
       
       <div className="conclusion-text">
@@ -231,7 +320,16 @@ const About = ({ theme, toggleTheme }) => {
                 <li className='tech_li' ><p>Python для аналитики и AI </p> <img className='icon_stack' src={python} alt=""/></li>
                 <li className='tech_li' ><p>Облачные платформы (AWS, Azure) </p> <img className='icon_stack' src={aws} alt=""/></li>
                 <li className='tech_li' ><p>GitHub Actions, GitLab CI, Jenkins — автоматизация процессов сборки, тестирования и развертывания. </p> <img className='icon_stack' src={github} alt=""/></li>
-                <li className='tech_li' ><p>Современные базы данных <br /><ul><li className='tech_li tech_li_bd'><p>PostgreSQL</p> <img className='icon_stack'  src={PostgreSQL} alt=""/></li><li className='tech_li tech_li_bd'><p>MySQL</p> <img className='icon_stack' src={mysql} alt=""/></li></ul></p> <img className='icon_stack' src={database} alt=""/></li>
+                <li className='tech_li'>
+                  <div>
+                    <p>Современные базы данных</p>
+                    <ul>
+                      <li className='tech_li tech_li_bd'><p>PostgreSQL</p> <img className='icon_stack'  src={PostgreSQL} alt=""/></li>
+                      <li className='tech_li tech_li_bd'><p>MySQL</p> <img className='icon_stack' src={mysql} alt=""/></li>
+                    </ul>
+                  </div>
+                  <img className='icon_stack' src={database} alt=""/>
+                </li>
                 <li className='tech_li'><p>Next.js — full-stack фреймворк для React с рендерингом на стороне сервера, маршрутизацией и API-роутами.</p><img className='icon_stack' src={next} alt="Next.js"/></li>
                 <li className='tech_li'><p>Redis — кэширование и работа со структурами данных в памяти для высокой производительности приложений.</p><img className='icon_stack' src={redis} alt="Redis"/></li>
               </ul>
@@ -246,7 +344,26 @@ const About = ({ theme, toggleTheme }) => {
       
       </section>
 
-          <section className="clients-section">
+      <section className="why-choose-us-section">
+        <div className="container">
+          <h2 className="section-title">ПОЧЕМУ ВЫБИРАЮТ НАС</h2>
+          <p className="section-subtitle">Мы предлагаем не просто услуги, а полное решение для вашего бизнеса</p>
+          
+          <div className="why-choose-grid">
+            {whyChooseUs.map((item, index) => (
+              <div key={index} className="why-choose-card">
+                <div className="why-choose-icon">
+                  <i className={`fas ${item.icon}`}></i>
+                </div>
+                <h3 className="why-choose-title">{item.title}</h3>
+                <p className="why-choose-description">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+        <section className="clients-section">
         <div className="container">
           <h2 className="section-title">НАМ ДОВЕРЯЮТ</h2>
           <p className="clients-subtitle">Мы работаем с компаниями различных масштабов и отраслей</p>
@@ -266,6 +383,34 @@ const About = ({ theme, toggleTheme }) => {
           
         </div>
       </section>
+
+      <section className="faq-section">
+        <div className="container">
+          <h2 className="section-title">ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</h2>
+          <p className="section-subtitle">Ответы на популярные вопросы о нашей работе</p>
+          
+          <div className="faq-container">
+            {faqItems.map((item, index) => (
+              <div key={index} className="faq-item">
+                <button 
+                  className={`faq-question ${expandedFAQ === index ? 'active' : ''}`}
+                  onClick={() => toggleFAQ(index)}
+                >
+                  <span>{item.question}</span>
+                  <i className={`fas fa-chevron-down ${expandedFAQ === index ? 'rotated' : ''}`}></i>
+                </button>
+                {expandedFAQ === index && (
+                  <div className="faq-answer">
+                    <p>{item.answer}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+  
 
       <section id="contact" className={`contact-section enhanced-hero ${theme}`}>
         <div className="container">
@@ -303,7 +448,7 @@ const About = ({ theme, toggleTheme }) => {
 
               <div className="form-group checkbox-group">
                 <input type="checkbox" className='checkbox-input' id="privacy" required />
-                <label htmlFor="privacy">Да, я прочитал и согласен с <a href="#privacy">Политикой конфиденциальности</a></label>
+                <label htmlFor="privacy">Да, я прочитал и согласен с <a href="#" onClick={(e) => { e.preventDefault(); setIsPrivacyOpen(true); }}>Политикой конфиденциальности</a></label>
               </div>
 
               <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
@@ -314,6 +459,8 @@ const About = ({ theme, toggleTheme }) => {
           </div>
         </div>
       </section>
+
+      <PrivacyPolicy isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
 
       <footer className="footer">
         <div className="container">

@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import '../styles/global.css';
 import '../styles/home.css';
 import emailjs from '@emailjs/browser';
+import PrivacyPolicy from '../components/UI/PrivacyPolicy';
 
 const Contacts = ({ theme, toggleTheme }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +37,7 @@ const Contacts = ({ theme, toggleTheme }) => {
     }
   };
 
-  const logoPath = theme === 'dark' ? process.env.PUBLIC_URL + '/logo_dark.svg' : process.env.PUBLIC_URL + '/logo_Theme.svg';
+  const logoPath = theme === 'dark' ? import.meta.env.BASE_URL + 'logo_dark.svg' : import.meta.env.BASE_URL + 'logo_Theme.svg';
 
   return (
     <div className="landing-page">
@@ -158,7 +160,7 @@ const Contacts = ({ theme, toggleTheme }) => {
 
               <div className="form-group checkbox-group">
                 <input type="checkbox" className='checkbox-input' id="privacy" required />
-                <label htmlFor="privacy">Да, я прочитал и согласен с <a href="#privacy">Политикой конфиденциальности</a></label>
+                <label htmlFor="privacy">Да, я прочитал и согласен с <a href="#" onClick={(e) => { e.preventDefault(); setIsPrivacyOpen(true); }}>Политикой конфиденциальности</a></label>
               </div>
 
               <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
@@ -170,6 +172,8 @@ const Contacts = ({ theme, toggleTheme }) => {
           </div>
         </div>
       </section>
+
+      <PrivacyPolicy isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
 
          <footer className="footer">
         <div className="container">
