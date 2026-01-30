@@ -101,7 +101,7 @@ const About = ({ theme, toggleTheme }) => {
     },
     {
       question: 'Как начать сотрудничество?',
-      answer: 'Свяжитесь с нами через форму обратной связи или напрямую по телефону/email. Мы проведем консультацию, обсудим ваши требования, предоставим смету и предложим оптимальный вариант сотрудничества.'
+      answer: 'Свяжитесь с нами через форму обратной связи или напрямую по телефону/email. Мы проведем экспертную оценку, обсудим ваши требования, предоставим смету и предложим оптимальный вариант сотрудничества.'
     }
   ];
 
@@ -419,7 +419,7 @@ const About = ({ theme, toggleTheme }) => {
       <section id="contact" className={`contact-section enhanced-hero ${theme}`}>
         <div className="container">
           <h2 className="section-title enhanced-title">ИНДИВИДУАЛЬНАЯ КОНСУЛЬТАЦИЯ</h2>
-          <p className="contact-subtitle enhanced-subtitle">Запишитесь на консультацию. Доверьте Вашу задачу профессионалам</p>
+          <p className="contact-subtitle enhanced-subtitle">Запишитесь на экспертную оценку. Доверьте Вашу задачу профессионалам</p>
 
           <div className="contact-form">
             <form onSubmit={handleFeedbackSubmit}>
