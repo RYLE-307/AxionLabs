@@ -99,7 +99,7 @@ const PrivacyPolicy = ({ isOpen, onClose }) => {
               Если у вас есть вопросы о нашей Политике конфиденциальности, свяжитесь с нами:
             </p>
             <ul>
-              <li>Email: <a href="mailto:info@AxionLabs.ru">info@AxionLabs.ru</a></li>
+              <li>Email: <a href="mailto:info@axionlabs.ru">info@axionlabs.ru</a></li>
               <li>Телефон: <a href="tel:+7(999)672-67-47">+7 (999) 672-67-47</a></li>
             </ul>
           </section>

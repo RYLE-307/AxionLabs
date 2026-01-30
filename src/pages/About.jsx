@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/global.css';
 import '../styles/home.css';
-import emailjs from '@emailjs/browser';
 import PrivacyPolicy from '../components/UI/PrivacyPolicy';
 
 const BaseAltLogo = import.meta.env.BASE_URL + 'Basealt_logo_inv.svg';
@@ -113,20 +112,25 @@ const About = ({ theme, toggleTheme }) => {
     setSubmitMessage('');
     setMessageType('');
 
+    const formData = new FormData(e.target);
     try {
-      await emailjs.sendForm(
-        'service_zgm9uap', 
-        'template_g1ls0zg', 
-        e.target,
-        'JRXdjzxl5wloLMLHS' 
-      );
-      setSubmitMessage('Спасибо! Ваше сообщение отправлено.');
-      setMessageType('success');
-      e.target.reset();
+      const response = await fetch('/sendmail.php', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await response.json();
+      if (data.success) {
+        setSubmitMessage('Спасибо! Ваше сообщение отправлено.');
+        setMessageType('success');
+        e.target.reset();
+      } else {
+        setSubmitMessage(data.error || 'Ошибка отправки. Попробуйте позже.');
+        setMessageType('error');
+      }
     } catch (error) {
       setSubmitMessage('Ошибка отправки. Попробуйте позже.');
       setMessageType('error');
-      console.error('EmailJS error:', error);
+      console.error('Sendmail error:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -474,7 +478,7 @@ const About = ({ theme, toggleTheme }) => {
             <div className="footer-section">
               <h3 className="footer-title">Контакты</h3>
               <ul className="footer-links">
-                <li><i className="fas fa-envelope"></i><a href="mailto:info@AxionLabs.ru">info@AxionLabs.ru</a></li>
+                <li><i className="fas fa-envelope"></i><a href="mailto:info@axionlabs.ru">info@axionlabs.ru</a></li>
                 <li><i className="fas fa-phone"></i> <a href="tel:+7(999)672-67-47">+7 (999) 672-67-47</a></li>
                 <li><i className="fas fa-map-marker-alt"></i> Москва, Россия</li>
               </ul>
