@@ -197,9 +197,9 @@ const Contacts = ({ theme, toggleTheme }) => {
               <h3 className="footer-title">Быстрые ссылки</h3>
               <ul className="footer-links">
                 <li><Link to="/">Главная</Link></li>
-        
                 <li><Link to="/portfolio">Портфолио</Link></li>
                 <li><Link to="/contacts">Контакты</Link></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); setIsPrivacyOpen(true); }}>Политика конфиденциальности</a></li>
               </ul>
             </div>
           </div>
