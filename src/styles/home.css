@@ -2187,17 +2187,6 @@
   margin-bottom: 0;
 }
 
-.project-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1px;
-  height: 100px;
-  background: linear-gradient(to bottom, var(--primary), transparent);
-  opacity: 0.3;
-}
 
 .section-title {
   font-size: 42px;
@@ -2224,6 +2213,13 @@
   border-radius: 2px;
 }
 
+.functionality-title{
+  margin-bottom: 20px;
+  font-size: 20px;
+ font-weight: 300;
+
+}
+
 .section-content {
   color: rgba(255, 255, 255, 0.8);
   line-height: 1.8;
@@ -2242,18 +2238,21 @@
   padding-left: 30px;
 }
 
-.section-content li {
+.functionality-card {
   margin-bottom: 15px;
   font-size: 16px;
   position: relative;
 }
 
-.section-content li::before {
+.functionality-card::before {
   content: '▸';
   position: absolute;
-  left: -30px;
+  left: -25px;
   color: var(--primary);
   font-weight: bold;
+ background: linear-gradient(135deg, var(--primary), #8a2be2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .section-content strong {
@@ -2379,6 +2378,66 @@
   line-height: 1.7;
   font-size: 16px;
 }
+
+/* Анализ проекта: карточки */
+.analysis-grid {
+ 
+  margin-top: 30px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.analysis-card {
+  display: flex;
+
+  font-size: 16px;
+  position: relative;
+
+
+}
+
+.analysis-card::before {
+  content: '▸';
+  position: absolute;
+  left: -25px;
+  color: var(--primary);
+  font-weight: bold;
+  background: linear-gradient(135deg, var(--primary), #8a2be2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+
+
+
+
+
+.analysis-title {
+  background: linear-gradient(135deg, var(--primary), #8a2be2);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-size: 20px;
+  margin: 0 0 8px 0;
+  font-weight: 700;
+}
+
+.analysis-card p {
+  margin-left: 1%;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  font-size: 20px;
+  
+}
+
+.analysis-card {
+ 
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+
 
 /* Изображения проекта */
 .project-images {
@@ -2718,6 +2777,43 @@
     grid-template-columns: 1fr;
     gap: 30px;
   }
+
+.tire{display: none;}
+
+  /* Mobile: single-column analysis cards */
+  .analysis-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 0 10px;
+  }
+
+  .analysis-card {
+    display: block; /* stack content naturally */
+    padding: 14px 14px 14px 36px; /* left padding for marker */
+    border-radius: 10px;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .analysis-card::before {
+    left: 10px; /* place marker inside the padding area */
+    font-size: 14px; /* slightly smaller marker */
+  }
+
+  .analysis-title {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+
+  .analysis-card p {
+    margin-left: 0; /* don't offset text further on mobile */
+    font-size: 14px;
+    color: rgba(255,255,255,0.9);
+  }
+
+.section-content p{
+  margin: 0;
+}
 
   .tech-stack-grid {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));

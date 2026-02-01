@@ -9,18 +9,39 @@ const Portfolio = ({ theme, toggleTheme }) => {
   const [filter, setFilter] = useState('all');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const projects = [
+ const projects = [
     {
       id: 'AxionTMP',
       title: 'AxionTMP - Test Management Platform',
       category: 'ВЕБ-ПРИЛОЖЕНИЯ',
       description: 'Современная платформа для управления процессом тестирования программного обеспечения с комплексным инструментарием.',
+      fullDescription: '',
+      works: ['Исследование', 'Дизайн', 'Frontend разработка', 'Backend разработка', 'Тестирование', 'Документация'],
       stack: ['React', 'PostgreSQL', 'CSS3' , 'GOlang'],
-      architecture: ['Модульная структура', 'Переиспользуемые UI компоненты', 'Пользовательские хуки для работы с API', 'Адаптивный  Слой для работы с API и данными'],
-      image: import.meta.env.BASE_URL + 'img/maybe.jpg',
-      status: 'В разработке'
+      main_image: [import.meta.env.BASE_URL + 'img/AxionLabs/maybe.jpg'],
+      image: import.meta.env.BASE_URL + 'img/AxionLabs/first.jpg',
+      status: 'В разработке',
+      client: 'AxionLabs',
+      duration: '5 месяцев',
+      team: '5 разработчиков',
+      functional: ['Комплексный инструментарий для создания, организации и выполнения тестов', 'Генерация детальных отчетов и метрик тестирования', 'Управление тест-кейсами, прогонами и пользователями', 'Интуитивный интерфейс для QA команд', 'Масштабируемость и гибкость под различные методологии'],
+     h2_analiz: 'После глубокого анализа рынка и требований клиента, мы предложили создать платформу, которая объединяет все процессы QA в едином инструменте. Основные принципы разработки:',
+      analize: [
+        { title: 'Интеграция в один инструмент', description : 'Все процессы QA в одном месте'},
+        { title: 'Удобный интерфейс',  description: 'Интуитивный дизайн для быстрого освоения' },
+        { title: 'Гибкость',  description: 'Адаптация под различные методологии тестирования' },
+        { title: 'Масштабируемость',  description: 'Поддержка как малых, так и крупных проектов' },
+        { title: 'Аналитика', description: 'Детальные отчеты и метрики для улучшения качества' },
+              ], 
+    features: [
+        { title: 'Управление тест-кейсами', description: 'Структурированное хранение и категоризация тест-кейсов с поддержкой Drag & Drop, гибкой классификацией и приоритизацией.' },
+        { title: 'Управление тест-ранами', description: 'Автоматические и ручные прогоны с отслеживанием прогресса в реальном времени и историей выполнения.' },
+        { title: 'Система отчетности', description: 'Автоматические и ручные отчеты с визуализацией, экспортом в PDF/CSV и метриками качества.' },
+        { title: 'Управление пользователями', description: 'Ролевая система с детальным распределением прав доступа и управлением командами.' },
+      ],
+      images: [import.meta.env.BASE_URL + 'img/AxionLabs/first.jpg', import.meta.env.BASE_URL + 'img/AxionLabs/fourth.jpg', import.meta.env.BASE_URL + 'img/AxionLabs/third.jpg', import.meta.env.BASE_URL + 'img/AxionLabs/second.jpg'],
     },
-
+   
   ];
 
   const categories = ['all', 'ВЕБ-ПРИЛОЖЕНИЯ', 'ВЕБ-САЙТЫ', 'МОБИЛЬНЫЕ ПРИЛОЖЕНИЯ', 'ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ'];
@@ -83,7 +104,7 @@ const Portfolio = ({ theme, toggleTheme }) => {
             {filteredProjects.map(project => (
               <div key={project.id} className="portfolio-project-card">
                 <div className="project-image">
-                  <img src={project.image} alt={project.title} />
+                  <img src={project.main_image} alt={project.title} />
                   {project.status && (
                     <span className="project-status">{project.status}</span>
                   )}
@@ -98,7 +119,7 @@ const Portfolio = ({ theme, toggleTheme }) => {
                     <div className="project-stack">
                       <h4>Архитектура:</h4>
                       <div className="stack-tags">
-                        {project.architecture.map(arch => (
+                        {(project.architecture || []).map(arch => (
                           <span key={arch} className="stack-tag">{arch}</span>
                         ))}
                       </div>

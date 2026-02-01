@@ -53,11 +53,28 @@ const ProjectDetail = ({ theme, toggleTheme }) => {
       fullDescription: '',
       works: ['Исследование', 'Дизайн', 'Frontend разработка', 'Backend разработка', 'Тестирование', 'Документация'],
       stack: ['React', 'PostgreSQL', 'CSS3' , 'GOlang'],
-      image: import.meta.env.BASE_URL + 'img/first.jpg',
+      main_image: [import.meta.env.BASE_URL + 'img/AxionLabs/maybe.jpg'],
+      image: import.meta.env.BASE_URL + 'img/AxionLabs/first.jpg',
       status: 'В разработке',
       client: 'AxionLabs',
       duration: '5 месяцев',
-      team: '5 разработчиков'
+      team: '5 разработчиков',
+      functional: ['Комплексный инструментарий для создания, организации и выполнения тестов', 'Генерация детальных отчетов и метрик тестирования', 'Управление тест-кейсами, прогонами и пользователями', 'Интуитивный интерфейс для QA команд', 'Масштабируемость и гибкость под различные методологии'],
+     h2_analiz: 'После глубокого анализа рынка и требований клиента, мы предложили создать платформу, которая объединяет все процессы QA в едином инструменте. Основные принципы разработки:',
+      analize: [
+        { title: 'Интеграция в один инструмент', description : 'Все процессы QA в одном месте'},
+        { title: 'Удобный интерфейс',  description: 'Интуитивный дизайн для быстрого освоения' },
+        { title: 'Гибкость',  description: 'Адаптация под различные методологии тестирования' },
+        { title: 'Масштабируемость',  description: 'Поддержка как малых, так и крупных проектов' },
+        { title: 'Аналитика', description: 'Детальные отчеты и метрики для улучшения качества' },
+              ], 
+    features: [
+        { title: 'Управление тест-кейсами', description: 'Структурированное хранение и категоризация тест-кейсов с поддержкой Drag & Drop, гибкой классификацией и приоритизацией.' },
+        { title: 'Управление тест-ранами', description: 'Автоматические и ручные прогоны с отслеживанием прогресса в реальном времени и историей выполнения.' },
+        { title: 'Система отчетности', description: 'Автоматические и ручные отчеты с визуализацией, экспортом в PDF/CSV и метриками качества.' },
+        { title: 'Управление пользователями', description: 'Ролевая система с детальным распределением прав доступа и управлением командами.' },
+      ],
+      images: [import.meta.env.BASE_URL + 'img/AxionLabs/first.jpg', import.meta.env.BASE_URL + 'img/AxionLabs/fourth.jpg', import.meta.env.BASE_URL + 'img/AxionLabs/third.jpg', import.meta.env.BASE_URL + 'img/AxionLabs/second.jpg'],
     },
    
   ];
@@ -105,7 +122,7 @@ const ProjectDetail = ({ theme, toggleTheme }) => {
               <h1 className="project-hero-title">{project.title}</h1>
               <p className="project-hero-description">{project.description}</p>
               <div className="project-works-tags">
-                {project.works.map(work => (
+                {(project.works || []).map(work => (
                   <span key={work} className="work-tag">{work}</span>
                 ))}
               </div>
@@ -121,25 +138,28 @@ const ProjectDetail = ({ theme, toggleTheme }) => {
         <div className="container">
 
           {/* ТРЕБОВАНИЯ */}
-          <div className="project-section">
-            <h2 className="section-title">ФУНКЦИОНАЛ</h2>
-            <div className="section-content">
-              
-              <ul>
-                <li>Комплексный инструментарий для создания, организации и выполнения тестов</li>
-                <li>Генерация детальных отчетов и метрик тестирования</li>
-                <li>Управление тест-кейсами, прогонами и пользователями</li>
-                <li>Интуитивный интерфейс для QA команд</li>
-                <li>Масштабируемость и гибкость под различные методологии</li>
-              </ul>
-            </div>
-          </div>
+         <div className="project-section">
+  <h2 className="section-title">ФУНКЦИОНАЛ</h2>
+  <div className="functionality-grid">  
+    {(project.functional || []).map((item, index) => (
+      <div key={index} className="functionality-card">
+      
+        <div className="functionality-content">
+          <h3 className="functionality-title">{item.title || item}</h3>
+          {item.description && (
+            <p className="functionality-description">{item.description}</p>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
 
           {/* СТЕК ТЕХНОЛОГИЙ */}
           <div className="project-section">
             <h2 className="section-title">СТЕК ТЕХНОЛОГИЙ</h2>
             <div className="tech-stack-grid">
-              {project.stack.map(tech => (
+              {(project.stack || []).map(tech => (
                 <span key={tech} className="tech-item">{tech}</span>
               ))}
             </div>
@@ -149,14 +169,16 @@ const ProjectDetail = ({ theme, toggleTheme }) => {
           <div className="project-section">
             <h2 className="section-title">АНАЛИЗ И ПРЕДЛОЖЕНИЕ</h2>
             <div className="section-content">
-              <p>После глубокого анализа рынка и требований клиента, мы предложили создать платформу, которая объединяет все процессы QA в едином инструменте. Основные принципы разработки:</p>
-              <ul>
-                <li><strong>Интеграция в один инструмент</strong> - Все процессы QA в одном месте</li>
-                <li><strong>Удобный интерфейс</strong> - Интуитивный дизайн для быстрого освоения</li>
-                <li><strong>Гибкость</strong> - Адаптация под различные методологии тестирования</li>
-                <li><strong>Масштабируемость</strong> - Поддержка как малых, так и крупных проектов</li>
-                <li><strong>Аналитика</strong> - Детальные отчеты и метрики для улучшения качества</li>
-              </ul>
+              <p>{project.h2_analiz}</p>
+              <div className="analysis-grid">
+                {(project.analize || []).map((item, index) => (
+                  <div key={index} className="analysis-card">
+                    <h3 className="analysis-title">{item.title}</h3>
+                    <p className='tire'>-</p>
+                    {item.description && <p className='analysis-card-description'>{item.description}</p>}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -165,30 +187,18 @@ const ProjectDetail = ({ theme, toggleTheme }) => {
             <h2 className="section-title">ФУНКЦИОНАЛЬНОСТЬ И ДИЗАЙН</h2>
             <div className="section-content">
               <div className="project-features">
-                <div className="feature-item">
-                  <h3>Управление тест-кейсами</h3>
-                  <p>Структурированное хранение и категоризация тест-кейсов с поддержкой Drag & Drop, гибкой классификацией и приоритизацией.</p>
-                </div>
-                <div className="feature-item">
-                  <h3>Управление тест-ранами</h3>
-                  <p>Автоматические и ручные прогоны с отслеживанием прогресса в реальном времени и историей выполнения.</p>
-                </div>
-                <div className="feature-item">
-                  <h3>Система отчетности</h3>
-                  <p>Автоматические и ручные отчеты с визуализацией, экспортом в PDF/CSV и метриками качества.</p>
-                </div>
-                <div className="feature-item">
-                  <h3>Управление пользователями</h3>
-                  <p>Ролевая система с детальным распределением прав доступа и управлением командами.</p>
-                </div>
+                {(project.features || []).map((item, index) => (
+                  <div key={index} className="feature-item">
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                  </div>
+                ))}
               </div>
             </div>
             <div className="project-images">
-              <img src={import.meta.env.BASE_URL + 'img/first.jpg'} alt="AxionTMP Dashboard" />
-              <img src={import.meta.env.BASE_URL + 'img/fourth.jpg'} alt="Test Management Interface" />
-              <img src={import.meta.env.BASE_URL + 'img/third.jpg'} alt="Test Management Interface" />
-              <img src={import.meta.env.BASE_URL + 'img/second.jpg'} alt="Test Management Interface" />
-
+              {(project.images || []).map((src, index) => (
+                <img key={index} src={src} alt={`${project.title} screenshot ${index + 1}`} />
+              ))}
             </div>
           </div>
 
